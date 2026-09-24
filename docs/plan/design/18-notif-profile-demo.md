@@ -5,7 +5,7 @@
 | **Status** | ⬜ Not started |
 | **Priority** | P1 |
 | **Owns screens** | S06, S25, S26 |
-| **Owns components** | `NotificationTile`; (added, flag for `prd/02`): `TsSegmentedControl`, `TsSwitch`, `TsSlider`, `SettingsRow` |
+| **Owns components** | `NotificationTile`; (added, flag for `prd/02`): `TsSegmentedControl`, `TsSlider`, `SettingsRow` (`TsSwitch` is built in step 09 for the S15 "Pisah jadwal" toggle — instance it here) |
 | **PRD refs** | [04 S06, S25, S26](../../../prd/04-screens.md), [05 demo-mode infra](../../../prd/05-data-model-mock.md), [03 F3/edge cases](../../../prd/03-user-flows.md), [06 S06/S25/S26 rows](../../../prd/06-responsive-layout.md) |
 | **Pen location** | Flows rows `S06`, `S25`, `S26` |
 | **Depends on** | Steps 02–05, 16 |
@@ -56,7 +56,7 @@ S06: single list → centered max 720. S25: 1-col menu → centered max 560 → 
 |---|---|
 | `NotificationTile` (owned, PRD 02) | Read/unread, icon by category, title, body, timestamp |
 | `TsSegmentedControl` | 2–3 segments; selected state by fill + label weight |
-| `TsSwitch` | On/off with label; ≥ 48dp target |
+| `TsSwitch` | **Built in step 09** (Off / On / Disabled, ≥ 48dp target); instance it here, no rebuild |
 | `TsSlider` | Only if Q3 keeps it |
 | `SettingsRow` | Leading icon, title, subtitle, trailing control/chevron |
 

@@ -179,6 +179,7 @@ Second Route B checkpoint (first was step 01). **Scope trimmed at kickoff (decis
 - **User feedback:** "approve, all export i check look good in figma"
 - **Changes made:** none.
 - **Outcome:** approved. The three LOW findings (promo icon disc, `Sisa n` / `Pakai voucher` wording, Label Small 11 px) stay open for step 19.
+- **Amended in step 09 (2026-09-24, kickoff):** the `SlotChip` `Sisa n` caption becomes **"Sisa n motor"** (limited and short; capacity counts motors per hour), closing that wording LOW; "Lewat" (D+0 past slot) is the Full master with a label override. `Pakai voucher` / Label Small 11 px stay open for step 19.
 
 ## Session log
 

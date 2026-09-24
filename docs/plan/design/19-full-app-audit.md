@@ -53,6 +53,27 @@ Verify the finished Pencil design is **complete, consistent and convertible** be
 - **`prd/02` inventory:** add `EstimatePane`, `CopySourceSheet` (sheet + modal), `UnitHeader`, `CopyFromRow` / `CopyNote`, `ComplaintSection`, `TsAppBar` step variant, `System / Keyboard` (design-only); `VehicleTabChip` gains Active + Complete / Incomplete / Error.
 - **Data (`services.json`):** three S11 services — Servis Berkala Rp85.000 · 60 mnt, Ganti Oli Rp35.000 · 30 mnt, Perbaikan/Keluhan Rp50.000 "estimasi awal" · 60 mnt (`requiresComplaint`); the two non-canonical prices are proposals.
 
+### PRD S13 / S14 corrections collected in step 08 (2026-09-24; apply in this step after approval)
+
+- **PRD 04 S13 content:** each `WorkshopCard` shows the bay count and "Estimasi N jam untuk M motor" (makespan of the draft's units over that workshop's bays); the chosen workshop carries a "Dipilih" tag; no sticky footer (the choice is committed from S14). Filters: "Buka sekarang" is an independent toggle, "Rating tertinggi" / "Terdekat" are mutually exclusive sorts (default Terdekat) with a result line "N bengkel · urut terdekat". Stepper caption "Langkah 3 dari 4 · Bengkel & Jadwal"; sentence case titles.
+- **PRD 04 S14 / PRD 03 F2:** the CTA depends on the context — in-flow "Pilih bengkel ini" → S15 ("Lanjut ke jadwal" when the workshop is already chosen), standalone "Booking di sini" → S10 with the workshop carried and S13 skipped. S14 in the flow has no stepper (back + close). The standalone entry has no source screen in the PRD: it is the workshop row of S18 / S20 (added in steps 11 / 16).
+- **PRD 03 (pricing & duration) / PRD 04 S11:** S11's duration is computed for a standard 2-bay workshop because no workshop is chosen yet; S13 shows the per-workshop makespan and S16 the final one. A workshop closed *now* is still bookable (slots 08.00–16.00 for D+0…D+14), so every workshop stays open through 17.00; "Buka sekarang" filters by the current time only.
+- **PRD 05 `Workshop`:** add `reviewCount` (S14 "126 ulasan") and a structured `openHours` (open / close time) so the status line and the "Buka sekarang" filter are computed, not stored text.
+- **PRD 06 S13 row:** Tablet-P = 1-col list (max 720); Expanded (1024) = list 400 + S14 pane 552; Large (1280) = list 440 + pane 768 with the CTA pinned at the pane bottom. Standalone S14 Large = photo + map left (560), info right (648).
+- **`prd/02` inventory:** add `SearchBar`, `FilterChipRow`, `StaticMap`, `WorkshopPhoto`, `WorkshopInfoBlock`, `WorkshopDetailContent`, `WorkshopCtaBar`; `WorkshopCard` gains the estimate row and the "Dipilih" tag.
+- **Demo content:** S13 workshop list is in the `00-index.md` demo table; `workshops.json` needs the five entries (bays 2 / 3 / 2 / 1 / 2, hours to 17.00 / 18.00 / 17.00 / 17.00 / 17.00, Cahaya closed now).
+
+### PRD S15 corrections collected in step 09 (2026-09-24; apply in this step after approval)
+
+- **PRD 03 scheduling / edge cases (split validation):** in split mode a unit's slot is validated against the seats left *after the other units' picks* (remaining = slot remaining − units already placed there), not "capacity ≥ 1" independently; otherwise 3 motors could be booked into a 1-seat slot. Chips update live; S16 still re-validates on entry.
+- **PRD 03 scheduling (chip state precedence):** `short` (remaining < number of units, shared mode) > `limited` (remaining ≤ 2) > `available`. For a 3-motor shared booking `limited` never shows; it shows in split mode and for 1–2-unit bookings. Capacity counts **motors per hour** (`TimeSlot.capacity`), so the caption reads "Sisa n motor".
+- **PRD 03 scheduling (D+0):** slots earlier than now + 2 h are shown disabled with "Lewat" (not hidden), with the helper "Booking hari ini minimal 2 jam sebelum jam datang."
+- **PRD 03 / PRD 04 (mode switching):** the "Pisah jadwal per motor" toggle is non-destructive — the draft keeps the shared slot and the per-unit slots separately and only the active mode counts. Changing the date clears the shared slot.
+- **PRD 04 S15 content:** adds a compact workshop row ("Bengkel Jaya Motor · 2 bay servis · Ubah" → S13), the month in each strip item caption (the calendar grid carries a "Sep – Okt 2026" range), a derived capacity banner (info / warning, action "Pisah jadwal"), a flat sticky footer with the slot recap ("Sel, 29 Sep 2026 · 09.00" / "n dari 3 motor terjadwal") and a reason line while Lanjut is disabled; all-full day = "Semua jam penuh" / "Coba tanggal lain — masih ada jam kosong di hari berikutnya." + a "Lihat <next day>" action (the UI says "jam", not "slot"). No "Konfirmasi" here; Lanjut → S16.
+- **PRD 06 S15 row:** Phone / Tablet-P = horizontal date strip above the 3-column slot grid; Expanded (1024) = date grid 400 + slots 552; Large (1280) = 2-week calendar grid 480 + slots 728 (split: unit rail 240 · grid 420 · slots 524). Tablet-L date control = 7 × 3 calendar grid, weekday-aligned.
+- **PRD 05 `TimeSlot` / mock data:** capacity 5 motors per hour in the demo; `getAvailableSlots(workshopId, date)` must return per-hour `booked` and `capacity`; the D+0 cutoff is computed from the clock, not stored.
+- **`prd/02` inventory:** add `TsSwitch`, `ScheduleModeToggle`, `WorkshopSummaryRow`, `CapacityBanner`, `UnitSlotSection`, `DateGrid` (+ the grid variant of `DateStripItem`); `SlotChip` caption "Sisa n motor" and the "Lewat" label.
+
 ## Scope
 
 ### Audit tracks

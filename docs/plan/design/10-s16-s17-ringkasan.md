@@ -17,7 +17,7 @@ Design the final review before confirming: workshop + schedule recap with edit l
 
 ## Inputs
 
-- `BookingStepper` (step 4/4), `PriceBreakdown`, `VoucherCard`, `StickyEstimateBar` or plain CTA bar, `TsDialog`, `TsSnackbar`, `ErrorState`/inline banner.
+- `BookingStepper` (step 4/4), `PriceBreakdown`, `VoucherCard`, `StickyEstimateBar` or plain CTA bar, `TsDialog`, `TsSnackbar`, `ErrorState`/inline banner. **From step 09:** `CapacityBanner` (Tone = Warning, icon + text + action) is the inline banner for the S16 "slot became invalid" state — instance it, do not redraw; suggested actions "Pisah jadwal" (→ S15 split) / "Pilih jam lain" (→ S15). S15 recap strings for the split-schedule summary: "Sel, 29 Sep · 09.00" per unit.
 - Rules: all prices "Estimasi"; total duration = **makespan** across the workshop's bays (not a sum) — e.g. 2 bays, 3 units × 60 min ≈ 120 min; re-validate slot on entering S16; voucher discount is its own line; payment = "Bayar di bengkel saat selesai".
 
 ## Open questions (ask at kickoff)
