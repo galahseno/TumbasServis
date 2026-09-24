@@ -41,7 +41,7 @@ Grounded in the Pencil skill docs (`pen-schema`, `execute`, `guide/components`, 
 
 ### Canvas layout
 - Pencil has no pages; the document root holds only screen frames, reusable component frames and section containers. Never place loose text/shapes at root.
-- Top rows: `00 Cover`, `01 Foundations` boards, `02 Components`. Layout after step 02: Cover (0, 0) and Demo Content (1360, 0); Foundations header y 1480, light boards y 1620, dark boards (`… · Dark`) y 5028 under their own header at y 4880; Components anchor + masters y 8400, Flows – Phone y 9900, Flows – Tablet y 12300 (anchors move down again when a row needs the room). **After step 03:** six light Components sheets at y 8760 (x 0 / 1360 / 2720 / 4080 / 5440 / 6800), their dark header at y 12240 and dark copies at y 12380, Flows – Phone y 16000, Flows – Tablet y 18400; step 04 sheets continue the light row at y 8760, x 8160 / 9520 / 10880 / 12240 / 13600 / 14960 (dark copies at y 12380 below them; the step 04 stress frame sits at x 16320). Below: one row per screen — phone light states → phone dark → tablet portrait → tablet landscape — each row led by a section-header frame. Figma pages are created in step 20.
+- Top rows: `00 Cover`, `01 Foundations` boards, `02 Components`. Layout after step 02: Cover (0, 0) and Demo Content (1360, 0); Foundations header y 1480, light boards y 1620, dark boards (`… · Dark`) y 5028 under their own header at y 4880; Components anchor + masters y 8400, Flows – Phone y 9900, Flows – Tablet y 12300 (anchors move down again when a row needs the room). **After step 03:** six light Components sheets at y 8760 (x 0 / 1360 / 2720 / 4080 / 5440 / 6800), their dark header at y 12240 and dark copies at y 12380, Flows – Phone y 16000, Flows – Tablet y 18400; step 04 sheets continue the light row at y 8760, x 8160 / 9520 / 10880 / 12240 / 13600 / 14960 (dark copies at y 12380 below them; the step 04 stress frame sits at x 16320). **After step 05:** Shell · Compact x 17760, Shell · Medium x 19448, Shell · Large x 21248 and Home blocks x 24008 (light y 8760, dark copies y 12380); S05 phone rows under the Flows – Phone anchor (light y 16372, dark y 18226), Flows – Tablet anchor moved to y 20000 (portrait row y 20372, landscape row y 21958). Below: one row per screen — phone light states → phone dark → tablet portrait → tablet landscape — each row led by a section-header frame. Figma pages are created in step 20.
 - Use `FindEmptySpace` for placement; never overlap root objects.
 
 ### Variables & themes
@@ -118,6 +118,15 @@ Grounded in the Pencil skill docs (`pen-schema`, `execute`, `guide/components`, 
   - **No stroke dash**: a dashed line is a row of small rectangles with `space_between`. **`event`, `group_off`, `sell`, `oil_barrel`, `qr_code_2` exist** in Material Symbols Rounded; `expand_more` still does not.
   - **Note nodes are not exported to `html-css`**, so handoff notes never reach html2figma (the HTML is about 400 – 600 px shorter than the sheet).
   - **`Copy` of a sheet holding reusable children again yields unnamed refs**; rename them after their master right after the copy. Deleting and re-copying the dark sheets is the reliable way to refresh them after light-sheet edits that add or move nodes (master edits flow through by themselves).
+- **Verified in step 05 (2026-09-24):**
+  - **Slots work for screens.** A reusable frame with `slot: []` is filled with `Replace(instance + "/<slotId>", {type:"frame", …})` and `Insert` into the returned id; the instance `height` is overridden and an absolute child moves with `Update(instance + "/<childId>", {y})`. Absolute children cannot anchor to the bottom, so a taller screen needs that `y` override. Pencil keeps warning "fill_container … not inside a flexbox layout" on the slot; it is spurious (render and bounds are right).
+  - **"Collapsed size / circular" warnings on a hug parent with one `fill_container` child are false positives** when a sibling has a definite or hug size (equal-height card rows, quick links): bounds read back correct (`Get(..., c.bounds)`). Avoid it only if every child fills.
+  - **A hard-stop gradient (two stops at the same position) draws a crisp boundary**, so a progress fill needs no pixel width (`FleetProgress`).
+  - **`Update(ref, {descendants})` merges** with the existing overrides. `Replace` on a nested ref inside a master threw (`reading 'type'`); `Delete` + `Insert` into the parent works when the node is the last child.
+  - **Emoji in a text node renders as a monochrome glyph** (the text `fill` applies); it is not tofu.
+  - **`note` height:** after a content edit the auto height changes but an earlier explicit `height` may stay stale; re-read the bounds and set it again. A `Copy` made before a note edit keeps the old text: delete and re-copy the dark sheet.
+  - **Copying an instance keeps slot content and names**; a dark `Copy` re-resolves everything. A text ×1.3 stress copy = `Get(copy, visit, {resolveInstances:true, resolveVariables:true})` + `Update(id, {fontSize})` per text node (47 nodes), then re-measure the body.
+  - **Root listing:** `Get(document, (n, c) => c.depth === 0 && …)` lists root nodes; `Get(document, {depth:1})` without a visitor is refused.
 - **Unsaved file:** the document lives in Pencil's memory until the user saves (Cmd+S); Claude has no save tool.
 - **Generated art internals** (the `rectangle` / `path` children of a generated SVG) are unnamed and exempt from the naming check; the wrapping frame/component is named.
 - **Multiplayer:** nodes the user adds while Claude works appear at the root (at step 01 close: 8 unnamed, paste-like nodes; the user told Claude to delete them at step 02 kickoff and they were removed after an id/type/position re-check). Claude never deletes nodes it did not create without asking.
@@ -192,6 +201,7 @@ Every screen uses the same story so the prototype reads as one app. Draft from t
 | Totals | Subtotal **Rp428.000** · voucher 10% **−Rp42.800** · total **Rp385.200** · 3 × 60 mnt on 2 bays → makespan **2 jam** |
 | S11 running estimate | 1 unit Rp85.000 · 1 j → 2 units (2/3 ✓) Rp228.000 · 1 j → 3 units Rp428.000 · 2 j (voucher applies from S16) |
 | Booking | `TS-260929-0417`, units `-A` `-B` `-C` |
+| S05 Home populated (step 05 kickoff, 2026-09-24) | Garage strip adds the sheet-only **Supra X 125** (`AB 3344 KL`, bebek) as a 4th free motor; the draft = Supra X 125 only, step 2/4, "Kedaluwarsa dalam 22 jam". Unit stages: A Vario Dikerjakan, B Beat Dikerjakan, C PCX Diperiksa → card "3 motor · Dikerjakan" + "1 motor masih Diperiksa". Empty state = same 3 motors, no badges |
 | Voucher | "Diskon 10% servis ≥2 motor" |
 | Promo/OTP | demo OTP `123456` |
 
@@ -217,7 +227,7 @@ Every screen uses the same story so the prototype reads as one app. Draft from t
 | 02 | [02-foundations.md](02-foundations.md) | — | — | ✅ | `04-design-step02-foundations.md` |
 | 03 | [03-components-core.md](03-components-core.md) | — | — | ✅ | `05-design-step03-components-core.md` |
 | 04 | [04-components-booking.md](04-components-booking.md) | — | — | ✅ | `06-design-step04-components-booking.md` |
-| 05 | [05-s05-home.md](05-s05-home.md) | P0 | S05 | ⬜ | `07-design-step05-s05-home.md` |
+| 05 | [05-s05-home.md](05-s05-home.md) | P0 | S05 | ✅ | `07-design-step05-s05-home.md` |
 | 06 | [06-s10-pilih-motor.md](06-s10-pilih-motor.md) | P0 | S10 | ⬜ | `08-design-step06-s10-pilih-motor.md` |
 | 07 | [07-s11-detail-servis.md](07-s11-detail-servis.md) | P0 | S11 | ⬜ | `09-design-step07-s11-detail-servis.md` |
 | 08 | [08-s13-s14-bengkel.md](08-s13-s14-bengkel.md) | P0/P1 | S13, S14 | ⬜ | `10-design-step08-s13-s14-bengkel.md` |
@@ -283,6 +293,8 @@ Components that exist in PRD 04 screens or global patterns but not in the PRD 02
 | `TicketUnitRow`, `PageIndicator` | 04 (moved from 11 / 13) | Needed inside `TicketCard` and `PromoBanner`; steps 11 and 13 instance them instead of redrawing |
 | `AppShell` | 05 | Tab shell (bottom `NavBar` / `NavRail`) reused by S05, S07, S19, S25 |
 | `ActiveBookingCard`, `DraftResumeCard`, `QuickLinkTile`, `FleetProgress` | 05 (`FleetProgress` full in 16) | S05 content blocks |
+| `BookingCtaCard` (Compact / Hero), `SectionTitleRow`, `GarageAddTile`, `VehicleSelectCard` compact In Service variant | 05 (added at kickoff, 2026-09-24) | S05: primary CTA (hero in the empty state), garage strip header / "+" tile, in-service badge on the compact garage card |
+| `TsAppBar / Type=Title, Actions=Bell` | 05 (added while building) | Tablet app bar without the logo (the rail carries it). A promo pause / play control was proposed by the review and declined by the user |
 | `UnitHeader`, `CopyFromRow`, `ComplaintSection`, `EstimatePane` | 07 | S11 sections |
 | `SearchBar`, `FilterChipRow`, `WorkshopInfoBlock` | 08 | S13/S14 (`SearchBar` reused by 15) |
 | `ScheduleModeToggle`, `UnitSlotSection`, `CapacityBanner`, date-grid `DateStripItem` | 09 | S15 split/capacity/landscape |
