@@ -125,6 +125,8 @@ New sheet "Schedule" (x 30808, light y 8760, dark copy below it; S13 / S14 block
 | `SlotChip` (amended) | Caption text "Sisa n motor" on limited / short; `Lewat` = Full master with label override (verify the master exposes label + icon nodes; if not, add a Past master and log it) |
 | Reused | `TsAppBar / Type=Step`, `BookingStepper` (phone + wide), `SelectionFooter`, `VehicleTabChip` rail-row (Tablet-L split: needs a slot line; if the master has no room, add a rail + slot variant and log it under Inventory additions), `Skeleton`, `TsDialog` exit, `EmptyState` (all-full, icon only) |
 
+> **Amended in step 10 (2026-09-24, kickoff):** `CapacityBanner` gains an `Action 2` slot (disabled by default, so the S15 frames do not change); S16 uses it for "Pisah jadwal" / "Pilih jam lain" on the slot-invalid banner.
+
 ### Content & copy
 
 - Title "Pilih jadwal"; stepper "Langkah 3 dari 4 · Bengkel & Jadwal"; calendar panel header "Tanggal kedatangan" + "Sep – Okt 2026"; heading "Sel, 29 Sep 2026" + caption "Jam datang untuk 3 motor". Date format `EEE, d MMM yyyy`, time `09.00`.

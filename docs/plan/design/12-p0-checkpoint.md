@@ -21,6 +21,8 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 - All P0 frames from steps 05–11, all components from steps 02–04.
 - Step 01's plugin verdict, Starter workaround and effort estimate; step 04's test-import record; the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility).
 
+> **Hand-off from step 11 (2026-09-24):** S18 carries a **real, decodable QR** built from ~114 small rectangles per code (tile + modules bound to primitives, dark-on-light in both themes). The S18 test import (phone light + dark) must check that html2figma keeps the modules crisp (no anti-aliased blur, no merged or dropped rectangles) and that the code still scans from the Figma render. S18 has no app bar and a flat sticky footer; the Tablet-P bar is a full-width strip with a 560 dp inner column. Exports: `design/pencil/exports/step11/` (20 PNG + `INDEX.md`).
+
 ## Open questions (ask at kickoff)
 
 1. **Early Figma gate.** Based on the P0 test import below (fidelity, manual repair effort, plugin still working): convert P0 now (jump to step 20 scoped to P0, then resume P1) — or continue P1 first? Show the effort estimate and remaining days.

@@ -104,6 +104,7 @@ Build decisions made while building (all inside the kickoff decisions unless mar
 - **Disabled reason lives in its own row** under the card / tile (`Reason Row`), not inside the text column, so it survives text ×1.3 (found by the stress frames).
 - **`TicketCard` notches are `Decor` ellipses** (fill `bg-page`, half outside the card), so they are exempt from the clipping audit; the dashed tear line is a row of 22 / 34 rectangles (Pencil has no stroke dash).
 - **Ticket sheet layout:** the composite (ticket left + units panel right) is a specimen built from instances; the panel is its own master (`TicketCard Units Panel`).
+- **Amended in step 11 (2026-09-24):** `TicketCard` (Phone `FgxE2`, Landscape `kHGZP`) gets a `Code Row` (booking code + 48 dp `Copy Button`, `TsIconButton` with `content_copy`), the real `QrCode` master instead of the `qr_code_2` placeholder tile, and `fill_container` Workshop / Schedule rows so long strings wrap; `TicketUnitRow` gets an `enabled:false` `Slot Line` (split-schedule slot). New masters live on the step 11 "Ticket & success" sheet: `TicketCard` Loading (Phone / Landscape) and `TicketCard Units Panel / State=Loading`. Decision 10 above (QR slot placeholder) is superseded.
 
 ## Figma test import (user-run)
 
@@ -180,6 +181,7 @@ Second Route B checkpoint (first was step 01). **Scope trimmed at kickoff (decis
 - **Changes made:** none.
 - **Outcome:** approved. The three LOW findings (promo icon disc, `Sisa n` / `Pakai voucher` wording, Label Small 11 px) stay open for step 19.
 - **Amended in step 09 (2026-09-24, kickoff):** the `SlotChip` `Sisa n` caption becomes **"Sisa n motor"** (limited and short; capacity counts motors per hour), closing that wording LOW; "Lewat" (D+0 past slot) is the Full master with a label override. `Pakai voucher` / Label Small 11 px stay open for step 19.
+- **Amended in step 10 (2026-09-24, kickoff):** decision 7 changes for S16 — the estimate block uses **static per-unit lines** (`PriceBreakdown Unit / State=Static` `b1Fc7`) and the per-unit detail moves into the new `UnitSummaryAccordion`; the collapsible `Unit` rows / `Variant=Summary` stay as built (S23 reference). S16 overrides the title to "Estimasi biaya" and the total to "Total estimasi" (masters unchanged). The `Pakai voucher` LOW stays: S16 row "Pilih voucher", S17 CTA "Pakai voucher".
 
 ## Session log
 
