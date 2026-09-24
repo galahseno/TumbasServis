@@ -12,7 +12,7 @@ Covers the bonus criterion "Tampilan Responsif & Safe Layout" and the extended r
 | Large | ≥1200dp | Extended `NavigationRail` (with labels) | Up to three-pane on the busiest screen (S11) |
 
 - **Orientation policy:** phone (shortest side < 600dp) is **portrait-locked** at the OS level. Tablet (shortest side ≥ 600dp) supports **both orientations** — the app must reflow, not just letterbox, when rotated.
-- Breakpoints are evaluated against `MediaQuery.sizeOf(context).shortestSide`, matching Material 3 guidance (not raw width), so a tablet in portrait still counts as "tablet," not "compact."
+- **Device type** (phone vs tablet, orientation lock) is decided by `MediaQuery.sizeOf(context).shortestSide` (≥ 600dp = tablet). The **layout class** in the table above is decided by the current window **width** (Material 3), so a tablet in portrait (≈ 800dp wide) is Medium and the same tablet in landscape (≈ 1280dp wide) is Large, matching the per-screen table below. In split-screen a narrow tablet window can legitimately fall to Compact.
 
 ## Grid
 

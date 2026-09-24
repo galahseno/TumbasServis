@@ -19,11 +19,11 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 ## Inputs
 
 - All P0 frames from steps 05–11, all components from steps 02–04.
-- Step 01's Figma-path decision and effort estimate.
+- Step 01's plugin verdict, Starter workaround and effort estimate; step 04's test-import record; the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility).
 
 ## Open questions (ask at kickoff)
 
-1. **Early Figma gate.** If the step-01 path is manual/heavy (or time is short): convert P0 now (jump to step 20 scoped to P0, then resume P1) — or continue P1 first? Show effort estimate and remaining days.
+1. **Early Figma gate.** Based on the P0 test import below (fidelity, manual repair effort, plugin still working): convert P0 now (jump to step 20 scoped to P0, then resume P1) — or continue P1 first? Show the effort estimate and remaining days.
 2. **Flow board form.** Copies of default phone frames in journey order with arrows (may go stale; refreshed in step 19) vs PNG exports placed as image fills (static). *Recommended: copies, labelled with source frame names.*
 3. **Any P0 screen the user wants redesigned** now that the whole flow is visible (cheaper here than after Figma conversion).
 
@@ -50,6 +50,10 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 - Findings list, fixes applied across earlier steps (each logged against the owning step file's Session log).
 - Decision on early Figma conversion.
 
+### P0 Figma test import (user-run)
+
+Third Route B checkpoint. After the flow-level fixes, Claude exports (`html-css`, one frame per file) the `P0 Flow Board`, three default phone frames (S05, S11, S18) in light **and** dark, and one tablet frame (S11 landscape), pre-checks each HTML in Chromium against the Pencil PNG, and the user drags them into html2figma in a scratch Figma Draft. Claude has no Figma access, so the user sends screenshots and Claude compares them side by side with the Pencil PNG exports: spacing, type, radius, shadow/glass, icons, illustrations, dark frames. Also confirm html2figma still works and note its version (a free third-party plugin can change before step 20), and check that the Draft's public link opens in incognito. Outcome feeds Q1 above and the *Figma-plugin compatibility* rules.
+
 ## Checklist
 
 ### Build
@@ -58,6 +62,7 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 - [ ] Flow board built with entry points annotated.
 - [ ] Continuity audit: prices/codes/motors identical across S11/S16/S18 (script over text nodes).
 - [ ] Dark sweep done for every P0 dark frame.
+- [ ] P0 test import run by the user; screenshots compared with Pencil PNG exports; plugin version noted; new compat rules logged in `00-index.md`.
 - [ ] Early-Figma decision recorded in the index decision log.
 
 ### Quality (automated, run in `execute`)

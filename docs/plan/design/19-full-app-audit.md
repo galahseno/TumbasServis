@@ -23,7 +23,7 @@ Verify the finished Pencil design is **complete, consistent and convertible** be
 
 ## Open questions (ask at kickoff)
 
-1. Which PRD edits does the user want applied now (token divergences from step 02, `TsDialog`/`TsSnackbar` and other inventory additions, window-class wording, price set)? Approve the exact diff list before editing `prd/`.
+1. Which PRD edits does the user want applied now (token divergences from step 02, `TsDialog`/`TsSnackbar` and other inventory additions, price set, and the Starter dark-mode workaround if step 01 chose two collections)? Approve the exact diff list before editing `prd/`. The window-class wording in `prd/06` was already fixed in step 01.
 2. Any frames the user wants dropped or added before conversion (each removed frame saves Figma effort).
 
 ## Scope
@@ -43,6 +43,7 @@ Verify the finished Pencil design is **complete, consistent and convertible** be
 | Continuity | Demo data (motors, plates, codes, totals) across S05/S10/S11/S16/S18/S20/S23 | Identical |
 | Tablet | Every screen has PRD 06-conformant tablet frames | Per matrix |
 | Dark | Every dark frame required by the rules exists and passes contrast | Per matrix |
+| Figma compatibility | Check frames and components against the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility) (rules from the step 01 spike and the step 04 / step 12 test imports) | Zero violations |
 
 ### `/better-interface` runs (one per feature group — respects the skill's scope-narrowing rule)
 
@@ -60,9 +61,9 @@ Each run: ≤ 15 findings, systemic root causes consolidated (token/component fi
 ### Deliverables
 
 - Audit report (tracks + `/better-interface` runs) in this file.
-- PRD edit list applied after user approval (`prd/02` inventory + tokens, `prd/06` window classes, `prd/00` decision log).
+- PRD edit list applied after user approval (`prd/02` inventory + tokens + Figma dark-mode workaround, `prd/00` decision log; `prd/06` window classes already done in step 01).
 - Refreshed `P0 Flow Board`; full-document PNG export set.
-- Conversion manifest for step 20: component list with variants, style/variable list, screen list with node ids.
+- Conversion manifest for step 20: component list with variants, style/variable list, screen list with node ids, plus the html2figma version and import options (Auto Layout on/off) that worked in the step 12 test import.
 
 ## Checklist
 

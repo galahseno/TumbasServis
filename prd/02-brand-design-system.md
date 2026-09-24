@@ -43,6 +43,12 @@ Not present on the source site — derived to fill out semantic needs, flagged h
 |---|---|---|
 | `warning-400` | `#D99A2B` | warning states (e.g. slot almost full) |
 | `info-400` | `#5B8DEF` | informational banners |
+| `sand-600` | `#756C65` | `text-muted` in light mode (darker than site `sand-500`, see accessibility rule) |
+| `orange-700` | `#B04418` | `text-on-accent-soft` in light mode |
+| `green-100` `green-700` | `#EAF6EF` `#33794F` | `success-soft` (light) / `success-text` (light) |
+| `warning-100` `warning-700` | `#FAF3E6` `#8F641A` | `warning-soft` (light) / `warning-text` (light) |
+| `info-100` `info-300` `info-700` | `#EBF1FD` `#6090EF` `#1F63E9` | `info-soft` (light) / `info-text` (dark) / `info-text` (light) |
+| `red-100` `red-300` `red-700` | `#FCEBEA` `#E76861` `#CC291F` | `danger-soft` (light) / `danger-text` (dark) / `danger-text` (light) |
 
 ### Semantic tokens — Light / Dark
 
@@ -54,21 +60,44 @@ Not present on the source site — derived to fill out semantic needs, flagged h
 | `surface-hover` | `sand-100` `#F4F1EE` | `#232020` |
 | `text-heading` | `sand-900` `#1A1716` | `#F7F4F2` |
 | `text-body` | `sand-700` `#463F3A` | `#C9C1BB` |
-| `text-muted` | `sand-500` `#8A817A` | `#9A918B` |
+| `text-muted` | `sand-600` `#756C65` (site `sand-500` fails AA, see accessibility rule) | `#9A918B` |
 | `text-faint` | `sand-400` `#B0A79F` | `#6C645F` |
 | `accent` | `orange-500` `#E4622F` | `orange-400` `#FF8551` |
 | `accent-hover` | `orange-600` `#C24C1D` | `orange-300` `#FFAE81` |
 | `text-accent` | `orange-600` `#C24C1D` | `orange-400` `#FF8551` |
 | `text-on-accent` | `#FFFFFF` | `#1A0E07` |
 | `accent-soft` | `orange-100` `#FFE8DB` | `orange-400 @ 16%` |
+| `text-on-accent-soft` | `orange-700` `#B04418` | `orange-400` `#FF8551` |
 | `border-subtle` | `sand-200` `#E8E3DE` | `#282422` |
 | `border-default` | `sand-300` `#D6CFC8` | `#363130` |
 | `border-strong` | `sand-400` `#B0A79F` | `#4B4442` |
+| `border-control` | `sand-500` `#8A817A` | `#6C645F` |
 | `border-accent` | `orange-500` | `orange-400` |
+| `focus-ring` | `orange-500` | `orange-400` |
 | `success` | `green-400` `#4FB477` | `green-400` `#4FB477` |
 | `danger` | `red-400` `#E4574F` | `red-400` `#E4574F` |
 | `warning` | `warning-400` `#D99A2B` | `warning-400` `#D99A2B` |
 | `info` | `info-400` `#5B8DEF` | `info-400` `#5B8DEF` |
+| `success-text` | `green-700` `#33794F` | `green-400` `#4FB477` |
+| `warning-text` | `warning-700` `#8F641A` | `warning-400` `#D99A2B` |
+| `info-text` | `info-700` `#1F63E9` | `info-300` `#6090EF` |
+| `danger-text` | `red-700` `#CC291F` | `red-300` `#E76861` |
+| `success-soft` | `green-100` `#EAF6EF` | `green-400 @ 16%` |
+| `warning-soft` | `warning-100` `#FAF3E6` | `warning-400 @ 16%` |
+| `info-soft` | `info-100` `#EBF1FD` | `info-400 @ 16%` |
+| `danger-soft` | `red-100` `#FCEBEA` | `red-400 @ 16%` |
+| `danger-fill` | `red-700` `#CC291F` | `red-300` `#E76861` |
+| `text-on-danger` | `#FFFFFF` | `#1A0E07` |
+| `surface-inverse` | `sand-900` `#1A1716` | `sand-100` `#F4F1EE` |
+| `text-on-inverse` | `sand-50` `#FBFAF9` | `sand-900` `#1A1716` |
+| `accent-on-inverse` | `orange-300` `#FFAE81` | `orange-700` `#B04418` |
+| `skeleton-base` | `sand-200` `#E8E3DE` | `#282422` |
+| `skeleton-highlight` | `#FFFFFF` | `#363130` |
+| `illustration-outline` | `sand-900 @ 8%` | `#FFFFFF1A` |
+| `accent-pressed` | `orange-700` `#B04418` | `orange-300` `#FFAE81` |
+| `danger-pressed` | `#B3231A` | `#EE8580` |
+| `state-pressed` | `sand-900 @ 10%` (`#1A17161A`) | `#FFFFFF1F` |
+| `bg-page-clear` | `sand-50 @ 0%` (`#FBFAF900`) | `sand-950 @ 0%` (`#100E0D00`) — transparent end of the scroll-edge fade (`bg-page-clear` → `bg-page`) on tab chips and the date strip (added step 04) |
 
 ### Accessibility rule (important — deviates from raw site tokens)
 
@@ -78,7 +107,16 @@ White text on `orange-500` (`#E4622F`) measures **~3.4:1** contrast — fails WC
 - **Brand surfaces that don't carry text directly** (logo tile, hero backgrounds, selection borders, progress indicators, icons): `orange-500` is fine.
 - **Dark mode:** `#1A0E07` on `orange-400` (`#FF8551`) measures **~7.9:1** — passes comfortably, no substitution needed.
 
-This is the one place the design system intentionally diverges from a literal copy of the site's raw accent value, and it must be respected in both Figma styles and Flutter `ColorScheme`.
+The rule "white on `orange-600`" is the first of several deliberate divergences from the site's raw tokens. All were measured (WCAG relative luminance, resolved hexes) in design step 02 and must be respected in both Figma styles and Flutter `ColorScheme`:
+
+- **`text-muted` (light):** site `sand-500` `#8A817A` is 3.66 / 3.82 / 3.39 : 1 on `bg-page` / `surface-card` / `surface-inset`. It carries captions, hints and timestamps, so light mode uses `sand-600` `#756C65` (4.93 / 5.14 / 4.56 : 1). Dark `#9A918B` already passes (5.82–6.23).
+- **`text-faint`:** 2.3 : 1 (light) / 3.1–3.3 : 1 (dark). Decorative only — never content, labels or placeholders.
+- **Status as text:** `success` / `warning` / `info` / `danger` on white measure 2.58 / 2.44 / 3.23 / 3.64 : 1. The base tokens are for **icons, dots and borders only**. A status badge is a `*-soft` tint background + `*-text` label + an icon (never color alone); every pair is ≥ 4.6 : 1 in both modes.
+- **Control boundaries (WCAG 1.4.11):** `border-default` is 1.4–1.5 : 1. Inputs, checkboxes, radios and unselected chips use `border-control` (≥ 3 : 1); `border-default` / `border-subtle` are for cards and dividers.
+- **Focus ring:** every focusable control shows a 2dp solid `focus-ring` with a 2dp offset (the source site's `:focus-visible` recipe), measured ≥ 3.07 : 1 on every surface in both modes. Never removed, never clipped. Flutter: `FocusTheme` / `Focus` decoration on `TsButton`, `TsTextField`, `TsChip`, list rows, nav items. Exceptions (step 03): a control whose border is the indicator uses the 2dp `focus-ring` as that border with no offset (`TsTextField`, nav bar / rail items, dialog choice rows); on the inverse surface (`TsSnackbar` action) the ring is `accent-on-inverse`, because `focus-ring` measures only 2.14 : 1 on the dark-mode inverse surface.
+- **Pressed states:** filled buttons press to `accent-pressed` / `danger-pressed`; secondary and outline buttons keep their fill and press to a `border-accent` border; ghost presses to `accent-soft`; `state-pressed` is the state layer of `TsIconButton`. A dark overlay on a tonal fill would fall below 4.5 : 1.
+- **`surface-hover` and bordered controls:** `border-control` on `surface-hover` is 2.79 : 1 in dark, so `surface-hover` fills borderless rows and tiles only; a bordered control keeps its fill when pressed and changes only its border to `border-accent`. `text-accent` (4.29 : 1 in light) is not used on `surface-inset` or `surface-hover`; use `text-on-accent-soft` there.
+- **Text on `accent-soft`:** `text-accent` on `orange-100` is 4.1 : 1, so text on `accent-soft` uses `text-on-accent-soft` (4.83 light, ≥ 5.7 dark).
 
 ### Material 3 mapping
 
@@ -89,36 +127,48 @@ ColorScheme:
   primary            → accent (button-fill variant: orange-600 light / orange-400 dark)
   onPrimary          → text-on-accent
   primaryContainer   → accent-soft
-  onPrimaryContainer → text-accent
+  onPrimaryContainer → text-on-accent-soft
   surface            → bg-page
   surfaceContainerLow/Lowest → surface-inset
   surfaceContainer/High      → surface-card
   onSurface          → text-heading
   onSurfaceVariant   → text-body / text-muted
-  outline            → border-default
+  outline            → border-control
+  (focus ring        → focus-ring, drawn by the app's FocusTheme)
   outlineVariant     → border-subtle
-  error              → danger
+  error              → danger-fill (solid confirm) / danger (borders, icons)
+  onError            → text-on-danger
+  errorContainer     → danger-soft
+  onErrorContainer   → danger-text
+  inverseSurface     → surface-inverse
+  onInverseSurface   → text-on-inverse
+  inversePrimary     → accent-on-inverse
 
 TsThemeExtension (custom):
-  textMuted, textFaint, success, warning, info,
-  glassTint, glassBorder, glassSheen, shadowSm, shadowMd, shadowAccent
+  textMuted, textFaint, borderDefault, borderStrong, focusRing,
+  success, warning, info, successText, warningText, infoText, dangerText,
+  successSoft, warningSoft, infoSoft, dangerSoft,
+  glassTint, glassBorder, glassSheen, glassShadow, shadowSm, shadowMd, shadowAccent
 ```
 
 ### Status colors (per booking-unit status)
 
-| Status | Color token | Notes |
-|---|---|---|
-| Terjadwal (Scheduled) | `text-muted` / `border-default` | neutral, not yet started |
-| Check-in / Antre (Queued) | `info` | arrived, waiting for bay |
-| Diperiksa (Inspecting) | `warning` | in diagnosis |
-| Dikerjakan (In progress) | `accent` | active work |
-| QC (Quality check) | `warning` | final check |
-| Selesai (Done) | `success` | complete |
-| Dibatalkan (Cancelled) | `danger` | terminal, cancelled |
+| Status | Base token (icon / dot / border) | Badge (soft bg + text) | Notes |
+|---|---|---|---|
+| Terjadwal (Scheduled) | `text-muted` / `border-default` | `surface-inset` + `text-muted` | neutral, not yet started |
+| Check-in / Antre (Queued) | `info` | `info-soft` + `info-text` | arrived, waiting for bay |
+| Diperiksa (Inspecting) | `warning` | `warning-soft` + `warning-text` | in diagnosis |
+| Dikerjakan (In progress) | `accent` | `accent-soft` + `text-on-accent-soft` | active work |
+| QC (Quality check) | `warning` | `warning-soft` + `warning-text` | final check |
+| Selesai (Done) | `success` | `success-soft` + `success-text` | complete |
+| Dibatalkan (Cancelled) | `danger` | `danger-soft` + `danger-text` | terminal, cancelled |
+
+Every badge also carries a status icon and label — color is never the only signal.
 
 ## Typography
 
 - **Family:** Exo 2 (variable font), bundled as a Flutter asset (`assets/fonts/Exo2-Variable.ttf` + italic) — not fetched at runtime, matching the site's `@font-face` approach but self-hosted for offline/APK reliability.
+- **Weights shipped:** 400 (Regular), 600 (SemiBold), 800 (ExtraBold, logo monogram only).
 - **Type scale** (Material 3 roles, Exo 2):
 
 | Role | Size / Line-height | Weight | Tracking |
@@ -132,7 +182,10 @@ TsThemeExtension (custom):
 | Body Medium | 14 / 22 | Regular | normal |
 | Body Small | 12 / 18 | Regular | normal |
 | Label Large (buttons) | 14 / 20 | SemiBold | 0.025em (wide) |
-| Label Small (badges/chips) | 11 / 16 | SemiBold | 0.025em |
+| Label Medium (nav labels) | 12 / 16 | SemiBold | 0.025em |
+| Label Small (badges) | 11 / 16 | SemiBold | 0.025em |
+
+Filter chips use Label Large (14 / 20): they are tap targets and carry longer Indonesian text.
 
 Headings use tight tracking (`−0.025em`, matching the site's `--tracking-tight`); button/badge labels use wide tracking (`--tracking-wide`) for legibility at small sizes.
 
@@ -154,13 +207,21 @@ Headings use tight tracking (`−0.025em`, matching the site's `--tracking-tight
 | `shadow-md` | `0 2px 4px rgba(26,23,22,0.08), 0 14px 28px -10px rgba(26,23,22,0.18)` |
 | `shadow-accent` | `0 10px 26px -8px rgba(228,98,47,0.35)` — used only on the primary booking CTA |
 
-Dark mode uses the same shadows against near-black surfaces (values tuned darker per the source site; treat as reference, adjust opacity if shadows disappear against `sand-950`).
+Dark mode uses the source site's values, tuned for near-black surfaces:
+
+| Token | Value (dark) |
+|---|---|
+| `shadow-sm` | `0 1px 2px #00000080, 0 4px 14px -4px #00000099` |
+| `shadow-md` | `0 2px 4px #0000008C, 0 16px 32px -10px #000000B3` |
+| `shadow-accent` | `0 10px 26px -8px rgba(255,133,81,0.26)` (`orange-400 @ 26%`) |
 
 ## Glassmorphism signature
 
 A restrained "glass" treatment marks two specific surfaces as the brand's signature move — not used everywhere:
 
-- **Bottom navigation bar** and **sticky estimate/price bar** (in the booking flow) use frosted glass: `backdrop-filter: blur(14px) saturate(180%)`, tint `sand-0 @ 42%` (light) / `#1C1918 @ 40%` (dark), 1px `glass-border`, inset `glass-sheen` highlight.
+- **Bottom navigation bar** and **sticky estimate/price bar** (in the booking flow) use frosted glass: `backdrop-filter: blur(14px) saturate(180%)`, tint `sand-0 @ 42%` (light) / `#1C1918 @ 40%` (dark), 1px `glass-border`, inset `glass-sheen` highlight, `glass-shadow` drop shadow. Values from the source site: `glass-border` `sand-900 @ 8%` (light) / `#FFFFFF1A` (dark); `glass-sheen` `inset 0 1px 0 #FFFFFFBF, inset 0 -1px 0 #FFFFFF40` (light) / `inset 0 1px 0 #FFFFFF17, inset 0 -1px 0 #FFFFFF08` (dark); `glass-shadow` `0 1px 1px sand-900 @ 4%, 0 8px 28px -8px sand-900 @ 18%` (light) / `0 1px 1px #00000066, 0 10px 30px -10px #000000B3` (dark). In Pencil `saturate` does not exist and the blur radius is 28 (= CSS 14px); the Figma/Flutter implementation should keep `saturate(180%)` where the platform supports it.
+- **NavBar tint:** the bottom `NavBar` uses `glass-tint-strong` (content always scrolls under it, so its backdrop is unpredictable); the `StickyEstimateBar` keeps the standard 42 % `glass-tint`.
+- **Text on glass:** only `text-heading` / `text-body`, never `text-muted` / `text-faint`. Measured `text-body` on `glass-tint`: light over `bg-page` / `surface-card` 10.1 / 10.3 : 1, over `orange-500` 5.1 : 1 (pass), over `sand-900` 2.4 : 1 (fail); dark over `bg-page` / `surface-card` 10.5 / 10.0 : 1 (pass), over `orange-400` / `orange-500` 2.9 / 3.8 : 1 (fail). Where the backdrop is unpredictable (content, promo banners scrolling under the bar) use the site's denser `glass-tint-strong` (`sand-0 @ 80%` light / `#1C1918 @ 80%` dark), which measures ≥ 5.2 : 1 over every case above. **`StickyEstimateBar` (step 04):** the 42 % tint stays in both themes because its text is `text-heading` only; measured over the S11 worst-case backdrops, `text-heading` is ≥ 7.4 : 1 (light) / ≥ 4.7 : 1 (dark, even over a solid accent fill), whereas `text-body` falls to 4.3 : 1 / 2.9 : 1 over a solid accent fill, so `text-body` is not used on this bar.
 - **Budget:** at most 1–2 `BackdropFilter` widgets visible on screen at once (perf cost in Flutter); never stack glass panels.
 - Everything else uses flat `surface-card` — glass is an accent, not the default.
 
@@ -174,6 +235,7 @@ A restrained "glass" treatment marks two specific surfaces as the brand's signat
 ## Voice & microcopy
 
 - All UI copy in **Bahasa Indonesia**, friendly and concise (not formal-bureaucratic) — e.g. "Yuk, pilih motor yang mau diservis" rather than "Silakan pilih kendaraan Anda."
+- Capitalization: **sentence case** for buttons, chips, titles and headings ("Lihat detail", "Tambah motor", "Ubah jadwal"); proper nouns and service names keep their case ("Bengkel Jaya Motor", "Servis Berkala"). Wireframe copy in `04-screens.md` that uses title case is aligned in design step 19.
 - Number format: Indonesian Rupiah, thousands-dotted, no decimals — `Rp412.000` (`id_ID` locale via `intl`).
 - Date format: `EEE, d MMM yyyy` → "Sen, 29 Sep 2026". Time format: 24-hour, dot separator → "09.00".
 
@@ -183,18 +245,18 @@ One-to-one mapping target: each Figma component becomes exactly one Flutter widg
 
 | Component | Key variants |
 |---|---|
-| `TsButton` | primary / secondary / outline / ghost / danger × default/pressed/disabled/loading |
+| `TsButton` | primary / secondary (tonal) / outline / ghost / danger (solid, dialog confirm only) / danger-outline (on-screen destructive trigger) × default/pressed/focused/disabled/loading |
 | `TsTextField` | default/focused/error/disabled, with optional prefix icon |
 | `TsChip` | filter chip: unselected/selected/disabled |
 | `VehicleTabChip` | complete (✓) / active (●) / incomplete (○) / error |
 | `VehicleSelectCard` | selectable/selected/disabled (with "sedang diservis" reason) |
-| `ServiceOptionTile` | radio-style, default/selected/disabled |
+| `ServiceOptionTile` | checkbox-style (default, multi-select; ≥ 1 per unit) or radio-style (exclusive group), default/selected/disabled |
 | `PartOptionTile` | checkbox-style with price, default/selected/incompatible |
 | `WorkshopCard` | list item: name, rating, distance, open/closed badge |
-| `SlotChip` | available / limited (low capacity) / full (disabled) / selected |
+| `SlotChip` | available / limited (low capacity) / short (fewer seats than selected units, disabled) / full (disabled) / selected |
 | `DateStripItem` | horizontal date scroller item: default/selected/today |
-| `BookingStepper` | 4-step horizontal progress indicator |
-| `StickyEstimateBar` | glass bar: total price + duration + CTA, pinned to bottom |
+| `BookingStepper` | 4-step horizontal progress indicator; phone = numbered circles + one caption row, wide = all four labels inline |
+| `StickyEstimateBar` | glass bar: "Estimasi · 1 jam" over the total + Lanjut CTA, pinned to bottom; states default / CTA disabled (reason line) / loading / error |
 | `PriceBreakdown` | line-item list: label, qty, price, subtotal, discount, total |
 | `TicketCard` | perforated-edge ticket card, per-unit sub-section |
 | `UnitStatusBadge` | one per status color (table above) |

@@ -16,6 +16,8 @@
 
 Wire the click-through prototype so a reviewer can go from **Home to Booking Success without gaps**, publish the file with **"Anyone with the link can view"**, and verify the link in an incognito window. This closes assessment deliverable M1.
 
+Claude has no Figma access: Claude writes the **wiring table** (below) from the approved frames; the **user** wires it in Figma and reports back with screenshots or a screen recording of the playthrough.
+
 ## Inputs
 
 - Figma file from step 20; P0 frames (phone light, dark variant frames for the mode demo).
@@ -25,7 +27,7 @@ Wire the click-through prototype so a reviewer can go from **Home to Booking Suc
 
 1. **Prototype path.** Primary: Home CTA → S10 → S11 → S13 → S14 → S15 → S16 → S17 → S16 → S18 → S20. Include the alternate entry points (Garage → pre-selected, Workshop detail) or only the main path?
 2. **Interaction depth.** Component-variant interactions (chip select, tab switching on S11, checkbox toggles on S10, slot selection on S15) vs plain frame-to-frame taps. *Recommended: variant interactions for S10 selection, S11 tabs, S15 slot; taps elsewhere.*
-3. **Dark mode demo** — a control (frame flow variant) that shows the same journey in dark via variable mode?
+3. **Dark mode demo** — depends on the step 01 Starter decision: with real Light/Dark variable modes, set the mode per flow; with a second collection, wire a separate dark flow from the dark frames. Include a dark demo at all?
 4. **Tablet prototype** — include 800×1280 / 1280×800 flows or phone only?
 5. **Device frame / starting frame** and presentation settings (background color, fit-to-screen).
 6. **Prototype for P1** (auth, garage, tracking) — wire main links or leave static?
@@ -44,11 +46,19 @@ Wire the click-through prototype so a reviewer can go from **Home to Booking Suc
 | Back behavior | Back arrows and system-back equivalents wired |
 | Flow starting points | Named flows per entry point |
 
+### Wiring table (written by Claude, executed by the user)
+
+Generated at kickoff from the step 19 conversion manifest, the final frame names and PRD 03 F2, once Q1–Q6 are answered. One row per tappable element on the agreed path; the user wires row by row and ticks it off.
+
+| # | From (frame · element) | Trigger | To (frame / overlay) | Transition |
+|---|---|---|---|---|
+| _n_ | `S<id> <Name> / <State> / Phone` · element name | On tap | target frame or overlay | Move in ≈ 250 ms · sheet slides up · success ≈ 300 ms Smart animate |
+
 ### Publish & verification
 
 | Item | Detail |
 |---|---|
-| Share settings | "Anyone with the link can view" (view-only; confirm prototype link too) |
+| Share settings | "Anyone with the link can view" (view-only; confirm prototype link too). If the file is a Starter **Draft**, confirm public sharing works from a Draft (checked in step 01) and that no login wall appears |
 | Link hygiene | Copy both the file link and the prototype link; confirm neither exposes edit rights |
 | Incognito test | Open the link in a private window with no Figma login: file loads, prototype plays, S05 → S18 click-through complete without a dead end |
 | Record | Link stored in the index and in the session file; feeds README/submission template (PRD 08 §4) |
@@ -57,7 +67,8 @@ Wire the click-through prototype so a reviewer can go from **Home to Booking Suc
 
 ### Build
 - [ ] Kickoff questions answered.
-- [ ] `05 Prototype` page (or flow) built; starting frame set.
+- [ ] Wiring table written by Claude and approved by the user.
+- [ ] `05 Prototype` page (or flow) built by the user from the table; starting frame set.
 - [ ] Every P0 interactive element wired; no dead ends on the main path.
 - [ ] Overlays, sheets, back navigation wired.
 - [ ] (Optional) tablet and dark demos wired.

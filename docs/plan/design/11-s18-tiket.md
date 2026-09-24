@@ -5,7 +5,7 @@
 | **Status** | ⬜ Not started |
 | **Priority** | P0 |
 | **Owns screens** | S18 |
-| **Owns components** | (screen-local): `SuccessHeader`, `QrCode` placeholder, `TicketUnitRow`; P2 `ShareTicketRow` (optional) |
+| **Owns components** | (screen-local): `SuccessHeader`, `QrCode` pattern; P2 `ShareTicketRow` (optional). `TicketUnitRow` moved to step 04 (built inside `TicketCard`, decided at the step 04 kickoff) |
 | **PRD refs** | [04 S18 + P2 extras](../../../prd/04-screens.md), [03 identifiers & status](../../../prd/03-user-flows.md), [06 S18 row + stress screens](../../../prd/06-responsive-layout.md) |
 | **Pen location** | Flows row `S18` |
 | **Depends on** | Steps 02–04, 10 |
@@ -17,7 +17,7 @@ Design the flow's terminal success screen: confirmation, booking code + QR, perf
 
 ## Inputs
 
-- `TicketCard` (phone + landscape variants), `UnitStatusBadge` ("Terjadwal"), `TsButton` (primary + secondary), `TsSnackbar`.
+- `TicketCard` (phone + landscape variants, with `TicketUnitRow` and a QR slot placeholder tile, step 04), `UnitStatusBadge` ("Terjadwal"), `TsButton` (primary + secondary), `TsSnackbar`.
 - Identifiers: `TS-260929-0417`, units `-A`, `-B`, `-C`. Demo booking from step 01.
 - Business note: total is "bayar di bengkel" (paid later).
 
@@ -55,8 +55,8 @@ Design the flow's terminal success screen: confirmation, booking code + QR, perf
 | Component | Notes |
 |---|---|
 | `SuccessHeader` | Check badge + "Berhasil!" + booking code (copy affordance) |
-| `QrCode` | Placeholder pattern at ≥ scannable size with quiet zone, light + dark (QR always dark-on-light, even in dark mode — annotate) |
-| `TicketUnitRow` | Motor name, unit code (-A), service summary, `UnitStatusBadge` |
+| `QrCode` | Placeholder pattern at ≥ scannable size with quiet zone, light + dark (QR always dark-on-light, even in dark mode — annotate); replaces the QR slot tile of `TicketCard` (step 04) by override |
+| `TicketUnitRow` | **Built in step 04** (inside `TicketCard`): motor name, unit code (-A), service summary, `UnitStatusBadge`. Used here as an instance, not redrawn |
 | `ShareTicketRow` (P2) | Share ticket + add to calendar |
 
 ### Content & copy
