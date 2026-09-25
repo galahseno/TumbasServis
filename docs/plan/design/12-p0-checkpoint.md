@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | ✅ Approved 2026-09-24 |
 | **Priority** | P0 gate |
 | **Owns screens** | — |
 | **Owns components** | — |
@@ -14,20 +14,28 @@
 
 ## Goal
 
-Per-step reviews judge screens in isolation. This step judges the **mandatory flow as a whole** (Home → Booking Success): consistency, continuity of data, dark mode, hygiene — and decides whether to start P0 Figma conversion early or continue with P1. After this step the P0 design is submission-grade on its own.
+Per-step reviews judge screens in isolation. This step judges the **mandatory flow as a whole** (Home → Booking Success): consistency, continuity of data, dark mode, hygiene. After this step the P0 design is submission-grade on its own and ready to be built in Flutter.
+
+**Pencil-only.** Decided at the kickoff (2026-09-24): all Figma work (test import, HTML export, plugin check, early-conversion gate) moves to steps 20–21, which now run **after the Flutter app build**.
 
 ## Inputs
 
 - All P0 frames from steps 05–11, all components from steps 02–04.
-- Step 01's plugin verdict, Starter workaround and effort estimate; step 04's test-import record; the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility).
+- The `/better-interface` reports of steps 05–11 (their LOW lists feed the systemic-LOW sweep).
 
-> **Hand-off from step 11 (2026-09-24):** S18 carries a **real, decodable QR** built from ~114 small rectangles per code (tile + modules bound to primitives, dark-on-light in both themes). The S18 test import (phone light + dark) must check that html2figma keeps the modules crisp (no anti-aliased blur, no merged or dropped rectangles) and that the code still scans from the Figma render. S18 has no app bar and a flat sticky footer; the Tablet-P bar is a full-width strip with a 560 dp inner column. Exports: `design/pencil/exports/step11/` (20 PNG + `INDEX.md`).
+> **Hand-off from step 11 (2026-09-24):** S18 carries a **real, decodable QR** (~114 small rectangles per code, tile + modules bound to primitives, dark-on-light in both themes). When the Figma import finally runs (step 20) it must check that html2figma keeps the modules crisp (no anti-aliased blur, no merged or dropped rectangles) and that the code still scans from the Figma render. S18 has no app bar and a flat sticky footer; the Tablet-P bar is a full-width strip with a 560 dp inner column. The step 11 PNG exports are not on disk (only `step02` and `step04` exist); step 19 exports the full set.
 
-## Open questions (ask at kickoff)
+## Kickoff decisions (2026-09-24, 2 interview rounds)
 
-1. **Early Figma gate.** Based on the P0 test import below (fidelity, manual repair effort, plugin still working): convert P0 now (jump to step 20 scoped to P0, then resume P1) — or continue P1 first? Show the effort estimate and remaining days.
-2. **Flow board form.** Copies of default phone frames in journey order with arrows (may go stale; refreshed in step 19) vs PNG exports placed as image fills (static). *Recommended: copies, labelled with source frame names.*
-3. **Any P0 screen the user wants redesigned** now that the whole flow is visible (cheaper here than after Figma conversion).
+| # | Topic | Decision |
+|---|---|---|
+| 1 | Figma | **All Figma work deferred** to after the app build: no P0 test import, no HTML export + Chromium pre-check, no plugin-version note, no incognito-link check, no early-conversion gate. Steps 20–21 stay in the plan. Consequence: html2figma fidelity, the Starter Draft / variable-mode limits and the public link stay unverified until step 20 |
+| 2 | Flow board | Live **copies** of the default phone light frames in journey order, numbered arrows, entry-point notes (Home CTA, Garage, Workshop detail standalone, Rebook), each labelled with its source frame name. May go stale; refreshed in step 19 |
+| 3 | Fix authority | Apply HIGH + MEDIUM across approved screens, log each fix in the owning step's Session log, report at the review gate |
+| 4 | Old LOW findings (steps 05–11, ~40) | Fix the **systemic** ones now (repeat across steps or affect flow consistency); single-frame LOWs stay for the step 19 audit |
+| 5 | 11 px labels | **Raise `Label Small` to 12**: `type-label-sm-size` 11 → 12, `type-label-sm-lh` 1.4545 → 1.3333 (same 16 px line, no vertical reflow), `type-label-sm-tracking` 0.275 → 0.3. The text-size scan stays "no text < 12". Label Small then equals Label Medium in size (both roles kept for PRD 02 parity) |
+| 6 | PNG exports | Flow board + every P0 frame edited by a fix → `design/pencil/exports/step12/` + `INDEX.md`; the full set is exported at step 19 |
+| 7 | Redesign wishes | None yet; asked again at the review gate once the flow board is visible |
 
 ## Scope
 
@@ -49,52 +57,94 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 
 - `P0 Flow Board`: default phone light frames in journey order with numbered arrows and entry-point annotations (Home CTA, Garage, Workshop detail, Rebook).
 - Coverage table generated by script: expected frames (from each step's matrix) vs existing frames by name — no gaps.
-- Findings list, fixes applied across earlier steps (each logged against the owning step file's Session log).
-- Decision on early Figma conversion.
-
-### P0 Figma test import (user-run)
-
-Third Route B checkpoint. After the flow-level fixes, Claude exports (`html-css`, one frame per file) the `P0 Flow Board`, three default phone frames (S05, S11, S18) in light **and** dark, and one tablet frame (S11 landscape), pre-checks each HTML in Chromium against the Pencil PNG, and the user drags them into html2figma in a scratch Figma Draft. Claude has no Figma access, so the user sends screenshots and Claude compares them side by side with the Pencil PNG exports: spacing, type, radius, shadow/glass, icons, illustrations, dark frames. Also confirm html2figma still works and note its version (a free third-party plugin can change before step 20), and check that the Draft's public link opens in incognito. Outcome feeds Q1 above and the *Figma-plugin compatibility* rules.
+- `Label Small` 12 px applied (variables + literal-size stress copies) with wrap / overflow re-check.
+- Findings list, fixes applied across earlier steps (each logged against the owning step file's Session log), systemic LOWs from steps 05–11 cleared.
 
 ## Checklist
 
 ### Build
-- [ ] Kickoff questions answered.
-- [ ] Coverage script run; missing frames created (logged in the owning steps).
-- [ ] Flow board built with entry points annotated.
-- [ ] Continuity audit: prices/codes/motors identical across S11/S16/S18 (script over text nodes).
-- [ ] Dark sweep done for every P0 dark frame.
-- [ ] P0 test import run by the user; screenshots compared with Pencil PNG exports; plugin version noted; new compat rules logged in `00-index.md`.
-- [ ] Early-Figma decision recorded in the index decision log.
+- [x] Kickoff questions answered (2 rounds, 7 questions).
+- [x] Docs updated for the Figma deferral (`00-index.md`, `19`, `20`).
+- [x] `Label Small` → 12: variables, literal 11 nodes, ×1.3 stress copies re-scaled, badge / chip / ticket wrap re-checked.
+- [x] Coverage script run; missing frames created (logged in the owning steps).
+- [x] Systemic LOW sweep (steps 05–11) done and logged.
+- [x] Continuity audit: prices/codes/motors identical across S11/S16/S18 (script over text nodes).
+- [x] Consistency and copy audits done.
+- [x] Dark sweep done for every P0 dark frame; tablet sweep done.
+- [x] Flow board built with entry points annotated.
 
 ### Quality (automated, run in `execute`)
-- [ ] Clipping check over all P0 frames → zero `problems`.
-- [ ] Raw-hex audit over the whole document → zero.
-- [ ] Detached-instance / default-name scan → zero.
-- [ ] Text-size scan: no body text < 12 sp, no touch-target instance < 48dp.
+- [x] Clipping check over all P0 frames → zero `problems`.
+- [x] Raw-hex audit over the whole document → zero.
+- [x] Detached-instance / default-name scan → zero.
+- [x] Text-size scan: no text < 12 sp, no touch-target instance < 48dp.
 
 ### /better-interface
-- [ ] Run `/better-interface` on the **complete P0 flow** (S05 → S18) — the skill's "one complete flow" scope — across accessibility, layout, writing, typography, color, UI. State the boundary: P1 screens excluded.
-- [ ] Report recorded below (≤ 15 findings, systemic ones consolidated); HIGH/MEDIUM fixed in the owning frames; LOW listed; verdict `Approve`.
+- [x] Run `/better-interface` on the **complete P0 flow** (S05 → S18) — the skill's "one complete flow" scope — across accessibility, layout, writing, typography, color, UI. State the boundary: P1 screens excluded.
+- [x] Report recorded below (≤ 15 findings, systemic ones consolidated); HIGH/MEDIUM fixed in the owning frames; LOW listed; verdict `Approve`.
 
 ### Review gate
-- [ ] Status set to 🔵; user shown: flow board, findings + fixes, dark sweep, tablet sweep, decision on Figma timing.
-- [ ] Review rounds logged; user approval recorded (date + quote).
+- [x] Status set to 🔵; user shown: flow board, findings + fixes, dark sweep, tablet sweep, `Label Small` before / after; redesign question asked.
+- [x] Review rounds logged; user approval recorded (date + quote).
 
 ### Close (only after approval)
-- [ ] PNG export of the flow board + updated P0 frames to `design/pencil/exports/step12/`.
-- [ ] Claude session file written.
-- [ ] Tracker set to ✅; decision log updated.
+- [x] PNG export of the flow board + edited P0 frames to `design/pencil/exports/step12/` (+ `INDEX.md`).
+- [x] Claude session file written.
+- [x] Tracker set to ✅; decision log updated.
 
 ## /better-interface report
 
-_Not run yet._ Paste the report block from [`00-index.md`](00-index.md#templates).
+**Scope:** the complete P0 flow S05 → S10 → S11 → S13 → S14 → S15 → S16 → S17 → S18 — 202 P0 frames (139 light, 63 dark; phone, Tablet-Portrait, Tablet-Landscape, Expanded, stress) + the `P0 Flow Board` `abxMC`; **P1 screens excluded** · **Stack/conventions:** Pencil, variables per 00-index, PRD 02 tokens · **Convention docs found:** 00-index.md, prd/02, prd/06, the step 05 – 11 reports (their LOW lists)
+
+| Domain | Evidence inspected | Result |
+|---|---|---|
+| Accessibility | Contrast over 63 dark + 139 light frames (10,063 text + icon nodes, 0 failures; the logo `Monogram` is a logotype, exempt) · touch targets: every control-named node in 202 frames ≥ 48 dp (0 below) · reason line under every disabled CTA in 22 phone light frames · semantics notes (S05, S16, S18 read) · non-color cues on slot / status chips · destructive + exit dialogs · stress frames for S05 S10 S11 S13 S14 S15 S16 S18 | 1 LOW |
+| Layout | 18 default Tablet-P / Tablet-L frames against the PRD 06 rows · stepper wrap rhythm (72 dp on S10 / S13 / S15 / S16, 74 dp on S11) · 7 bottom bars side by side · clipping over 273 roots (only intentional viewports, 0 real) · wrap scan over 2,608 `Label Small` nodes after the change | 1 MEDIUM (fixed), 1 LOW |
+| Writing | 5,335 visible strings (light frames): `Rp`, dates, times, English words, "slot", Title Case, double spaces · dialogs and error banners (fix named, verb-first) · reason lines · vocabulary (`motor` / `jam` / `estimasi`) · capitalization | 3 MEDIUM (fixed), 2 LOW |
+| Typography | Every text ≥ 12 (only the logo monogram at 11) · titles Title Large 20 at y 43 on S10 – S17 · 126 ×1.3 nodes re-scaled · role table after the change | 1 LOW |
+| Color | Raw hex 0 over 12,923 nodes · contrast above · static icon tile recipe · one filled action per view on S10 – S18 | 1 LOW |
+| UI | 7 bottom bars, app bars S10 – S17, `Time Row` chip restructure, arrows and entry cards of the board · motion is annotation-only in Pencil | Clear |
+
+| Severity | Domain | Location (frame · node id) | Before | After | Why |
+|---|---|---|---|---|---|
+| MEDIUM | Writing | S17 (9 frames) footer: `Counter` `SWrZj/O1pECf`, `EsBxt/…`, `VKnpR/…`, `Uqzat/…`, `E4DD0/…`, `NKC6v/…`; CTA `Label` `SWrZj/DOn1Z/zZjKm` + 8 (incl. Loading and Single Motor `c1scCE` `vBAMC/Gj8ps/Hi1xz`) | "Total Rp385.200" · CTA "Pakai voucher" (Single Motor: counter "Tidak pakai voucher" beside "Pakai voucher") | "Total estimasi Rp385.200" · CTA "Terapkan"; note `Mpd6M` updated | S16 / S18 label every price "estimasi"; the CTA contradicted the chosen option ("Tidak pakai voucher"); "Terapkan" is true for both. Closes the step 10 LOW. **Fixed** |
+| MEDIUM | Layout | `SlotChip` masters `mONRh` `i7C4p` `lgGhs` `JnDPu` `IKMKa`; S15 Split One Complete `OTfUk`, Split All Complete, Split Sibling Conflict (+ dark): 11 captions | Status Row = icon + fixed-width caption (74 dp shared, 69 dp split); at 12 px "Sisa 2 motor" is 73 dp → wraps in split, fits by 1 dp in shared | `Time Row` (status icon + time, centered) above a full-width caption (87 – 92 dp); chip height still 54; 0 visible wraps in 2,608 nodes | The `Label Small` 12 px change exposed a 1 dp fit: a caption that wraps in one chip breaks the equal-height grid. **Fixed** |
+| MEDIUM | Writing | `BookingStepper` masters `GvfM2`, `V3eIvx` `txFbl` `l8Neo1` `E3Z8e` (87 resolved nodes on S13, S15, S16, tablets, dark); notes `FndpN` `F4IBq` | "Langkah 3 dari 4 · Bengkel & Jadwal" | "… · Bengkel & jadwal" | One capitalization policy: S16's card title and every other label are sentence case. **Fixed** |
+| MEDIUM | Writing | S16 Error Slot Invalid (phone, dark, Tablet-P, Tablet-L): `CapacityBanner` body `F2Prge/EthTu`, `yFBvB/EthTu`, `R95Thc/EthTu`, `zJdoJ/EthTu` | "Tersisa 2 tempat di Sel, 29 Sep · 09.00." | "Tersisa 2 motor di Sel, 29 Sep · 09.00." | S15 chips say "Sisa n motor" and the banner title "muat 3 motor"; capacity counts motors, "tempat" is a third word for it. **Fixed** |
+| LOW | Color | `WorkshopSummaryRow` `WyfWQ`, `VoucherRow` `A9ZWl` `lOURc` icon tiles (S15, S16 all frames) | `accent-soft` tile + `text-on-accent-soft` icon = the selected-state recipe on a static icon | `surface-inset` tile + `text-body` icon (`y2k834` `JHApZ` `mGWZ5`) | One color, one meaning: the tint marks selection elsewhere in the same screen (steps 04 / 09 / 10). **Fixed** (systemic LOW) |
+| LOW | Writing | `TicketActions` Tracking Disabled masters `iQF2u` `qUBFy` (S18 Loading, 8 frames) | "Tiket sedang dibuat" beside the caption "Membuat tiket…" | "Aktif setelah tiket dibuat" | A disabled reason states what unlocks it (step 11 LOW). **Fixed** |
+| LOW | Typography | `type-label-sm-*` vs `type-label-md-*` (`LveOX`, `LqAAP`) | Label Small 12 / 16 / 600 / 0.3 = Label Medium after the raise | Keep both roles (PRD 02 parity) but map `labelSmall` and `labelMedium` to one `TextStyle`; PRD 02 update in step 19 | Two roles that render the same are a redundant step in the scale. **Left for you** |
+| LOW | Accessibility | Loading frames S10 `…/Loading/Phone`, S14, S15, S17 and S16 Confirm Loading: disabled CTA, no reason line (S16 Loading and S18 Loading have one) | Disabled control under a skeleton says nothing | Add `Semantics(value: "Memuat")` to the annotation, or a reason line "Memuat…" like S16 | Every disabled control explains itself; loading is announced (notes only in S16 / S18). **Left for you** |
+| LOW | Color | S05 `PromoBanner` CTA `cUKfM` (two filled compact buttons beside the booking CTA) | Filled Primary compact ×2 competes with "Mulai booking" | Ghost / text button with chevron (needs no 3 : 1 boundary) | One filled action per view; carried from step 05, the Outline swap fails 2.24 : 1 on dark `accent-soft`. **Left for you** |
+| LOW | Layout | Carried: `FilterChipRow` / `VehicleTabRow` visual inset (S11, S13); tablet column balance (S14 standalone Tablet-L, S15 Tablet-L, S17 Tablet-P) | Chip visuals 6 dp inside the hit area; columns end 240 – 460 dp apart | Step 19 pass | Edge alignment; whitespace under the shorter column. **Left for you** |
+| LOW | Writing | `Status Caption` `IZ7z3` (S05 `ActiveBookingCard`) | "1 motor masih Diperiksa" | "1 motor masih diperiksa" (the badge keeps the capital) | Status names are capitalized as badges, sentence case inside a sentence. **Left for you** |
+
+**Verification:** *Passed* — `Label Small` wrap scan before / after (2,618 → 2,608 token-bound nodes; 14 baseline wraps; 0 visible new wraps after the chip fix); ×1.3 literal sizes 14.3 → 15.6 (126 nodes, 0 left); clipping over 273 roots (0 real; the S18 notes wrapper was a stale 384 dp height, fixed to 426); raw hex 0 / 12,923 nodes; unnamed 0 (generated art internals only); detached 0; placeholders 0; text < 12 → 0 (logo monogram exempt); contrast 0 failures over 202 frames; touch targets 0 below 48 dp; copy scans 0 hits; screenshots of the chips, S17 footer (Populated and Single Motor), the S16 slot banner, the stepper caption, the `TicketActions` reason line, the icon tiles and the flow board parts. **Not verified:** keyboard focus order and visible focus ring (annotation + specimens only), real motion and `reduce-motion` behavior, tabular figures, screen-reader output, Flutter rendering, any Figma import (deferred).
+**Verdict:** Approve
+**Fixes applied:** 4 MEDIUM (S17 footer copy, `SlotChip` `Time Row`, stepper caption case, S16 "tempat") + 2 systemic LOW (static icon tiles, S18 reason wording) + `Label Small` 12 · **LOW left for user:** Label Small = Label Medium, loading-state reasons, `PromoBanner` CTA weight, chip inset / column balance, mid-sentence status capital.
 
 ## Review rounds
 
-_None yet._
+#### Round 1 — 2026-09-24
+- **Frames shown:** `P0 Flow Board` `abxMC` (9 copies, arrows, entry cards A – D), the 18 default Tablet-P / Tablet-L frames, `Label Small` before / after (chips, badges, ×1.3 stress), the `/better-interface` report (11 findings, 4 MEDIUM fixed), the dark and light contrast sweeps, the open questions (redesign wishes, dark copies for 7 real states).
+- **User feedback:** "approve" (no redesign requested, no dark copies requested for the 7 states the step matrices skipped).
+- **Changes made:** none after the gate.
+- **Outcome:** approved.
 
 ## Session log
 
 | Time | Action | Result / node ids |
 |---|---|---|
+| — | Kickoff | 2 interview rounds, 7 decisions above; Figma deferred to after the app build; read-only Pencil check: P0 frames S05 15 / 5 dark, S10 19 / 8, S11 33 / 12, S13 14 / 6, S14 11 / 5, S15 24 / 7, S16 23 / 10, S17 9 / 4, S18 15 / 6; `type-label-sm-size` = 11 is the only sub-12 role |
+| 2026-09-24 | Docs for the Figma deferral | `00-index.md` (intro, decision log row, Figma import cadence, compat rules line, cut-line paragraph, risks ×4, tracker 🟡), `19` (compat row, conversion manifest), `20` (depends on, inputs, Q1, Q6) |
+| 2026-09-24 | Baseline before the token change | 2,618 resolved 11 px text nodes (2,608 token-bound, 10 literal); 14 already wrapped (height > 17); 12 px baseline not compared by id (416 legitimately multi-line) |
+| 2026-09-24 | `Label Small` 11 → 12 | `SetVariables` `type-label-sm-size` 12 · `-lh` 1.3333 · `-tracking` 0.3 (same 16 px line); `SectionHeader` `Index` `Gpvrl` (literal 11) bound to the tokens; 126 literal 14.3 nodes in 11 ×1.3 stress frames (`d13If` `oleh5` `w4NaX` `XDfNp` `q2ueR` `GvbAS` `IhfgI` `fNgNv` `GheTy` `x8mnIG` `EkS65`) re-scaled to 15.6; `Monogram` (`dAuv8`, 10 nodes on the Logo boards) stays 11 as logo art |
+| 2026-09-24 | Wrap check after the change | 19 new wraps: 8 hidden (`enabled:false` reason badges) and **11 visible** — `SlotChip` `Status Label` "Sisa n motor" in the S15 Split frames (chip 99 dp wide, label 69 dp < 73 dp text). Shared frames fitted by 1 dp only. **Fix (SlotChip masters `mONRh` `i7C4p` `lgGhs` `JnDPu` `IKMKa`):** new `Time Row` (status icon + time, centered) above the label, so the caption takes the full 87 – 92 dp; chip height unchanged (54). Re-scan: 0 visible new wraps in 2,608 label nodes. Logged against step 09 |
+| 2026-09-24 | Flow-level scans (read-only) | Coverage matrix from frame names: all step matrices present; phone-dark gaps vs the index rule are the step matrices' own choices (S05 long names, S11 Long Content, S14 Chosen / Closed, S15 D+0 / Split All Complete / Split Sibling Conflict, S17 Empty / Single Motor, S18 P2 / snackbar). Continuity: prices, plates, codes, dates identical S05 → S18 (85.000 + 143.000 + 200.000 = 428.000 → −42.800 → 385.200). Consistency: titles Title Large 20 at y 43 on S10 – S17, CTA 70 dp above the frame bottom (S11 = glass pill, 78). Copy: 5,335 visible strings (light frames), 0 hits (Rp format, "slot", English words, colon times, Title Case). Contrast: 63 dark frames, 3,075 text + icon nodes checked, 0 failures. Hygiene: raw hex 0, unnamed 0 (only generated-art internals), detached 0, placeholders 0, text < 12 → only the logo monogram, touch targets < 48 dp → 0. Clipping over 273 roots: only intentional viewports / specimens + one stale note height (S18 notes wrapper `WaJs1`, fixed: notes 384 / 384 / 426 / 300 / 321, wrapper 426; step 11) |
+| 2026-09-24 | Tablet sweep | 9 Tablet-Portrait + 9 Tablet-Landscape default frames screenshotted: PRD 06 layouts hold (S10 2-col / 3-col, S11 rail · form · pane, S13 list + preview, S15 calendar + slots, S16 two-pane, S17 1-col / 2-col, S18 ticket + status panel), no letterboxed phone layouts, no clipping |
+| 2026-09-24 | Systemic-LOW sweep | 34 LOWs from steps 05 – 11 classified. Fixed: 11 px labels (5 steps); static icon tile on `accent-soft` = selected recipe (steps 04 / 09 / 10): `WorkshopSummaryRow` `WyfWQ` and `VoucherRow` Empty / Applied `A9ZWl` `lOURc` now `surface-inset` + `text-body` icon (`y2k834` `JHApZ` `mGWZ5`), `VoucherCard` / `TsDialog` Confirm Save keep `accent-soft` (semantic tint, not a static tile in a selectable row); loading reason wording: S18 `TicketActions` Tracking Disabled `iQF2u` `qUBFy` "Tiket sedang dibuat" → "Aktif setelah tiket dibuat" (8 frames). Left for step 19 (single-frame or design-choice): tablet column balance (S14 standalone, S15 Tablet-L, S17 Tablet-P, S05 empty), chip visual inset in `FilterChipRow` / `VehicleTabRow`, S17 CTA "Pakai voucher" vs "Tidak pakai voucher", S15 D+0 footer duplication, S16 Confirm Loading dimming, S16 Ubah gap, wrapped reason-badge radius, S17 Empty next action, S18 ×1.3 orphan and Salin offset, nickname cap, `PromoBanner` CTA weight, `Hapus draft` style |
+| 2026-09-24 | `P0 Flow Board` | Root `abxMC` at (0, −2420) above the Cover, 4200 × 2260: header (`SectionHeader` ref), entry cards A – D (`Entry A` `EwV9a` over S05, `Entry Stack` `h85fKH` over S10), 9 labelled copies (`Board · S05 …` `m5XmJ`, `SttOW`, `fu3X8`, `ESNya`, `l77f5w`, `p5iNNO`, `byVNA`, `ewTlf`, `dA3Zj`), 8 arrows (7 and 8 grey = optional). Clipping 0. **Pencil fact:** right after the build every new (non-`Copy`) node screenshot came back blank and its bounds were shifted +50 dp in y; the same nodes rendered and measured correctly after a `get_app_state` call and one more `execute` — call `get_app_state` before screenshotting fresh inserts |
+| 2026-09-24 | Contrast audit over the light frames | 139 light P0 frames (57 + 25 + 39 + 18 roots), 6,988 text + icon nodes checked, 0 failures except the `TsLogo` monogram (3.45 : 1, logotype, exempt) |
+| 2026-09-24 | `/better-interface` (flow-level) | 11 findings (0 HIGH, 4 MEDIUM, 7 LOW), verdict Approve; fixed: S17 footer copy (9 frames), `SlotChip` `Time Row`, stepper "Bengkel & jadwal", S16 "tempat" → "motor", static icon tiles, S18 reason wording; `Foundations / Type` spec text `dHd9g` `s4cw5` and the badge notes `TaRnV` `r4974p` updated to 12 px; owning steps 02, 04, 09, 10, 11 logged; `19` gets a "PRD corrections collected in step 12" block |
+| 2026-09-24 | Review gate | Status 🔵; board, findings + fixes, sweeps and the two open questions shown; user replied "approve" |
+| 2026-09-24 | Close | 91 PNG (`abxMC` board + 90 frames edited by a fix: the ×1.3 / 360×640 stress frames, S15 `SlotChip`, S16 / S17 / S18 copy and tile fixes, default-state frames with the sentence-case stepper label) + `INDEX.md` to `design/pencil/exports/step12/` (19 MB, every PNG listed, checked by script); exported S17 `ThHnc` and the board read back. Full re-export at step 19. Session file `14-design-step12-p0-checkpoint.md`; tracker ✅; decision log row in `00-index.md`. No commit |

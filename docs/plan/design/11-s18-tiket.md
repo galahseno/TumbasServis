@@ -214,3 +214,4 @@ The Flows – Tablet block moved down 4,000 dp (anchor y 50000). Build notes: Lo
 | — | `/better-interface` | 3 MEDIUM fixed (focus specimens, Tablet-L alignment, motion note), 3 LOW listed; dark sheet re-copied `M9j5Hs`, dark Tablet-L re-copied `kDvWq` |
 | — | QR proof | 7 PNG exports decoded to the expected codes |
 | — | Review gate + close | User approved ("approve"); 20 PNG + `INDEX.md` exported to `design/pencil/exports/step11/`; session file `13-design-step11-s18-tiket.md` written; tracker ✅ |
+| 2026-09-24 | Step 12 fixes | `TicketActions` Tracking Disabled masters `iQF2u` `qUBFy`: reason "Tiket sedang dibuat" → "Aktif setelah tiket dibuat" (8 frames; closes the wording LOW); notes wrapper `WaJs1` height 384 → 426 with explicit note heights (`SLnGC` had grown to 426 after the step 11 motion-note fix and was flagged "partially clipped"). The step 11 PNG folder is no longer on disk (`design/pencil/exports/` holds only `step02` and `step04`) |

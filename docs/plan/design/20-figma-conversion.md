@@ -9,7 +9,7 @@
 | **Converts** | All screens, components and tokens approved in steps 02–18 |
 | **PRD refs** | [02 Figma documentation spec](../../../prd/02-brand-design-system.md) (pages, variables, naming, layer hygiene, base frame sizes), [08 M1, M2, B5](../../../prd/08-deliverables-acceptance.md) |
 | **Pen location** | Source only; nothing new is designed here (Claude may adjust Pencil to make a re-export cleaner) |
-| **Depends on** | Step 01 (Route B approved, Starter decision), steps 04 and 12 (test imports), step 19 (conversion manifest) — or step 12 if early P0 conversion was chosen |
+| **Depends on** | Step 01 (Route B approved, Starter decision), step 04 (test import), step 19 (conversion manifest), and the **Flutter app build** (decided at the step 12 kickoff, 2026-09-24: Figma runs after all design and the app build; no early P0 conversion) |
 | **Claude session** | `docs/claude-session/22-design-step20-figma-conversion.md` (written after approval) |
 
 ## Goal
@@ -20,19 +20,19 @@ Get the approved Pencil design into Figma as a documented file matching the PRD 
 
 ## Inputs
 
-- Step 01 verdict (Route B approved), Starter decision, Figma-compat rules in [`00-index.md`](00-index.md#figma-plugin-compatibility); step 04 and step 12 test-import records (html2figma version, options that worked).
+- Step 01 verdict (Route B approved), Starter decision, Figma-compat rules in [`00-index.md`](00-index.md#figma-plugin-compatibility); step 04 test-import record (html2figma version, options that worked). No step 12 test import exists (deferred to this step), and the step 05–11 PNG exports are not on disk: export them again from Pencil.
 - Step 19 conversion manifest (components + variants, styles/variables, screens with node ids).
 - Pencil PNG exports (`design/pencil/exports/`) and HTML exports (`design/pencil/exports/html/`) with their `INDEX.md` (node id ↔ frame name).
 - Figma target file, owned by the user (a Draft on Starter unless the plan was upgraded).
 
 ## Open questions (ask at kickoff)
 
-1. **Tool status** — is html2figma still working and the same version as in step 12? If it changed, re-test one frame first. If it broke: Route C (Claude writes a Figma development plugin from a Pencil JSON manifest) or manual rebuild.
+1. **Tool status** — is html2figma still working and the same version as in the step 04 test import? Re-test one frame first, and also the step 11 hand-off: S18's real QR (~114 rectangles per code) must stay crisp and still scan from the Figma render; confirm the Draft's public link opens in incognito. If it broke: Route C (Claude writes a Figma development plugin from a Pencil JSON manifest) or manual rebuild.
 2. **Deliverable location and plan** — Draft (Starter default) or a team file after an upgrade? Confirm the Light/Dark approach (two collections vs real modes) and that the Draft's public link opens in incognito.
 3. **Icons** — html2figma delivers icons as unlinked vectors. Keep as-is, or turn each used icon into a component?
 4. **Fonts** — Exo 2 with 400 / 600 / 800 available in the user's Figma.
 5. **Review cadence** — one gate at the end, or gates after 20d and 20e (recommended)?
-6. **Scope split** — convert P0 first (if step 12 chose early conversion) and P1 later?
+6. **Scope split** — convert P0 first and P1 later, or everything in one pass? (Early P0 conversion was dropped at the step 12 kickoff.)
 7. **Route C** — if the estimate for hand-rebuilding components and variables is too high, should Claude write the Figma development plugin instead?
 
 ## Scope

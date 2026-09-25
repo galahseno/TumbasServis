@@ -96,6 +96,35 @@ Verify the finished Pencil design is **complete, consistent and convertible** be
 - **Demo content:** 5-unit specimen `TS-261002-0418` (Jum, 2 Okt 2026 · 08.00; a 5-motor shared slot needs an empty hour) with `-D` Supra X 125 and `-E` Ninja 250 for the 360×640 stress frame only.
 - **`prd/02` inventory:** add `SuccessHeader`, `QrCode`, `TicketActions`, `ShareTicketRow` (P2); `TicketCard` gains a copy button, the real QR and a loading state; `TicketUnitRow` gains a slot line; `TicketCard Units Panel` (the Tablet-L status list) and its loading state.
 
+### PRD corrections collected in step 12 (2026-09-24; apply in this step after approval)
+
+- **PRD 02 type table:** `Label Small` is **12 / 16, SemiBold, 0.025em** (was 11 / 16); it now equals `Label Medium`, so map Flutter `labelSmall` and `labelMedium` to one `TextStyle` (or drop one role). No text in the product is below 12 sp (the `TsLogo` monogram inside the mark is logo art, exempt). `Foundations / Type` spec text and the badge note were updated in Pencil.
+- **PRD 04 S17:** the footer counter reads "Total estimasi Rp385.200 · Hemat …" and the CTA is **"Terapkan"** (replaces "Pakai voucher", which contradicted "Tidak pakai voucher" and the Single Motor state); the promo / banner CTA on S05 keeps "Pakai voucher".
+- **PRD 04 stepper / S13 / S15:** step 3 label is sentence case, "Bengkel & jadwal" (caption "Langkah 3 dari 4 · Bengkel & jadwal").
+- **PRD 04 S16 slot-invalid copy:** capacity is counted in motors — "Tersisa 2 motor di Sel, 29 Sep · 09.00", never "tempat".
+- **PRD 04 S18 loading:** the disabled "Lacak status" reason is "Aktif setelah tiket dibuat".
+- **`SlotChip` (PRD 02 inventory):** status icon sits beside the time (`Time Row`), the caption takes the full chip width; captions are "Sisa n motor" / "Penuh" / "Dipilih" / "Tersedia".
+- **Type-scale audit note (for step 19 track "Token integrity"):** text-size scan rule = nothing under 12 sp, exempt logo art (`Monogram`); `Foundations / Logo` keeps its 11 px specimen.
+- **Left over from step 12 for this audit:** loading-state disabled CTAs without a reason line (S10, S14, S15, S17 Loading), `PromoBanner` CTA weight on S05, chip visual inset (`FilterChipRow`, `VehicleTabRow`), tablet column balance (S14 standalone Tablet-L, S15 Tablet-L, S17 Tablet-P), mid-sentence status capital ("1 motor masih Diperiksa"). The step 05 – 11 PNG folders are not on disk: export the full set here.
+
+### PRD / token items collected in step 13 (2026-09-25; apply in this step after approval)
+
+- **Token `focus-ring` (orange-500) on `accent-soft`:** measured 2.92 : 1 in light (< 3 : 1 non-text minimum). Step 13 uses `text-on-accent-soft` for the `Lewati` ring on the S02 art band; decide here whether the shared token becomes orange-600 (≈ 4.1 : 1 on `accent-soft`) or the ring is set per surface, then re-check every focus specimen from steps 03 – 11 that sits on `accent-soft` (`PromoBanner` CTA, selected chips).
+- **PRD 04 S03 / S04:** "Ganti nomor" and resend are text links, built as `AuthLink` (48 dp, zero side padding); S04 shows the masked number on its own line with a "Ganti nomor" link, and a demo-mode line "Kode demo: 123456". Terms microcopy is two lines: "Dengan melanjutkan, kamu setuju dengan / Syarat & Ketentuan dan Kebijakan Privasi." CTA labels are sentence case: "Kirim kode OTP", "Verifikasi", "Lanjut" / "Mulai".
+- **PRD 04 S02:** onboarding titles are Headline Small (22) on phone with 1 – 2 line bodies (copy drafted in step 13); "Lewati" is hidden on slide 3.
+- **PRD 04 S04 (open):** "Verifikasi" is disabled until 6 digits (kickoff decision 9); `better-accessibility` recommends keeping submit enabled and validating on submit, so confirm the pattern app-wide (S11 / S16 use the same disabled-with-reason pattern).
+- **Track "Token integrity":** unnamed nodes in the audit are silhouette internals (`path` / `ellipse`, step 04); the audit scripts need `{resolveInstances:true}` on any frame with a replaced slot (see Pencil facts, step 13).
+
+### PRD / token items collected in step 14 (2026-09-25; apply in this step after approval)
+
+- **PRD 04 S07:** one add action only. The header "+" is the add action while the garage has motors (no FAB, no in-list add card); with an empty garage the "+" is hidden (title-only bar) and the empty-state CTA "Tambah motor" is the only action. In-service motors carry a status badge (icon + text); tapping a card opens S09. Tablet grid = 2 columns (Tab-P, content 720) / 3 columns (Tab-L). Check the *other* add entries for the same double-action rule: S05 garage strip "+" tile beside "Lihat semua", and S10 "Tambah motor lain" card.
+- **PRD 04 S08:** states are default, saving (spinner button, fields in the disabled style) and save error (inline banner + "Coba lagi"); "validating" = validate on blur / submit, CTA always enabled (S03 rule). Nickname max 20 characters with a counter (closes the step 06 LOW); plate auto-format `AB 1234 XY` with format and duplicate errors; year optional, 1990–2026; photo optional, silhouette by model category, chooser / permission are annotations. Model picker = bottom sheet (phone) / centered modal 560 (tablet) with brand groups and search. Back on a dirty form opens "Buang perubahan?" ("Lanjut mengisi" primary, "Buang").
+- **PRD 04 S09:** "Booking motor ini" is **disabled with a reason** ("Sedang dalam servis") plus a "Lacak servis" link → S20 when the motor is in a booking; "Hapus motor" stays enabled and opens the blocked dialog in that case. New `MotorDetails` card (Merek, Model, Jenis, Kapasitas, Tahun). History = active row + 3 latest past rows + "Lihat semua" → S19 pre-filtered to the motor; empty copy "Belum ada riwayat servis".
+- **PRD 06 S09 row:** Tab-L = hero + CTA + delete link in the left column (400), details + history in the right column (640); Tab-P = stacked, max 720, full-scroll capture.
+- **PRD 05:** `motor_models.json` = the 15 models listed in step 14 (Honda 6, Yamaha 5, Suzuki 4). **Ninja 250** (S10 sheet-only sport motor) and **Scoopy 110** are demo garage motors: add them to the model list or drop them from the S10 demo. `garage_seed.json` has 3 motors while the S05 / S07 demo shows a 4th (Supra X 125): decide which seed the Flutter demo uses.
+- **Inventory additions (for `prd/02`):** `TsAppBar / Type=Title, Actions=Add`, `VehicleSelectCard / Mode=Display` `State=In Service` / `State=Loading`, `MotorPhotoField`, `MotorModelPicker`, `MotorForm`, `MotorPreviewPane`, `MotorHero`, `MotorDetails`, `ServiceHistoryRow`, `HistorySection`, `FormErrorBanner` (already listed in the `00-index.md` inventory table).
+- **Left LOW from step 14 to decide here:** history rows 8 dp apart vs the 12 dp garage cards (list-gap rule), tabular figures for the nickname counter, a larger hero silhouette for wide panels, plate helper repeating its placeholder, a loading announcement for skeleton states. Token `focus-ring` on `accent-soft` (step 13) still open.
+
 ## Scope
 
 ### Audit tracks
@@ -113,7 +142,7 @@ Verify the finished Pencil design is **complete, consistent and convertible** be
 | Continuity | Demo data (motors, plates, codes, totals) across S05/S10/S11/S16/S18/S20/S23 | Identical |
 | Tablet | Every screen has PRD 06-conformant tablet frames | Per matrix |
 | Dark | Every dark frame required by the rules exists and passes contrast | Per matrix |
-| Figma compatibility | Check frames and components against the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility) (rules from the step 01 spike and the step 04 / step 12 test imports) | Zero violations |
+| Figma compatibility | Check frames and components against the *Figma-plugin compatibility* rules in [`00-index.md`](00-index.md#figma-plugin-compatibility) (rules from the step 01 spike and the step 04 test import; the step 12 test import was deferred to step 20) | Zero violations |
 
 ### `/better-interface` runs (one per feature group — respects the skill's scope-narrowing rule)
 
@@ -133,7 +162,7 @@ Each run: ≤ 15 findings, systemic root causes consolidated (token/component fi
 - Audit report (tracks + `/better-interface` runs) in this file.
 - PRD edit list applied after user approval (`prd/02` inventory + tokens + Figma dark-mode workaround, `prd/00` decision log; `prd/06` window classes already done in step 01).
 - Refreshed `P0 Flow Board`; full-document PNG export set.
-- Conversion manifest for step 20: component list with variants, style/variable list, screen list with node ids, plus the html2figma version and import options (Auto Layout on/off) that worked in the step 12 test import.
+- Conversion manifest for step 20: component list with variants, style/variable list, screen list with node ids, plus the html2figma version and import options (Auto Layout on/off) that worked in the step 04 test import (re-tested at the start of step 20, which runs after the app build).
 
 ## Checklist
 

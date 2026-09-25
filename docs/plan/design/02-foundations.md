@@ -69,7 +69,7 @@ All answered 2026-09-23 (interview with the user; every recommended option accep
 | Body Medium | 14 / 22 | 1.571 | 400 | 0 |
 | Body Small | 12 / 18 | 1.5 | 400 | 0 |
 | Label Large | 14 / 20 | 1.429 | 600 | +0.025em (+0.35) |
-| Label Small | 11 / 16 | 1.455 | 600 | +0.025em (+0.275) |
+| Label Small | 12 / 16 (was 11 / 16 until step 12) | 1.333 | 600 | +0.025em (+0.3) |
 
 ### Boards
 
@@ -205,3 +205,4 @@ Light row y 1620, dark copies y 5028 (`… · Dark`, `theme:{mode:"dark"}`); Fou
 | 2026-09-24 | Automated checks | clipping 0, raw hex 0, unnamed 0, placeholder 0; 1,089-text-node contrast audit clean except the logo monogram |
 | 2026-09-24 | `/better-interface` | 11 findings (0 HIGH, 4 MEDIUM, 7 LOW), verdict Approve; 3 MEDIUM fixed, 1 decision open |
 | 2026-09-24 | Fixes | Matrix +11 rows (12 added, 1 hypothetical row removed), resolutions, `focus-ring` token + specimen `H8com`, badge icons 16; dark header moved to (1360, 4880); `prd/02` `focus-ring` + `surface-hover` rules |
+| 2026-09-24 | Step 12 change (`Label Small`) | `type-label-sm-size` 11 → 12, `type-label-sm-lh` 1.4545 → 1.3333 (same 16 px line), `type-label-sm-tracking` 0.275 → 0.3; `SectionHeader` `Index` `Gpvrl` bound to the tokens; Label Small now equals Label Medium (12 / 16 / 600 / 0.3); PRD 02 type table (Label Small 11 / 16) to be updated in step 19 |
