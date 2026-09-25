@@ -219,3 +219,4 @@ Build decisions made while building (all inside the kickoff decisions unless mar
 | 2026-09-24 | `/better-interface` | 13 findings (1 HIGH, 5 MEDIUM, 7 LOW); HIGH + MEDIUM + 2 LOW fixed; frames re-measured, dark copies and stress frames regenerated; re-checks clean; verdict Approve |
 | 2026-09-24 | Review gate, round 1 | User asked to drop the promo pause / play button and approved: `PromoControls` masters and section deleted, 7 indicator rows restored, heights re-measured, derived frames + dark Home sheet regenerated (`HcsZK` `oleh5` `cqX7g` `W9lsjI` `k9oVN` `TFJWb` `Ty36e` `CjTfd`), all checks re-run clean |
 | 2026-09-24 | Close | `Export` of 6 frames + Home blocks + Shell · Compact to `design/pencil/exports/step05/` (8 PNG + `INDEX.md`); session file written; tracker ✅ |
+| 2026-09-25 | Step 19 audit fix (F9) | `Status Caption` master `IZ7z3`: "1 motor masih Diperiksa" → "1 motor masih diperiksa" (8 S05 frame instances follow) |

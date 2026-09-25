@@ -233,3 +233,4 @@ Build decisions made while building (all inside the kickoff decisions unless mar
 | 2026-09-24 | Checks | Coverage 36 / 36; clipping: S13 Empty phone overflowed 34 dp → padding 4; raw hex 0; contrast 1,760 → 2,421 nodes 0 fails; targets ≥ 48 |
 | 2026-09-24 | `/better-interface` | Six domain skills loaded; 5 MEDIUM + 4 LOW; the 5 MEDIUM fixed (`Preview Chevron`, notes, empty-state copy, park tokens, S14 `Chosen Tag`); re-run clipping / hex / contrast clean; verdict Approve |
 | 2026-09-24 | Review gate + close | User approved ("approve"); 23 frames + 2 blocks sheets exported to `design/pencil/exports/step08/` (25 PNG + `INDEX.md`, verified with `ls`); session file `10-design-step08-s13-s14-bengkel.md`; tracker ✅; `00-index.md` canvas layout, Pencil facts, inventory updated |
+| 2026-09-25 | Step 19 audit fix (F4) | S14 Loading frames `Tvg5J` `Qs5pN` `XfOX4` `qRLMi`: `WorkshopCtaBar` `Helper Row` enabled, "Memuat detail bengkel…"; 0 clip rows |

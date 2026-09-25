@@ -48,6 +48,8 @@ Get the approved Pencil design into Figma as a documented file matching the PRD 
 | `04 Flows – Tablet` | Screens at 800×1280 and 1280×800 (+1024×768 for S11) |
 | `05 Prototype` | Wired in step 21 |
 
+Canvas note (step 19, 2026-09-25): the Pencil canvas is no longer split into Flows – Phone / Flows – Tablet stacks; it has one horizontal band per screen (S01 → S26, see `00-index.md` Conventions and the band table). Frames are exported one per HTML and sorted into these pages **by frame name** (breakpoint suffix) in 20b, so the Figma pages `03` / `04` do not depend on the Pencil layout. `19-conversion-manifest.md` lists every frame id with its band position.
+
 Starter note: team files cap at 3 pages, Drafts do not. If the deliverable must live in a team file, split the pages across files (decided in Q2).
 
 ### Phases

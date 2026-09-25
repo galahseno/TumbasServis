@@ -49,6 +49,23 @@ Locked during the PRD interview (2026-09-23):
 | Responsive | Phone portrait-locked; tablet supports portrait + landscape; Material 3 window size classes |
 | PRD structure | Split numbered files (this structure) |
 
+Amended during the design phase (steps 01–19, 2026-09-23 → 2026-09-25); the per-step detail lives in `docs/plan/design/00-index.md` (decision log) and each step file:
+
+| Topic | Decision |
+|---|---|
+| Window classes | Device type by `shortestSide ≥ 600`; layout class by **width**: 360 compact, 800 medium, 1024 expanded, 1280 large |
+| Design tool + Figma path | Pencil (`design/pencil/TumbasServis.pen`), one band per screen S01 → S26 (phone → tablet-P → expanded → tablet-L, light + dark). Figma via `html-css` export → html2figma (route B) after the Flutter build; deliverable in a Figma Draft; variables rebuilt by hand |
+| Icons / imagery | Material Symbols Rounded (no fill axis: selected = weight 700 + accent); flat vector art built from components (onboarding vignettes), generated SVG budget 8 of ≈ 11 |
+| Booking-flow chrome | S10–S18 show no `NavBar` / `NavRail`; back / close in the app bar, sticky footer at the bottom; exit dialog only with ≥ 1 selected motor |
+| Pricing language | Every price is an estimate ("Estimasi", "Total estimasi"); pay at the workshop |
+| Vouchers | S17 is a full page reached only from S16; promo / notification voucher CTAs start a booking with the voucher carried; no code field |
+| Tracking demo control | Segmented auto-advance "Mati / 15 dtk / 5 dtk" (replaces the slider), per-unit and booking-level controls, one-shot error simulation, "Reset semua data" restores the seed and keeps session / theme / demo settings |
+| Review gate | Reviews (S24) are hard-gated behind a paid invoice; the per-mechanic section appears only with ≥ 2 mechanics |
+| Copy conventions | Sentence case for buttons, chips, titles; "kamu" voice; dialog dismiss = "Batal" (only the cancel-booking dialog uses "Kembali"); the UI says "jam" (not "slot") and "motor" for capacity |
+| Submit rule | Text forms validate on submit (button stays enabled); count-gated steps (S04 six digits, S10 / S11 / S15 / S16 gates) may disable only with a visible reason line |
+| Motion | 150 ms micro-interactions, ~250 ms route / sheet, ~300 ms staggered timeline; all of it off under `MediaQuery.disableAnimations`; no state is carried by motion alone |
+| Design-file conventions | Colors, weights and effects are variable-bound; spacing, radius and size numbers are literals that equal the token scale (Pencil cannot bind `width` / `height`); the design carries the full component library (487 masters) and 386 frames |
+
 ## Priority legend
 
 Used throughout 03/04/06/08:

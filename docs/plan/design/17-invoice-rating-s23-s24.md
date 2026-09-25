@@ -220,3 +220,4 @@ Pencil facts (verified in step 17; copy to `00-index.md` at close):
 | 2026-09-25 | User approval | "approve" (round 1) |
 | 2026-09-25 | Export | 27 frames → `design/pencil/exports/step17/`, 2 sheets → `…/step17/components/`, `INDEX.md` (`ls`: 27 PNG in the folder, 2 in `components/`) |
 | 2026-09-25 | Close | `00-index.md`: tracker ✅, canvas-layout "After step 17", "Verified in step 17"; session file `docs/claude-session/19-design-step17-invoice-rating.md`; status ✅ |
+| 2026-09-25 | Step 19 audit fixes (F6, F7, F10, F11) | S23 confirm dialog dismiss "Kembali" → "Batal" (`ErVEy/nFZKr/duZFa`, `RfzCv/nFZKr/duZFa`); star nodes bound to new token `rating-star` (37); 57 literal `fontWeight: "normal"` in the Invoice & Review masters and S24 frames bound to `$font-weight-regular`; MOTION note `YPW51` in `MiFp5`; 12 master strokes set to `strokeAlignment: inner` |

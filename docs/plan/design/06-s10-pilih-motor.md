@@ -177,3 +177,4 @@ Build decisions made while building (all inside the kickoff decisions unless mar
 | 2026-09-24 | `/better-interface` | 7 findings (0 HIGH, 3 MEDIUM, 4 LOW); MEDIUM fixed (focus / pressed specimens, dialog + loading annotations, heading role), re-checks clean, dark blocks sheet re-copied (`L3zHV4`); verdict Approve |
 | 2026-09-24 | Review gate, round 1 | User approved ("approved"), no changes |
 | 2026-09-24 | Close | `Export` of 10 nodes to `design/pencil/exports/step06/` (10 PNG + `INDEX.md`, verified with `ls`); session file `08-design-step06-s10-pilih-motor.md`; tracker ✅ |
+| 2026-09-25 | Step 19 audit fix (F4) | S10 Loading frames `PI4VN` `NKFpW` `m4Zdo` `jbxqb`: `SelectionFooter` `Reason Row` enabled, "Memuat daftar motor…"; 0 clip rows |

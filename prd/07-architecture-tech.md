@@ -24,7 +24,7 @@ lib/
 ├── workshop/                # S13–S14
 ├── catalog/                 # S12 + service/part browsing shared with booking
 ├── booking/                 # S10, S11, S15, S16, S17, S18 — the core flow, incl. BookingDraft keep-alive state
-├── tracking/                 # S20, S21, S22 + TrackingSimulator wiring
+├── tracking/                 # S20, S21, S22 + TrackingSimulator wiring (shared by S21 and S26)
 ├── invoice/                  # S23
 ├── review/                   # S24
 ├── notification/             # S06
@@ -48,20 +48,23 @@ The booking flow (S10→S18) is one continuous domain object (`BookingDraft`). I
 | `/login` | S03 |
 | `/otp` | S04 |
 | `/home` | S05 (shell: bottom nav / rail) |
-| `/notifications` | S06 |
+| `/notifications` | S06 (pushed page, no shell) |
 | `/garage`, `/garage/add`, `/garage/:id` | S07, S08, S09 |
 | `/booking/vehicles` | S10 |
-| `/booking/configure` | S11 (+ `/booking/configure/parts` sheet route → S12) |
-| `/booking/workshop`, `/booking/workshop/:id` | S13, S14 |
+| `/booking/configure` | S11 |
+| `/booking/configure/parts` | S12 in select mode — a **full-screen page** pushed over S11 (no shell); the part detail is a sheet / modal |
+| `/catalog` | S12 in browse mode (Home "Katalog suku cadang"; no unit context, no cart) |
+| `/booking/workshop`, `/booking/workshop/:id` | S13, S14 in-flow ("Pilih bengkel ini") |
+| `/workshops/:id` | S14 standalone (from S18 / S20; "Booking di sini" → `/booking/vehicles` with the workshop carried, S13 skipped) |
 | `/booking/schedule` | S15 |
-| `/booking/summary`, `/booking/summary/voucher` | S16, S17 |
+| `/booking/summary`, `/booking/summary/voucher` | S16, S17 (full page, reachable only from S16 — a draft is required) |
 | `/booking/success/:bookingId` | S18 |
 | `/bookings` | S19 |
 | `/bookings/:id` | S20 |
 | `/bookings/:id/unit/:unitCode` | S21 |
 | `/invoice/:bookingId` | S23 |
 | `/review/:bookingId` | S24 |
-| `/profile`, `/profile/demo-mode` | S25, S26 |
+| `/profile`, `/profile/demo-mode` | S25, S26 (pushed page, no shell) |
 
 `/home`, `/bookings`, `/garage`, `/profile` are the four `StatefulShellRoute` branches behind the bottom `NavBar`/`NavigationRail`.
 
@@ -74,16 +77,17 @@ Reference implementation, matching the skills' reference stack and the Flutter S
 - **Routing:** `go_router`.
 - **Localization/formatting:** `intl` (+ Flutter's `gen-l10n` if/when an EN toggle is added later — v1 ships `id` only per the locked decision).
 - **Local persistence:** `shared_preferences` (session flag, theme mode, demo-mode flag) + a structured local store (`hive_ce` or equivalent) for garage/bookings/notifications lists.
-- **QR:** `qr_flutter` for the S18 ticket code.
+- **QR:** `qr_flutter` for the S18 ticket code: encodes the booking code only, a ≥ 126 dp code with a 4-module quiet zone on a white tile in **both themes** (dark on light even in dark mode).
 - **External intents:** `url_launcher` (S14 "Buka di Maps").
-- **Vector/icons:** `flutter_svg` if any brand SVGs are used (logo, illustrations); otherwise Material Symbols/Phosphor icon font.
+- **Vector/icons:** Material Symbols Rounded (decided in design step 02; `Icons.*_rounded` or the font); `flutter_svg` for the logo and generated illustrations. Rating stars use `Icons.star_rounded` / `star_outline_rounded` / `star_half_rounded` at the `rating-star` / `border-control` tokens.
 - **App branding tooling:** `flutter_native_splash`, `flutter_launcher_icons`, driven off the assets/tokens in [02](02-brand-design-system.md).
 
 ## Quality gates
 
 - `flutter analyze` clean (no warnings) before each milestone commit.
 - Unit tests (domain, pure Dart, no mocks needed) for: pricing/discount math, fleet-duration makespan calculation, per-unit validation (required service/complaint), "Salin dari" compatibility filtering, slot-capacity checks (shared vs. split), voucher eligibility, booking/unit status derivation.
-- Widget tests: S11 multi-unit config (chip switching preserves state, "Lanjut" gating), and layout tests at the [06](06-responsive-layout.md) device matrix sizes for S05/S11/S16/S18 to catch overflow regressions.
+- Widget tests: S11 multi-unit config (chip switching preserves state, "Lanjut" gating), and layout tests at the [06](06-responsive-layout.md) device matrix sizes and at text scale ×1.3 for S05/S11/S16/S18 to catch overflow regressions; pixel-diff of the built screens against the design exports (assessment M2) is exported on request.
+- Presentation: `TsSlider` is not built (the S26 speed control is `TsSegmentedControl`); reduced motion (`MediaQuery.disableAnimations`) switches every animation to instant / fade-only.
 
 ## Android build
 

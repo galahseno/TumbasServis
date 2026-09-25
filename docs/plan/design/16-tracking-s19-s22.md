@@ -207,3 +207,4 @@ What was wrong and is fixed:
 | 2026-09-25 | `/better-interface` (6 domains): 1 HIGH + 6 MEDIUM fixed, 3 LOW listed; darks + sheet re-copied again | report above |
 | 2026-09-25 | Final checks | clipping 0, hex 0, unnamed 0, contrast 0 / 1,837, overlaps 3 (pre-existing) |
 | 2026-09-25 | Gate 2 approved; export + session file + docs | `exports/step16/` (43 PNG + `INDEX.md` + `components/`), `18-design-step16-tracking.md`; tracker ✅ |
+| 2026-09-25 | Step 19 audit fix (F11) | MOTION notes: S20 `e8isll` in `r5Ran`, S22 `pebCU` in `EDpGd` (150 ms swaps / dialog, 250 ms sheet / route, `disableAnimations` = instant / fade only) |

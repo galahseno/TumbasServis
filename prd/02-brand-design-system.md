@@ -63,6 +63,7 @@ Not present on the source site — derived to fill out semantic needs, flagged h
 | `text-muted` | `sand-600` `#756C65` (site `sand-500` fails AA, see accessibility rule) | `#9A918B` |
 | `text-faint` | `sand-400` `#B0A79F` | `#6C645F` |
 | `accent` | `orange-500` `#E4622F` | `orange-400` `#FF8551` |
+| `accent-fill` | `orange-600` `#C24C1D` | `orange-400` `#FF8551` — filled buttons and selected fills that carry `text-on-accent` (the M3 `primary` button variant) |
 | `accent-hover` | `orange-600` `#C24C1D` | `orange-300` `#FFAE81` |
 | `text-accent` | `orange-600` `#C24C1D` | `orange-400` `#FF8551` |
 | `text-on-accent` | `#FFFFFF` | `#1A0E07` |
@@ -73,7 +74,7 @@ Not present on the source site — derived to fill out semantic needs, flagged h
 | `border-strong` | `sand-400` `#B0A79F` | `#4B4442` |
 | `border-control` | `sand-500` `#8A817A` | `#6C645F` |
 | `border-accent` | `orange-500` | `orange-400` |
-| `focus-ring` | `orange-500` | `orange-400` |
+| `focus-ring` | `orange-600` `#C24C1D` (was `orange-500`; 2.92 : 1 on `accent-soft`, now 4.10 : 1, design step 19) | `orange-400` `#FF8551` |
 | `success` | `green-400` `#4FB477` | `green-400` `#4FB477` |
 | `danger` | `red-400` `#E4574F` | `red-400` `#E4574F` |
 | `warning` | `warning-400` `#D99A2B` | `warning-400` `#D99A2B` |
@@ -98,6 +99,9 @@ Not present on the source site — derived to fill out semantic needs, flagged h
 | `danger-pressed` | `#B3231A` | `#EE8580` |
 | `state-pressed` | `sand-900 @ 10%` (`#1A17161A`) | `#FFFFFF1F` |
 | `bg-page-clear` | `sand-50 @ 0%` (`#FBFAF900`) | `sand-950 @ 0%` (`#100E0D00`) — transparent end of the scroll-edge fade (`bg-page-clear` → `bg-page`) on tab chips and the date strip (added step 04) |
+| `scrim` | `sand-900 @ 40%` (`#1A171666`) | `#000000A6` — the dim layer behind dialogs, sheets and modals (step 06) |
+| `rating-star` | `warning-700` `#8F641A` | `warning-400` `#D99A2B` — filled and half stars in `RatingStars`, `WorkshopCard`, `MechanicCard`; same values as `warning-text`, its own role (step 19) |
+| glass and elevation tokens | see *Elevation & shadow* and *Glassmorphism signature* | `glass-tint`, `glass-tint-strong`, `glass-border`, `glass-sheen-top` / `-bottom`, `glass-shadow-1` / `-2`, `shadow-sm-1` / `-2`, `shadow-md-1` / `-2`, `shadow-accent` (built as variables in the design file) |
 
 ### Accessibility rule (important — deviates from raw site tokens)
 
@@ -113,7 +117,7 @@ The rule "white on `orange-600`" is the first of several deliberate divergences 
 - **`text-faint`:** 2.3 : 1 (light) / 3.1–3.3 : 1 (dark). Decorative only — never content, labels or placeholders.
 - **Status as text:** `success` / `warning` / `info` / `danger` on white measure 2.58 / 2.44 / 3.23 / 3.64 : 1. The base tokens are for **icons, dots and borders only**. A status badge is a `*-soft` tint background + `*-text` label + an icon (never color alone); every pair is ≥ 4.6 : 1 in both modes.
 - **Control boundaries (WCAG 1.4.11):** `border-default` is 1.4–1.5 : 1. Inputs, checkboxes, radios and unselected chips use `border-control` (≥ 3 : 1); `border-default` / `border-subtle` are for cards and dividers.
-- **Focus ring:** every focusable control shows a 2dp solid `focus-ring` with a 2dp offset (the source site's `:focus-visible` recipe), measured ≥ 3.07 : 1 on every surface in both modes. Never removed, never clipped. Flutter: `FocusTheme` / `Focus` decoration on `TsButton`, `TsTextField`, `TsChip`, list rows, nav items. Exceptions (step 03): a control whose border is the indicator uses the 2dp `focus-ring` as that border with no offset (`TsTextField`, nav bar / rail items, dialog choice rows); on the inverse surface (`TsSnackbar` action) the ring is `accent-on-inverse`, because `focus-ring` measures only 2.14 : 1 on the dark-mode inverse surface.
+- **Focus ring:** every focusable control shows a 2dp solid `focus-ring` with a 2dp offset (the source site's `:focus-visible` recipe), measured ≥ 3 : 1 on every surface in both modes (light `orange-600`: 4.83 : 1 on white, 4.10 : 1 on `accent-soft`; dark `orange-400`: ≥ 3.07 : 1). Never removed, never clipped. Flutter: `FocusTheme` / `Focus` decoration on `TsButton`, `TsTextField`, `TsChip`, list rows, nav items. Exceptions (step 03): a control whose border is the indicator uses the 2dp `focus-ring` as that border with no offset (`TsTextField`, nav bar / rail items, dialog choice rows); on the inverse surface (`TsSnackbar` action) the ring is `accent-on-inverse`, because `focus-ring` measures only 2.14 : 1 on the dark-mode inverse surface.
 - **Pressed states:** filled buttons press to `accent-pressed` / `danger-pressed`; secondary and outline buttons keep their fill and press to a `border-accent` border; ghost presses to `accent-soft`; `state-pressed` is the state layer of `TsIconButton`. A dark overlay on a tonal fill would fall below 4.5 : 1.
 - **`surface-hover` and bordered controls:** `border-control` on `surface-hover` is 2.79 : 1 in dark, so `surface-hover` fills borderless rows and tiles only; a bordered control keeps its fill when pressed and changes only its border to `border-accent`. `text-accent` (4.29 : 1 in light) is not used on `surface-inset` or `surface-hover`; use `text-on-accent-soft` there.
 - **Text on `accent-soft`:** `text-accent` on `orange-100` is 4.1 : 1, so text on `accent-soft` uses `text-on-accent-soft` (4.83 light, ≥ 5.7 dark).
@@ -183,7 +187,9 @@ Every badge also carries a status icon and label — color is never the only sig
 | Body Small | 12 / 18 | Regular | normal |
 | Label Large (buttons) | 14 / 20 | SemiBold | 0.025em (wide) |
 | Label Medium (nav labels) | 12 / 16 | SemiBold | 0.025em |
-| Label Small (badges) | 11 / 16 | SemiBold | 0.025em |
+| Label Small (badges) | 12 / 16 | SemiBold | 0.025em |
+
+Label Small was raised from 11 to 12 in design step 12 so that **no text in the product is below 12 sp** (the `TsLogo` monogram inside the mark is logo art and exempt). It now equals Label Medium; keep both roles for M3 parity but map Flutter `labelSmall` and `labelMedium` to one `TextStyle`.
 
 Filter chips use Label Large (14 / 20): they are tap targets and carry longer Indonesian text.
 
@@ -227,15 +233,15 @@ A restrained "glass" treatment marks two specific surfaces as the brand's signat
 
 ## Iconography, illustration, imagery, motion
 
-- **Icons:** one rounded/line icon set (e.g. Material Symbols Rounded or Phosphor), 24dp default, 2px stroke weight equivalent, `text-body`/`text-muted` fill, `accent` when active/selected.
-- **Illustrations:** flat, geometric line illustrations in the orange/sand palette for empty states (empty garage, no bookings, no notifications) — no photographic stock in illustration slots.
+- **Icons:** **Material Symbols Rounded** (decided in design step 02), 24dp default, weight 400, `text-body` / `text-muted` fill, `accent` when active / selected. The design tool has no fill axis, so selected = weight 700 + `accent` (+ an indicator pill), never filled-vs-outlined; the Flutter build may use the filled variant for the same state. Rating stars are token-bound paths (`Icons.star_rounded` / `star_outline_rounded` / `star_half_rounded` in Flutter).
+- **Illustrations:** flat, geometric vector illustrations in the orange/sand palette for empty / error / success states (empty garage, no bookings, no notifications, offline, empty search) and three motor silhouettes — no photographic stock in illustration slots. Onboarding art (S02) is built from real components on a tonal `accent-soft` panel (silhouettes + ticket, motor cards + service pills, timeline + fleet progress), so it follows the theme; generated SVG budget used: 8 of ≈ 11 (generated art is not theme-aware and needs a light tile in dark mode).
 - **Imagery:** motor category silhouettes (matic/bebek/sport) for garage cards when no photo is set; workshop photos are placeholder/generic (no real business names/photos claimed as real).
 - **Motion:** micro-interactions (chip select, checkbox, button press) 150ms `ease-out`; page/route transitions ~250ms; status timeline step reveals ~300ms staggered. All motion respects `MediaQuery.disableAnimations` / reduce-motion.
 
 ## Voice & microcopy
 
 - All UI copy in **Bahasa Indonesia**, friendly and concise (not formal-bureaucratic) — e.g. "Yuk, pilih motor yang mau diservis" rather than "Silakan pilih kendaraan Anda."
-- Capitalization: **sentence case** for buttons, chips, titles and headings ("Lihat detail", "Tambah motor", "Ubah jadwal"); proper nouns and service names keep their case ("Bengkel Jaya Motor", "Servis Berkala"). Wireframe copy in `04-screens.md` that uses title case is aligned in design step 19.
+- Capitalization: **sentence case** for buttons, chips, titles and headings ("Lihat detail", "Tambah motor", "Ubah jadwal"); proper nouns and service names keep their case ("Bengkel Jaya Motor", "Servis Berkala"). Wireframe copy in `04-screens.md` is aligned to this rule (design step 19). Dialog dismiss is **"Batal"**; only the cancel-booking dialog (S22, confirm "Ya, batalkan") uses **"Kembali"**. The UI says "jam" (not "slot"), "motor" for capacity, and every price is an estimate ("Estimasi", "Total estimasi").
 - Number format: Indonesian Rupiah, thousands-dotted, no decimals — `Rp412.000` (`id_ID` locale via `intl`).
 - Date format: `EEE, d MMM yyyy` → "Sen, 29 Sep 2026". Time format: 24-hour, dot separator → "09.00".
 
@@ -248,36 +254,56 @@ One-to-one mapping target: each Figma component becomes exactly one Flutter widg
 | `TsButton` | primary / secondary (tonal) / outline / ghost / danger (solid, dialog confirm only) / danger-outline (on-screen destructive trigger) × default/pressed/focused/disabled/loading |
 | `TsTextField` | default/focused/error/disabled, with optional prefix icon |
 | `TsChip` | filter chip: unselected/selected/disabled |
-| `VehicleTabChip` | complete (✓) / active (●) / incomplete (○) / error |
+| `VehicleTabChip` | complete (✓) / incomplete (○) / error, each also **active** (selected style keeping its glyph); `Layout=Rail` for the tablet unit rail |
 | `VehicleSelectCard` | selectable/selected/disabled (with "sedang diservis" reason) |
 | `ServiceOptionTile` | checkbox-style (default, multi-select; ≥ 1 per unit) or radio-style (exclusive group), default/selected/disabled |
-| `PartOptionTile` | checkbox-style with price, default/selected/incompatible |
-| `WorkshopCard` | list item: name, rating, distance, open/closed badge |
-| `SlotChip` | available / limited (low capacity) / short (fewer seats than selected units, disabled) / full (disabled) / selected |
+| `PartOptionTile` | checkbox-style with price, `Layout=Compact` (list) / `Grid` (tablet), default / selected / incompatible (with a category + cc reason) / loading |
+| `WorkshopCard` | list item: photo, name, rating · distance, open / closed badge, bays + "Estimasi N jam untuk M motor" row; states open / closed / selected ("Dipilih" tag) / loading |
+| `SlotChip` | time row (status icon + time) over a caption "Sisa n motor" / "Penuh" / "Dipilih" / "Tersedia"; available / limited (≤ 2 motors left) / short (fewer seats than selected units, disabled) / full (disabled) / selected; slots earlier than now + 2 h show disabled "Lewat" |
 | `DateStripItem` | horizontal date scroller item: default/selected/today |
 | `BookingStepper` | 4-step horizontal progress indicator; phone = numbered circles + one caption row, wide = all four labels inline |
-| `StickyEstimateBar` | glass bar: "Estimasi · 1 jam" over the total + Lanjut CTA, pinned to bottom; states default / CTA disabled (reason line) / loading / error |
-| `PriceBreakdown` | line-item list: label, qty, price, subtotal, discount, total |
-| `TicketCard` | perforated-edge ticket card, per-unit sub-section |
+| `StickyEstimateBar` | glass bar on S11 only: "Estimasi · 1 jam" over the total + Lanjut CTA, pinned to bottom; states default / CTA disabled (reason line) / loading / error. Other booking steps use flat bars (`SelectionFooter`, `ConfirmBar`, `WorkshopCtaBar`, `SelectedPartsBar`) |
+| `PriceBreakdown` | line-item list: label, qty, price, subtotal, discount, total; variants `Confirm` (S16, static per-unit lines, titled "Estimasi biaya", total "Total estimasi"), `Invoice` (S23, every unit expanded), `Pane` (tablet), `Loading`; the step-04 `Summary` / accordion variants are superseded |
+| `TicketCard` | perforated-edge ticket card, per-unit sub-section; the booking code appears once with a copy button and a real scannable QR (`QrCode`, dark on a white tile in both themes); `Layout=Phone` / `Landscape`, loading skeleton; `TicketCard Units Panel` = the Tablet-L status list |
 | `UnitStatusBadge` | one per status color (table above) |
 | `StatusTimeline` | vertical stepper: done/current/pending nodes |
 | `MechanicCard` | avatar/initial, name, rating |
 | `PromoBanner` | carousel card, image/gradient + CTA |
 | `VoucherCard` | selectable, eligible/ineligible (with reason) |
-| `RatingStars` | display + interactive input variant |
-| `NotificationTile` | read/unread, icon by category |
+| `RatingStars` | display (read-only, half values) + input (whole stars, 5 × 48 dp targets, live word label "Buruk / Kurang / Cukup / Baik / Sangat baik" + "n dari 5", `Semantics` value, arrow keys); Large / Compact |
+| `NotificationTile` | read / unread (dot + semibold title + hidden "Belum dibaca" label), category Status / Promo / Reminder, loading; text wraps, no line clamp |
 | `EmptyState` | illustration + title + body + optional CTA |
 | `ErrorState` | illustration + message + retry CTA |
 | `Skeleton` | shimmer placeholder, per component shape |
 | `SheetHeader` | bottom-sheet drag handle + title + close |
-| `TsAppBar` | with/without back, with/without actions |
+| `TsAppBar` | Home / Back / Title (+ Bell or Add action) / Large / Close / Step (back leading + close trailing, used by S11–S16) |
 | `NavBar` / `NavRail` | glass bottom bar (compact) / rail (medium+) |
 | `TsLogo` | mark-only / mark+wordmark, light/dark |
+
+### Additions built during design (steps 03–18)
+
+Not in the original list above; each is one Figma component family = one Flutter widget (variants as Figma properties). `TsSlider` (planned for S26) was **dropped**: the auto-advance control is `TsSegmentedControl`.
+
+| Area | Components |
+|---|---|
+| Controls and feedback | `TsIconButton` (standard / tonal), `TsCheckbox`, `TsRadio`, `TsSwitch`, `TsSegmentedControl`, `TsDialog` (confirm destructive / choice / info / blocked / confirm save), `TsSnackbar` (success / info / error, with or without action), `PageIndicator`, `SearchBar`, `FilterChipRow`, `CategoryChipRow`, `VehicleTabRow` |
+| Shell and Home (S05) | `AppShell` (compact / medium / large × 4 tabs), `NavBar Item`, `NavRail Item`, `ActiveBookingCard`, `DraftResumeCard`, `BookingCtaCard`, `QuickLinkTile`, `SectionTitleRow`, `GarageAddTile`, `FleetProgress`, `VehicleSelectCard` (Display / Compact / In Service / Loading) |
+| Pick motor, configure (S10–S12) | `SelectionFooter`, `AddMotorCard`, `EstimatePane`, `CopySourceSheet` (sheet + modal), `CopySourceRow`, `CopyFromRow`, `CopyNote`, `UnitHeader`, `ComplaintSection`, `PartDetailSheet` (sheet + modal), `CompatRow`, `SpecRow`, `SelectedPartsBar`, `CompatToggleRow` |
+| Workshop and schedule (S13–S15) | `StaticMap`, `WorkshopPhoto`, `ServiceTag`, `WorkshopInfoBlock`, `WorkshopMapBlock`, `WorkshopServicesBlock`, `WorkshopAddressBlock`, `WorkshopDetailContent`, `WorkshopCtaBar`, `ScheduleModeToggle`, `WorkshopSummaryRow`, `CapacityBanner` (info / warning, up to two actions), `UnitSlotSection`, `DateGrid`, `DateGridCell` |
+| Summary and ticket (S16–S18) | `SummaryCard`, `UnitSummaryAccordion`, `PaymentNote`, `VoucherRow`, `NoVoucherOption`, `ConfirmBar`, `ConfirmPane`, `SuccessHeader`, `QrCode`, `TicketActions`, `ShareTicketRow` (P2), `TicketUnitRow` |
+| Auth (S01–S04) | `OnboardingArt`, `OnboardingContent`, `OtpInput`, `AuthLink`, `TermsNote`, `AuthCard`, `AuthHero` |
+| Garage (S07–S09) | `MotorForm`, `MotorPhotoField`, `MotorModelPicker`, `ModelRow`, `BrandHeader`, `MotorPreviewPane`, `MotorHero`, `MotorDetails`, `ServiceHistoryRow`, `HistorySection`, `FormErrorBanner`, `Silhouette` |
+| Tracking (S19–S22) | `HistoryTab` / `HistoryTabRow` (scrolling underline tabs with counts), `BookingHistoryCard`, `UnitStatusRow`, `CancelScopeChooser`, `DemoModeShortcut`, `StatusTimeline` (live / completed / cancelled), `MechanicCard` (assigned / not assigned) |
+| Invoice and review (S23–S24) | `PaymentStatusTag`, `PaidBanner`, `InvoiceHeaderCard`, `InvoiceSummaryCard`, `WorkshopRatingCard`, `MechanicRatingRow`, `RatingLabel`, `ReviewRecap` |
+| Notifications, profile, demo (S06, S25, S26) | `NotificationGroupHeader`, `SettingsRow` / `SettingsGroup`, `UserCard`, `ThemeSetting`, `ThemePreview`, `AboutContent`, `DemoPanel`, `DemoUnitRow`, `DemoPreviewPane`, `ErrorSimBanner` |
+| Design-only (not Flutter widgets) | `Type / <Role>` text nodes (Figma text styles), `System / Status Bar`, `Gesture Bar`, `Keyboard`, `Keyboard Numeric`, `SectionHeader` (canvas row header), `Fold Marker` |
+
+The design file holds 487 masters in 150 families (about 91 are library-only variants that no screen shows, e.g. disabled / loading states of controls).
 
 ## Figma documentation spec (bonus: Figma docs + clean architecture)
 
 - **Pages:** `00 Cover`, `01 Foundations` (color/type/spacing/radius/shadow as Figma Variables + Styles), `02 Components` (the inventory above, organized by category, with variant properties), `03 Flows – Phone`, `04 Flows – Tablet`, `05 Prototype` (wired interactions, Home → Booking Success at minimum).
-- **Variables:** color variables defined with Light/Dark modes (mirrors the semantic token table exactly) so toggling the Figma variable mode previews dark mode.
+- **Variables:** color variables defined with Light/Dark modes (mirrors the semantic token table exactly) so toggling the Figma variable mode previews dark mode. **Starter plan caveat (decided in design step 01):** variable modes are documented only for Education / Pro / Org / Enterprise plans, so on a Starter account the two modes become two collections (`Semantic Light`, `Semantic Dark`); the deliverable lives in a Figma **Draft** (team files cap at 3 pages). The Pencil → Figma route is `html-css` export → html2figma (route B), run after the Flutter build (design steps 20–21): it imports frames only, so components (rebuilt and combined as variants from the `Prop=Value` names), variables, text / effect styles and the 251 handoff notes are recreated by hand from `docs/plan/design/19-conversion-manifest.md`.
 - **Frame naming convention:** `S<id> <Screen Name> / <State> / <Breakpoint>` — e.g. `S11 Detail Servis / Default / Phone`, `S11 Detail Servis / Error / Tablet-Landscape`.
 - **Layer hygiene:** auto-layout on every frame/group that can use it; no leftover default names ("Frame 12", "Rectangle 4"); components use the `Ts` prefix matching Flutter widget names.
 - **Base frame sizes:** phone 360×800, tablet portrait 800×1280, tablet landscape 1280×800 (see [06](06-responsive-layout.md) for the full breakpoint rationale).

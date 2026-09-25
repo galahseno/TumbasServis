@@ -230,3 +230,4 @@ Canvas: the Flows – Tablet block moved down 9,500 dp (anchor `URsZs` y 68,500)
 | 2026-09-25 | Review gate | Status 🔵; frame list handed to the user |
 | 2026-09-25 | Review round 1 | User asked for a single add action (A8): add card removed from 6 populated frames, empty frames use a title-only bar (`cGI0U`), notes updated, clipping 0 rows, approved |
 | 2026-09-25 | Approval + close | 33 PNG exported to `design/pencil/exports/step14/` (+ 2 sheets in `components/`) with `INDEX.md`, verified with `ls`; session file `16-design-step14-garage.md`; tracker ✅; PRD items → `19-full-app-audit.md`; `00-index.md` Pencil facts + canvas paragraph |
+| 2026-09-25 | Step 19 audit fix (F11) | S09 handoff wrapper `hJcRT` (now vertical): MOTION note `f6dxl9` (dialogs 150 ms, route 250 ms, `disableAnimations` = instant) |

@@ -27,30 +27,33 @@ Covers the bonus criterion "Tampilan Responsif & Safe Layout" and the extended r
 | Screen | Phone (compact) | Tablet portrait (medium/expanded) | Tablet landscape (expanded/large) |
 |---|---|---|---|
 | S01 Splash | centered logo | centered logo, same | centered logo, same |
-| S02 Onboarding | full-bleed slide | centered card, max-width 560 | slide content left, illustration right (split) |
-| S03/S04 Auth | centered form, full width | centered card, max-width 480 | form left (max 480) + brand illustration right |
-| S05 Beranda | single column | 2-col card grid (promo + garage strip span) | rail nav + 2-col grid, wider promo carousel |
-| S06 Notifikasi | single list | centered list, max-width 720 | list max-width 720, centered |
-| S07 Garasi Saya | 1-col list | 2-col grid | 3-col grid |
-| S08 Tambah/Edit Motor | full-width form | centered form, max-width 560 | form left, live preview card right |
-| S09 Detail Motor | stacked sections | stacked, max-width 720 | hero left, details + history right (split) |
-| S10 Pilih Motor | 1-col card list | 2-col card grid | 2–3-col card grid |
-| **S11 Detail Servis** | chip tabs + stacked cards | chip tabs (top) + stacked cards, max-width 720 | **list-detail-summary**: unit rail (left) + config form (middle) + live estimate pane (right) at large; at expanded, rail + form only (estimate stays as sticky bar) |
-| S12 Katalog | 1-col list | 2-col grid | 3–4-col grid |
-| S13 Pilih Bengkel | 1-col list | 1-col list, max-width 720 | **list-detail split**: list left, S14 preview right |
-| S14 Detail Bengkel | stacked sections | stacked, max-width 720 | map/photo left, info right |
-| S15 Pilih Jadwal | date strip above slot grid | date strip above slot grid, wider grid | **side-by-side**: date strip left, slot grid right |
-| S16 Ringkasan | stacked, sticky bottom bar | stacked, max-width 720, sticky bottom bar | **two-pane**: recap list left, sticky `PriceBreakdown` + CTA right |
-| S17 Pilih Voucher | 1-col list | 1-col list, max-width 560 | 2-col grid |
-| **S18 Booking Berhasil** | centered ticket, full width | centered ticket, max-width 560 | ticket left (max 480) + per-unit status list right |
-| S19 Riwayat | 1-col list w/ tabs | 1-col list, max-width 720 | list-detail split (list left, S20 preview right) |
+| S02 Onboarding | art band on top + title / body / dots / CTA | centered card, max-width 560 | slide content left, illustration right (split) |
+| S03/S04 Auth | top-aligned left text, terms pinned at the bottom | centered `AuthCard`, max-width 480 | form left (max 480) + `AuthHero` brand panel right |
+| S05 Beranda | single column | rail nav + 2-col card grid (promo + garage strip span) | rail nav + 2-col grid, wider promo carousel |
+| S06 Notifikasi (pushed, no nav) | single list | centered list, max-width 720 | list max-width 720, centered |
+| S07 Garasi Saya | 1-col list | 2-col grid (content 720) | 3-col grid |
+| S08 Tambah/Edit Motor | full-width form, flat sticky "Simpan" | centered form, max-width 560; model picker = centered modal 560 | form left, live preview card right |
+| S09 Detail Motor | stacked sections | stacked, max-width 720 (full-scroll) | hero + CTA + delete link left (400), details + history right (640) |
+| S10 Pilih Motor | 1-col card list | 2-col card grid | 3-col card grid (content max ~1040) |
+| **S11 Detail Servis** | chip tabs + stacked cards + glass estimate bar | medium: chip row on top + form (max 720) + glass pill | **expanded (840–1199):** unit rail 252 + form 700 + glass pill; **large (≥ 1200): list-detail-summary** — rail 252 · form 572 · live `EstimatePane` 360 (static per-unit lines, no voucher); 1 unit = form 720 + pane 360, centered |
+| S12 Katalog (full page over S11) | 1-col list | 2-col grid (720); detail = centered modal 560 | 4-col grid; detail = centered modal 560 |
+| S13 Pilih Bengkel | 1-col list | 1-col list, max-width 720 | **list-detail split**: expanded list 400 + S14 pane 552; large list 440 + pane 768 with the CTA pinned at the pane bottom |
+| S14 Detail Bengkel | stacked sections | stacked, max-width 720 | standalone: photo + map left (560), info right (648) |
+| S15 Pilih Jadwal | date strip above a 3-col slot grid, flat footer | same, wider grid | expanded: date grid 400 + slots 552; large: 2-week calendar grid (7 × 3) 480 + slots 728 (split: unit rail 240 · grid 420 · slots 524) |
+| S16 Ringkasan | stacked, flat sticky bar | stacked, max-width 720, flat sticky bar | **two-pane**: expanded recap 592 + pane 360; large recap 720 + pane 360 (centered); the pane holds the voucher row, estimate block, payment note and the CTA |
+| S17 Pilih Voucher (full page) | 1-col list | 1-col list, max-width 560 | 2 cols × 440 |
+| **S18 Booking Berhasil** | centered ticket, full width, flat sticky CTA bar | centered ticket, max-width 560, flat sticky bar | ticket 480 + status panel 400 side by side (904, centered), the CTAs under the panel; the panel rows are read-only |
+| S19 Riwayat | 1-col list w/ scrolling tabs | 1-col list, max-width 720 | list-detail split (list left, S20 preview right) |
 | S20 Detail Booking | stacked | stacked, max-width 720 | overview left, unit list + actions right |
-| S21 Lacak Unit | vertical timeline | vertical timeline, max-width 640 | timeline left, mechanic/map card right |
-| S22 Sheets | full-width bottom sheet | centered modal sheet, max-width 560 | centered modal sheet, max-width 560 |
-| S23 Invoice | stacked breakdown | stacked, max-width 640 | breakdown left, summary card right |
-| S24 Beri Ulasan | stacked form | centered, max-width 560 | form left, submitted-reviews preview right |
-| S25 Profil | 1-col menu list | centered, max-width 560 | menu left, active panel (e.g. theme preview) right |
-| S26 Mode Demo | stacked controls | centered, max-width 560 | controls left, live status preview right |
+| S21 Lacak Unit | vertical timeline | vertical timeline, max-width 640 | unit header + timeline left, ETA + mechanic + Mode Demo shortcut right (no map) |
+| S22 Sheets | bottom sheet anchored to the bottom edge | centered modal, max-width 560 (title row + close, no handle); cancel dialog 400 | same sizes as Tablet-P (no separate frame) |
+| S23 Invoice | stacked breakdown, flat footer | stacked, max-width 640 | breakdown 720 + `InvoiceSummaryCard` 360 |
+| S24 Beri Ulasan | stacked form | centered, max-width 560 | form left, live recap preview of the user's own review right |
+| S25 Profil | 1-col menu list | centered, max-width 560; About = modal | menu left, "Pratinjau tema" panel (forced-theme mini app) right |
+| S26 Mode Demo (pushed, no nav) | stacked controls | centered, max-width 560 | controls left (Kecepatan + Status), live preview + Simulasi galat + Data demo right |
+
+- **Booking flow chrome:** S10–S18 show no `NavBar` / `NavRail` at any size (focused flow); on tablet the app bar and stepper are full width and the content is centered at the max width above, so multi-pane layouts (S11, S15, S16) get the full width.
+- **Design frames:** tablet frames are fixed viewports (no status / gesture bar); a few pages are full-scroll captures taller than the viewport (S05 and S06 / S26 Tablet-L, S09 / S26 Tablet-P). The 1024×768 Expanded class has frames for S11, S13, S15 and S16.
 
 ## Safe-layout rules (checklist, applied to every screen)
 
@@ -58,7 +61,7 @@ Covers the bonus criterion "Tampilan Responsif & Safe Layout" and the extended r
 - No fixed-height `Container`s around text — use intrinsic sizing or `Flexible`/`Expanded` inside `Row`/`Column`, so translated or longer Indonesian strings never clip.
 - Scrollable content (`ListView`/`CustomScrollView`) instead of unconstrained `Column`s wherever content can exceed the viewport (every form screen, every list screen).
 - `MediaQuery.viewInsets.bottom` respected on every text-input screen — content scrolls above the keyboard, sticky CTAs reposition above it, never behind it.
-- Text scale factor tested up to 1.3 (accessibility large-text setting) without overflow — verified specifically on dense screens: S11 chip tabs, S16 price breakdown, S18 ticket.
+- Text scale factor tested up to 1.3 (accessibility large-text setting) without overflow — verified specifically on dense screens: S11 chip tabs, S16 price breakdown and voucher row, S18 ticket (the design carries ×1.3 and 360×640 stress frames for S05, S11, S16, S18 and ×1.3 for S06, S10, S13, S14, S15, S25, S26). A row that must survive large text is a column / `Wrap`, never a fixed-width hug row.
 - Long/variable content — motor nicknames, plate numbers, workshop names, complaint notes in list previews — always wrapped in `Text(overflow: TextOverflow.ellipsis, maxLines: n)` inside a bounded width, never assumed short.
 - Minimum tap target 48×48dp on every interactive element (chips, checkboxes, icon buttons), even where the visual icon is smaller.
 - Images/photos (workshop photos, motor photos) always have an aspect-ratio-boxed placeholder so layout doesn't jump/overflow while loading or when a photo is absent.
