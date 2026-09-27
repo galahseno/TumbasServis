@@ -45,7 +45,8 @@ lib/
 │   └── navigation/router.dart    # go_router route table + redirects (PRD 07 route table)
 ├── core/
 │   ├── domain/
-│   │   ├── model/                 # Result<T> + all ~19 shared entities/enums (PRD 05)
+│   │   ├── model/                 # Result<T> (root) + all ~19 shared entities/enums, grouped into
+│   │   │                          #   concept subfolders (see "Grouping folders" below)
 │   │   ├── repository/            # ALL 10 repository interfaces (see map below)
 │   │   └── service/                # Clock port, cross-feature business-rule services
 │   ├── data/
@@ -69,6 +70,10 @@ lib/
 ```
 
 A feature gets a `domain/` folder only if it needs a rule genuinely local to it (rare — most business rules are cross-feature and live in `core/domain/service/`); most features here have only `data/` + `presentation/`.
+
+### Grouping folders (adopted step 02, applies to every step from here on)
+
+Any folder that would otherwise collect many small files for one step (a model/entity dump, a repository-interface dump, a components dump, …) gets **concept subfolders** instead of a flat file list — one subfolder per domain concept, holding a class's hand-written/freezed `.dart` file together with its own `.freezed.dart`/`.g.dart`. Subfolder names track the owning feature area from the tree above where one exists (`garage/`, `workshop/`, `catalog/`, `booking/`, `invoice/`, `review/`, `notification/`) even though the folder itself stays under `core/` (cross-feature) — e.g. `core/domain/model/garage/motor.dart`. A concept with no matching feature keeps its own name (`user/`, `result.dart` stays at `core/domain/model/` root — it's the one type every layer imports, not owned by any concept). Tests mirror the same subfolders under `test/`. Apply this whenever a step is about to produce "much class and freezed in one package folder" (step 02's `model/`, and — expected to recur — step 03's `repository/`, later component-heavy presentation steps); a step with only a couple of files stays flat.
 
 ### Repository placement map (interface → owning feature's impl)
 
@@ -157,7 +162,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | Step | File | Layer | Priority | Owns | Status | Claude session file |
 |---|---|---|---|---|---|---|
 | 01 | [01-setup-scaffold.md](01-setup-scaffold.md) | Setup | — | Project scaffold | ✅ | `02-mobile-step01-setup-scaffold.md` |
-| 02 | [02-domain-entities.md](02-domain-entities.md) | Domain | — | `core/domain/model/` | ⬜ | `03-mobile-step02-domain-entities.md` |
+| 02 | [02-domain-entities.md](02-domain-entities.md) | Domain | — | `core/domain/model/` | ✅ | `03-mobile-step02-domain-entities.md` |
 | 03 | [03-domain-rules-repositories.md](03-domain-rules-repositories.md) | Domain | — | `core/domain/repository/`, `core/domain/service/` | ⬜ | `04-mobile-step03-domain-rules-repositories.md` |
 | 04 | [04-mock-data-assets.md](04-mock-data-assets.md) | Data (content) | — | `assets/mock/*.json` | ⬜ | `05-mobile-step04-mock-data-assets.md` |
 | 05 | [05-data-core-infra.md](05-data-core-infra.md) | Data | — | `core/data/service/`, `core/data/di/` | ⬜ | `06-mobile-step05-data-core-infra.md` |
