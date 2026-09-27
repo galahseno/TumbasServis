@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | ✅ Approved |
 | **Layer** | Domain |
 | **Priority** | — |
 | **Owns** | `lib/core/domain/repository/` (10 interfaces), `lib/core/domain/service/` (`Clock` port + 7 business-rule services) |
@@ -58,29 +58,55 @@ One test file per service in `test/core/domain/service/`, covering the PRD 07 qu
 ## Checklist
 
 ### Build
-- [ ] Open questions answered.
-- [ ] 10 repository interfaces written, method signatures match `00-index.md`'s skeleton table.
-- [ ] `Clock` port + 7 domain services written.
-- [ ] No `package:flutter/`, no riverpod, no storage import anywhere under `core/domain/`.
+- [x] Open questions answered.
+- [x] 10 repository interfaces written, method signatures match `00-index.md`'s skeleton table.
+- [x] `Clock` port + 7 domain services written.
+- [x] No `package:flutter/`, no riverpod, no storage import anywhere under `core/domain/`.
 
 ### Quality (flutter analyze / format / tests)
-- [ ] `flutter analyze` → 0 issues.
-- [ ] `dart format --set-exit-if-changed .` → clean.
-- [ ] `flutter test test/core/domain/` → green, every PRD 07 quality-gate scenario present and passing.
-- [ ] `grep -rln 'package:flutter/' lib/core/domain/` → empty.
+- [x] `flutter analyze` → 0 issues.
+- [x] `dart format --set-exit-if-changed .` → clean.
+- [x] `flutter test test/core/domain/` → green, every PRD 07 quality-gate scenario present and passing.
+- [x] `grep -rln 'package:flutter/' lib/core/domain/` → empty.
 
 ### Review gate
-- [ ] Status 🔵; show the user the interface list, the service list, and the test results (scenario-by-scenario).
-- [ ] Review round logged; approval recorded.
+- [x] Status 🔵; show the user the interface list, the service list, and the test results (scenario-by-scenario).
+- [x] Review round logged; approval recorded.
 
 ### Close (only after approval)
-- [ ] Commit message proposed: `013 - Create Domain Repositories & Business Rules`.
-- [ ] Claude session file written (`docs/claude-session/apps/04-mobile-step03-domain-rules-repositories.md`).
-- [ ] Tracker in `00-index.md` set to ✅.
+- [x] Commit message proposed: `013 - Create Domain Repositories & Business Rules`.
+- [x] Claude session file written (`docs/claude-session/apps/04-mobile-step03-domain-rules-repositories.md`).
+- [x] Tracker in `00-index.md` set to ✅.
+
+## Deviations from this doc's literal scope
+
+- `settings/app_theme_mode.dart` added (new `AppThemeMode` enum) — `SettingsRepository.getThemeMode/setThemeMode` needs a domain-owned theme type since Flutter's `ThemeMode` can't be imported under `domain/`; step 02's `model/` was already approved so this was scoped into `repository/settings/` instead of reopening it.
+- Both `repository/` and `service/` got concept subfolders (`session/`, `settings/`, …; `pricing_duration/`, `unit_config/`, `scheduling/`, `voucher/`, `status/`), matching step 02's "Grouping folders" convention, rather than flat directories as the doc's file list literally reads.
+- `TrackingRepository.watchUnitStatus` returns `Stream<BookingUnit>` (richer entity — history/mechanic/timestamps), not a bare `UnitStatus` stream — the 00-index skeleton table didn't specify a return type.
+- `VoucherEligibilityService.shortfallMessage` returns the full Indonesian string (hand-rolled Rp thousands-formatter lives in domain) rather than deferring string composition to presentation.
+- `BookingStatusDerivation`'s precedence when unit statuses mix (`Dibatalkan` > `Selesai` > `Berlangsung` > `Terjadwal`) is this step's own interpretation — PRD 03 states the four rules but not an explicit priority order.
+- `SettingsRepository.setDemoMode(bool enabled)` scoped to a simple on/off flag; speed + error-injection stay with `DemoModeController` (step 05).
+- `test/support/fake_clock.dart` introduced as a new shared-fixture location (first cross-file test fixture in the repo; prior tests mirror `lib/` 1:1).
+
+All of the above were raised and resolved with the user in the kickoff interview before implementation (see Review rounds).
 
 ## Review rounds
+
+#### Round 1 — 2026-09-27
+- **Shown:** kickoff interview covering the doc's 3 open questions (`Clock` shape, service granularity, DI vs static) plus 4 design ambiguities surfaced while reading PRD text against the actual step-02 entities (`AppThemeMode` placement, `BookingStatusDerivation` precedence, voucher message string-vs-ints, tracking stream richness); then the full interface list, service list, and `flutter test` scenario-by-scenario output.
+- **User feedback:** accepted every recommended option in both interview rounds; "aprrove i commit manually, do rest."
+- **Changes made:** none requested — plan and implementation approved as presented.
+- **Outcome:** Approved.
 
 ## Session log
 
 | Time | Action | Result |
 |---|---|---|
+| 2026-09-27 | Explored `00-index.md` skeleton table, PRD 05/03/07, `flutter-domain-layer` skill, step02 entity state | Confirmed step03 was a clean start, gathered exact business-rule wording and canonical demo numbers |
+| 2026-09-27 | Kickoff interview round 1 (`AskUserQuestion`) | Clock = abstract-class port + DI; 7 services stay separate; services stateless/no-DI; both `repository/` and `service/` get concept subfolders |
+| 2026-09-27 | Plan-agent design pass over real entity fields (`Motor`, `Part`, `Voucher`, `TimeSlot`, `UnitStatus`, etc.) | Exact signatures/APIs drafted; 9 risks/ambiguities flagged |
+| 2026-09-27 | Kickoff interview round 2 (`AskUserQuestion`) | `AppThemeMode` in `repository/settings/`; status-derivation precedence accepted; voucher message returns full string; tracking stream is `Stream<BookingUnit>` |
+| 2026-09-27 | Wrote 10 repository interfaces + `Clock` + 7 domain services + `FakeClock` fixture | All files created per plan |
+| 2026-09-27 | Wrote 7 test files (35 new tests) covering every PRD 07 quality-gate scenario with canonical numbers | `flutter test test/core/domain/` → 86/86 passed (51 step02 + 35 new) |
+| 2026-09-27 | `flutter analyze`, `dart format --set-exit-if-changed .`, `grep -rln 'package:flutter/' lib/core/domain/` | 0 issues; clean; empty (purity confirmed) |
+| 2026-09-27 | Shown review gate; user approved, will commit manually | Step closed |
