@@ -1,0 +1,20 @@
+[
+  {
+    "id": "promo_diskon10",
+    "title": "Diskon 10% Servis 2 Motor atau Lebih",
+    "image_asset_path": "assets/images/promo/promo_diskon10.png",
+    "deep_link": "/booking/select-motor?voucherId=voucher_diskon10"
+  },
+  {
+    "id": "promo_multi_motor",
+    "title": "Servis Sekaligus, Lebih Hemat Waktu",
+    "image_asset_path": "assets/images/promo/promo_multi_motor.png",
+    "deep_link": "/booking/select-motor"
+  },
+  {
+    "id": "promo_servis_reminder",
+    "title": "Waktunya Servis Berkala Motor Kamu",
+    "image_asset_path": "assets/images/promo/promo_servis_reminder.png",
+    "deep_link": "/booking/select-motor?motorId=motor_004"
+  }
+]

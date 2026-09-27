@@ -1,0 +1,23 @@
+[
+  {
+    "id": "svc_berkala",
+    "name": "Servis Berkala",
+    "price": 85000,
+    "duration_min": 60,
+    "requires_complaint": false
+  },
+  {
+    "id": "svc_oli",
+    "name": "Ganti Oli",
+    "price": 35000,
+    "duration_min": 30,
+    "requires_complaint": false
+  },
+  {
+    "id": "svc_perbaikan",
+    "name": "Perbaikan/Keluhan",
+    "price": 50000,
+    "duration_min": 60,
+    "requires_complaint": true
+  }
+]

@@ -1,0 +1,157 @@
+[
+  {
+    "id": "bk_seed_001",
+    "code": "TS-260910-0091",
+    "user_id": "user_001",
+    "workshop_id": "ws_001",
+    "units": [
+      {
+        "unit_code": "-A",
+        "motor_id": "motor_002",
+        "motor_snapshot": {
+          "id": "motor_002",
+          "owner_id": "user_001",
+          "nickname": "Beat 110",
+          "plate_number": "AB 5678 ZZ",
+          "year": 2021,
+          "model_id": "model_beat110"
+        },
+        "service_ids": ["svc_berkala", "svc_oli"],
+        "part_ids": ["part_oli_mpx1"],
+        "status": "selesai",
+        "status_history": [
+          { "status": "terjadwal", "timestamp": "2026-09-10T08:30:00.000" },
+          { "status": "checkIn", "timestamp": "2026-09-10T08:35:00.000" },
+          { "status": "diperiksa", "timestamp": "2026-09-10T08:45:00.000" },
+          { "status": "dikerjakan", "timestamp": "2026-09-10T09:00:00.000" },
+          { "status": "qc", "timestamp": "2026-09-10T09:50:00.000" },
+          { "status": "selesai", "timestamp": "2026-09-10T10:00:00.000" }
+        ],
+        "mechanic_id": "mech_001",
+        "subtotal": 143000,
+        "duration_min": 60
+      }
+    ],
+    "schedule_mode": "shared",
+    "shared_slot": { "date": "2026-09-10T00:00:00.000", "hour": 9, "capacity": 5, "booked": 3 },
+    "status": "selesai",
+    "subtotal": 143000,
+    "discount": 0,
+    "total": 143000,
+    "created_at": "2026-09-10T08:00:00.000",
+    "completed_at": "2026-09-10T10:00:00.000"
+  },
+  {
+    "id": "bk_seed_002",
+    "code": "TS-260714-0058",
+    "user_id": "user_001",
+    "workshop_id": "ws_001",
+    "units": [
+      {
+        "unit_code": "-A",
+        "motor_id": "motor_002",
+        "motor_snapshot": {
+          "id": "motor_002",
+          "owner_id": "user_001",
+          "nickname": "Beat 110",
+          "plate_number": "AB 5678 ZZ",
+          "year": 2021,
+          "model_id": "model_beat110"
+        },
+        "service_ids": ["svc_berkala"],
+        "part_ids": [],
+        "status": "selesai",
+        "status_history": [
+          { "status": "terjadwal", "timestamp": "2026-07-14T08:00:00.000" },
+          { "status": "checkIn", "timestamp": "2026-07-14T08:05:00.000" },
+          { "status": "diperiksa", "timestamp": "2026-07-14T08:15:00.000" },
+          { "status": "dikerjakan", "timestamp": "2026-07-14T08:30:00.000" },
+          { "status": "qc", "timestamp": "2026-07-14T09:15:00.000" },
+          { "status": "selesai", "timestamp": "2026-07-14T09:30:00.000" }
+        ],
+        "mechanic_id": "mech_001",
+        "subtotal": 85000,
+        "duration_min": 60
+      }
+    ],
+    "schedule_mode": "shared",
+    "shared_slot": { "date": "2026-07-14T00:00:00.000", "hour": 8, "capacity": 5, "booked": 2 },
+    "status": "selesai",
+    "subtotal": 85000,
+    "discount": 0,
+    "total": 85000,
+    "created_at": "2026-07-14T07:45:00.000",
+    "completed_at": "2026-07-14T09:30:00.000"
+  },
+  {
+    "id": "bk_seed_003",
+    "code": "TS-260502-0031",
+    "user_id": "user_001",
+    "workshop_id": "ws_001",
+    "units": [
+      {
+        "unit_code": "-A",
+        "motor_id": "motor_002",
+        "motor_snapshot": {
+          "id": "motor_002",
+          "owner_id": "user_001",
+          "nickname": "Beat 110",
+          "plate_number": "AB 5678 ZZ",
+          "year": 2021,
+          "model_id": "model_beat110"
+        },
+        "service_ids": ["svc_oli"],
+        "part_ids": [],
+        "status": "dibatalkan",
+        "status_history": [
+          { "status": "terjadwal", "timestamp": "2026-05-02T08:00:00.000" },
+          { "status": "dibatalkan", "timestamp": "2026-05-02T08:10:00.000", "note": "Dibatalkan oleh pengguna." }
+        ],
+        "subtotal": 35000,
+        "duration_min": 30
+      }
+    ],
+    "schedule_mode": "shared",
+    "shared_slot": { "date": "2026-05-02T00:00:00.000", "hour": 8, "capacity": 5, "booked": 1 },
+    "status": "dibatalkan",
+    "subtotal": 35000,
+    "discount": 0,
+    "total": 35000,
+    "created_at": "2026-05-02T07:50:00.000"
+  },
+  {
+    "id": "bk_seed_004",
+    "code": "TS-261006-0419",
+    "user_id": "user_001",
+    "workshop_id": "ws_001",
+    "units": [
+      {
+        "unit_code": "-A",
+        "motor_id": "motor_004",
+        "motor_snapshot": {
+          "id": "motor_004",
+          "owner_id": "user_001",
+          "nickname": "Supra X 125",
+          "plate_number": "AB 3344 KL",
+          "year": 2018,
+          "model_id": "model_suprax125"
+        },
+        "service_ids": ["svc_berkala"],
+        "part_ids": [],
+        "status": "terjadwal",
+        "status_history": [
+          { "status": "terjadwal", "timestamp": "2026-09-29T10:00:00.000" }
+        ],
+        "subtotal": 85000,
+        "duration_min": 60
+      }
+    ],
+    "schedule_mode": "shared",
+    "shared_slot": { "date": "2026-10-06T00:00:00.000", "hour": 9, "capacity": 5, "booked": 2 },
+    "status": "terjadwal",
+    "subtotal": 85000,
+    "discount": 0,
+    "total": 85000,
+    "created_at": "2026-09-29T10:00:00.000"
+  }
+]

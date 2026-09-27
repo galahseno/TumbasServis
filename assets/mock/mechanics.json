@@ -1,0 +1,8 @@
+[
+  { "id": "mech_001", "name": "Mas Rudi", "avatar_initial": "R", "rating": 4.8 },
+  { "id": "mech_002", "name": "Pak Anto", "avatar_initial": "A", "rating": 4.7 },
+  { "id": "mech_003", "name": "Pak Bambang", "avatar_initial": "B", "rating": 4.6 },
+  { "id": "mech_004", "name": "Mas Doni", "avatar_initial": "D", "rating": 4.5 },
+  { "id": "mech_005", "name": "Pak Slamet", "avatar_initial": "S", "rating": 4.9 },
+  { "id": "mech_006", "name": "Mas Yoga", "avatar_initial": "Y", "rating": 4.4 }
+]

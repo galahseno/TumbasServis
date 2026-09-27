@@ -164,7 +164,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 01 | [01-setup-scaffold.md](01-setup-scaffold.md) | Setup | — | Project scaffold | ✅ | `02-mobile-step01-setup-scaffold.md` |
 | 02 | [02-domain-entities.md](02-domain-entities.md) | Domain | — | `core/domain/model/` | ✅ | `03-mobile-step02-domain-entities.md` |
 | 03 | [03-domain-rules-repositories.md](03-domain-rules-repositories.md) | Domain | — | `core/domain/repository/`, `core/domain/service/` | ✅ | `04-mobile-step03-domain-rules-repositories.md` |
-| 04 | [04-mock-data-assets.md](04-mock-data-assets.md) | Data (content) | — | `assets/mock/*.json` | ⬜ | `05-mobile-step04-mock-data-assets.md` |
+| 04 | [04-mock-data-assets.md](04-mock-data-assets.md) | Data (content) | — | `assets/mock/*.json` | ✅ | `05-mobile-step04-mock-data-assets.md` |
 | 05 | [05-data-core-infra.md](05-data-core-infra.md) | Data | — | `core/data/service/`, `core/data/di/` | ⬜ | `06-mobile-step05-data-core-infra.md` |
 | 06 | [06-data-auth-profile.md](06-data-auth-profile.md) | Data | — | `auth/data/`, `profile/data/` | ⬜ | `07-mobile-step06-data-auth-profile.md` |
 | 07 | [07-data-garage-catalog.md](07-data-garage-catalog.md) | Data | — | `garage/data/`, `catalog/data/` | ⬜ | `08-mobile-step07-data-garage-catalog.md` |

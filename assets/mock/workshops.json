@@ -1,0 +1,67 @@
+[
+  {
+    "id": "ws_001",
+    "name": "Bengkel Jaya Motor",
+    "rating": 4.8,
+    "review_count": 126,
+    "distance_km": 1.2,
+    "address": "Jl. Melati Raya No. 12, Sleman, DI Yogyakarta",
+    "open_time": 8,
+    "close_time": 17,
+    "bay_count": 2,
+    "static_map_asset_path": "assets/images/maps/ws_001_map.png",
+    "service_ids": ["svc_berkala", "svc_oli", "svc_perbaikan"]
+  },
+  {
+    "id": "ws_002",
+    "name": "Sinar Roda Motor",
+    "rating": 4.6,
+    "review_count": 98,
+    "distance_km": 2.1,
+    "address": "Jl. Kaliurang Km 5 No. 8, Sleman, DI Yogyakarta",
+    "open_time": 8,
+    "close_time": 18,
+    "bay_count": 3,
+    "static_map_asset_path": "assets/images/maps/ws_002_map.png",
+    "service_ids": ["svc_berkala", "svc_oli", "svc_perbaikan"]
+  },
+  {
+    "id": "ws_003",
+    "name": "Motor Care Kotagede",
+    "rating": 4.9,
+    "review_count": 154,
+    "distance_km": 3.4,
+    "address": "Jl. Kemasan No. 21, Kotagede, Yogyakarta",
+    "open_time": 8,
+    "close_time": 17,
+    "bay_count": 2,
+    "static_map_asset_path": "assets/images/maps/ws_003_map.png",
+    "service_ids": ["svc_berkala", "svc_oli", "svc_perbaikan"]
+  },
+  {
+    "id": "ws_004",
+    "name": "Bengkel Resmi Sumber Rejeki Motor & Spesialis Matic Ngaglik",
+    "rating": 4.3,
+    "review_count": 41,
+    "distance_km": 4.7,
+    "address": "Jl. Palagan Tentara Pelajar No. 45, Ngaglik, Sleman, DI Yogyakarta",
+    "open_time": 8,
+    "close_time": 17,
+    "bay_count": 1,
+    "static_map_asset_path": "assets/images/maps/ws_004_map.png",
+    "service_ids": ["svc_berkala", "svc_oli", "svc_perbaikan"]
+  },
+  {
+    "id": "ws_005",
+    "name": "Cahaya Motor Gejayan",
+    "rating": 4.5,
+    "review_count": 76,
+    "distance_km": 5.0,
+    "address": "Jl. Affandi (Gejayan) No. 33, Depok, Sleman, DI Yogyakarta",
+    "open_time": 8,
+    "close_time": 10,
+    "bay_count": 2,
+    "static_map_asset_path": "assets/images/maps/ws_005_map.png",
+    "service_ids": ["svc_berkala", "svc_oli", "svc_perbaikan"]
+  }
+]

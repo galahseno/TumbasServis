@@ -1,0 +1,38 @@
+[
+  {
+    "id": "voucher_diskon10",
+    "code": "DISKON10",
+    "label": "Diskon 10% servis ≥2 motor",
+    "discount_type": "percent",
+    "discount_value": 10,
+    "min_units": 2,
+    "valid_until": "2026-10-31T23:59:59.000"
+  },
+  {
+    "id": "voucher_hemat25",
+    "code": "HEMAT25",
+    "label": "Potongan Rp25.000 min. belanja Rp300.000",
+    "discount_type": "flat",
+    "discount_value": 25000,
+    "min_subtotal": 300000,
+    "valid_until": "2026-10-15T23:59:59.000"
+  },
+  {
+    "id": "voucher_diskon15",
+    "code": "DISKON15",
+    "label": "Diskon 15% servis ≥4 motor",
+    "discount_type": "percent",
+    "discount_value": 15,
+    "min_units": 4,
+    "valid_until": "2026-11-15T23:59:59.000"
+  },
+  {
+    "id": "voucher_hemat75",
+    "code": "HEMAT75",
+    "label": "Potongan Rp75.000 min. belanja Rp500.000",
+    "discount_type": "flat",
+    "discount_value": 75000,
+    "min_subtotal": 500000,
+    "valid_until": "2026-11-30T23:59:59.000"
+  }
+]

@@ -1,0 +1,215 @@
+[
+  {
+    "id": "part_oli_mpx1",
+    "name": "AHM Oli MPX1",
+    "category": "Oli",
+    "brand": "AHM",
+    "grade": "MPX1",
+    "price": 58000,
+    "compatible_model_ids": ["model_beat110", "model_scoopy110", "model_suprax125"]
+  },
+  {
+    "id": "part_oli_mpx2",
+    "name": "AHM Oli MPX2",
+    "category": "Oli",
+    "brand": "AHM",
+    "grade": "MPX2",
+    "price": 70000,
+    "compatible_model_ids": ["model_vario125", "model_pcx160", "model_cb150r"]
+  },
+  {
+    "id": "part_oli_spx2",
+    "name": "AHM Oli SPX2",
+    "category": "Oli",
+    "brand": "AHM",
+    "grade": "SPX2",
+    "price": 62000,
+    "compatible_model_ids": ["model_cb150r"]
+  },
+  {
+    "id": "part_oli_yamalube_sport",
+    "name": "Yamalube Sport",
+    "category": "Oli",
+    "brand": "Yamalube",
+    "grade": "Sport",
+    "price": 98000,
+    "compatible_model_ids": ["model_r15", "model_mt15"]
+  },
+  {
+    "id": "part_kampas_matic",
+    "name": "Kampas Rem Matic",
+    "category": "Kampas rem",
+    "brand": "Indoparts",
+    "grade": "Matic",
+    "price": 45000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_scoopy110",
+      "model_vario125",
+      "model_pcx160",
+      "model_miom3125",
+      "model_nmax155",
+      "model_address110"
+    ]
+  },
+  {
+    "id": "part_kampas_bebek",
+    "name": "Kampas Rem Bebek",
+    "category": "Kampas rem",
+    "brand": "Indoparts",
+    "grade": "Bebek",
+    "price": 40000,
+    "compatible_model_ids": ["model_suprax125", "model_jupiterz1115", "model_smash115"]
+  },
+  {
+    "id": "part_kampas_sport",
+    "name": "Kampas Rem Sport",
+    "category": "Kampas rem",
+    "brand": "Indoparts",
+    "grade": "Sport",
+    "price": 120000,
+    "compatible_model_ids": [
+      "model_cb150r",
+      "model_r15",
+      "model_mt15",
+      "model_satriaf150",
+      "model_gsxr150",
+      "model_ninja250"
+    ]
+  },
+  {
+    "id": "part_busi_ngk",
+    "name": "Busi NGK",
+    "category": "Busi",
+    "brand": "NGK",
+    "grade": "Standard",
+    "price": 28000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_scoopy110",
+      "model_vario125",
+      "model_suprax125",
+      "model_miom3125",
+      "model_jupiterz1115",
+      "model_address110",
+      "model_smash115"
+    ]
+  },
+  {
+    "id": "part_busi_iridium",
+    "name": "Busi NGK Iridium",
+    "category": "Busi",
+    "brand": "NGK",
+    "grade": "Iridium",
+    "price": 95000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_pcx160",
+      "model_nmax155",
+      "model_cb150r",
+      "model_r15",
+      "model_mt15",
+      "model_satriaf150",
+      "model_gsxr150",
+      "model_ninja250"
+    ]
+  },
+  {
+    "id": "part_aki_gs_astra",
+    "name": "Aki GS Astra",
+    "category": "Aki",
+    "brand": "GS Astra",
+    "grade": "Standard",
+    "price": 185000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_scoopy110",
+      "model_vario125",
+      "model_pcx160",
+      "model_suprax125",
+      "model_miom3125",
+      "model_address110",
+      "model_smash115",
+      "model_jupiterz1115",
+      "model_nmax155"
+    ]
+  },
+  {
+    "id": "part_aki_yuasa",
+    "name": "Aki Yuasa",
+    "category": "Aki",
+    "brand": "Yuasa",
+    "grade": "Premium",
+    "price": 165000,
+    "compatible_model_ids": [
+      "model_cb150r",
+      "model_r15",
+      "model_mt15",
+      "model_satriaf150",
+      "model_gsxr150",
+      "model_ninja250"
+    ]
+  },
+  {
+    "id": "part_ban_irc",
+    "name": "Ban IRC",
+    "category": "Ban",
+    "brand": "IRC",
+    "grade": "Standard",
+    "price": 185000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_scoopy110",
+      "model_vario125",
+      "model_pcx160",
+      "model_suprax125",
+      "model_miom3125",
+      "model_address110",
+      "model_smash115",
+      "model_jupiterz1115",
+      "model_nmax155"
+    ]
+  },
+  {
+    "id": "part_ban_federal",
+    "name": "Ban Federal",
+    "category": "Ban",
+    "brand": "Federal",
+    "grade": "Sport",
+    "price": 210000,
+    "compatible_model_ids": [
+      "model_cb150r",
+      "model_r15",
+      "model_mt15",
+      "model_satriaf150",
+      "model_gsxr150",
+      "model_ninja250"
+    ]
+  },
+  {
+    "id": "part_filter_udara",
+    "name": "Filter Udara",
+    "category": "Filter udara",
+    "brand": "Sakura",
+    "grade": "Standard",
+    "price": 35000,
+    "compatible_model_ids": [
+      "model_beat110",
+      "model_scoopy110",
+      "model_vario125",
+      "model_pcx160",
+      "model_suprax125",
+      "model_cb150r",
+      "model_miom3125",
+      "model_nmax155",
+      "model_jupiterz1115",
+      "model_r15",
+      "model_mt15",
+      "model_address110",
+      "model_smash115",
+      "model_satriaf150",
+      "model_gsxr150",
+      "model_ninja250"
+    ]
+  }
+]

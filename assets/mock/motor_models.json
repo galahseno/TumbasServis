@@ -1,0 +1,18 @@
+[
+  { "id": "model_beat110", "brand": "Honda", "name": "Beat 110", "category": "matic", "cc": 110 },
+  { "id": "model_scoopy110", "brand": "Honda", "name": "Scoopy 110", "category": "matic", "cc": 110 },
+  { "id": "model_vario125", "brand": "Honda", "name": "Vario 125", "category": "matic", "cc": 125 },
+  { "id": "model_pcx160", "brand": "Honda", "name": "PCX 160", "category": "matic", "cc": 160 },
+  { "id": "model_suprax125", "brand": "Honda", "name": "Supra X 125", "category": "bebek", "cc": 125 },
+  { "id": "model_cb150r", "brand": "Honda", "name": "CB150R", "category": "sport", "cc": 150 },
+  { "id": "model_miom3125", "brand": "Yamaha", "name": "Mio M3 125", "category": "matic", "cc": 125 },
+  { "id": "model_nmax155", "brand": "Yamaha", "name": "NMAX 155", "category": "matic", "cc": 155 },
+  { "id": "model_jupiterz1115", "brand": "Yamaha", "name": "Jupiter Z1 115", "category": "bebek", "cc": 115 },
+  { "id": "model_r15", "brand": "Yamaha", "name": "R15", "category": "sport", "cc": 155 },
+  { "id": "model_mt15", "brand": "Yamaha", "name": "MT-15", "category": "sport", "cc": 155 },
+  { "id": "model_address110", "brand": "Suzuki", "name": "Address 110", "category": "matic", "cc": 110 },
+  { "id": "model_smash115", "brand": "Suzuki", "name": "Smash 115", "category": "bebek", "cc": 115 },
+  { "id": "model_satriaf150", "brand": "Suzuki", "name": "Satria F150", "category": "sport", "cc": 150 },
+  { "id": "model_gsxr150", "brand": "Suzuki", "name": "GSX-R150", "category": "sport", "cc": 150 },
+  { "id": "model_ninja250", "brand": "Kawasaki", "name": "Ninja 250", "category": "sport", "cc": 250 }
+]

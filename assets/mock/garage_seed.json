@@ -1,0 +1,34 @@
+[
+  {
+    "id": "motor_001",
+    "owner_id": "user_001",
+    "nickname": "Vario 125",
+    "plate_number": "AB 1234 XY",
+    "year": 2022,
+    "model_id": "model_vario125"
+  },
+  {
+    "id": "motor_002",
+    "owner_id": "user_001",
+    "nickname": "Beat 110",
+    "plate_number": "AB 5678 ZZ",
+    "year": 2021,
+    "model_id": "model_beat110"
+  },
+  {
+    "id": "motor_003",
+    "owner_id": "user_001",
+    "nickname": "PCX 160",
+    "plate_number": "AB 9012 QR",
+    "year": 2023,
+    "model_id": "model_pcx160"
+  },
+  {
+    "id": "motor_004",
+    "owner_id": "user_001",
+    "nickname": "Supra X 125",
+    "plate_number": "AB 3344 KL",
+    "year": 2018,
+    "model_id": "model_suprax125"
+  }
+]
