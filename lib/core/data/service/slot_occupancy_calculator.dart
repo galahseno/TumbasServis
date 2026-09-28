@@ -1,13 +1,5 @@
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 
-/// Computes how many motors are booked at a given workshop/date/hour.
-///
-/// Composed of a deterministic mock baseline (so the same inputs always
-/// produce the same slot table across app restarts, without persisting
-/// anything) plus a live overlay read from the real confirmed bookings in
-/// [LocalStore]. Both [WorkshopRepositoryImpl] and [BookingRepositoryImpl]
-/// call this directly instead of depending on each other, avoiding a
-/// provider cycle between the two repositories.
 class SlotOccupancyCalculator {
   const SlotOccupancyCalculator();
 

@@ -5,9 +5,11 @@ import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
+import 'package:tumbas_servis/core/data/service/status_notification_coordinator.dart';
 import 'package:tumbas_servis/core/data/service/system_clock.dart';
 import 'package:tumbas_servis/core/data/service/tracking_simulator.dart';
 import 'package:tumbas_servis/core/domain/service/clock.dart';
+import 'package:tumbas_servis/notification/data/di/notification_data_module.dart';
 
 final sharedPreferencesProvider = Provider<SharedPreferences>((ref) {
   throw UnimplementedError(
@@ -47,3 +49,16 @@ final trackingSimulatorProvider = Provider<TrackingSimulator>((ref) {
 });
 
 final clockProvider = Provider<Clock>((ref) => SystemClock());
+
+final statusNotificationCoordinatorProvider =
+    Provider<StatusNotificationCoordinator>((ref) {
+      final coordinator = StatusNotificationCoordinator(
+        trackingSimulator: ref.watch(trackingSimulatorProvider),
+        localStore: ref.watch(localStoreProvider),
+        notificationRepository: ref.watch(notificationRepositoryProvider),
+        clock: ref.watch(clockProvider),
+      );
+      coordinator.start();
+      ref.onDispose(coordinator.dispose);
+      return coordinator;
+    });

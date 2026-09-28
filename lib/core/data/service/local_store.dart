@@ -24,8 +24,6 @@ class LocalStore {
   static const _themeModeKey = 'local_store.theme_mode';
   static const _demoModeEnabledKey = 'local_store.demo_mode_enabled';
 
-  // -- Simple flags (shared_preferences) --
-
   bool getSessionFlag() => _preferences.getBool(_sessionActiveKey) ?? false;
 
   Future<void> setSessionFlag(bool value) =>
@@ -42,8 +40,6 @@ class LocalStore {
 
   Future<void> setDemoModeEnabled(bool value) =>
       _preferences.setBool(_demoModeEnabledKey, value);
-
-  // -- Structured store (hive_ce) --
 
   Future<Box<String>> _box(String boxName) async {
     final existing = _openBoxes[boxName];

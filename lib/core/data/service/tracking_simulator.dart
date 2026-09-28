@@ -45,6 +45,9 @@ class TrackingSimulator {
         .stream;
   }
 
+  UnitStatus currentStatus(String bookingId, String unitCode) =>
+      _currentStatus[_keyFor(bookingId, unitCode)] ?? UnitStatus.terjadwal;
+
   Duration? _intervalForCurrentSpeed() =>
       switch (_demoModeController.trackingSpeed) {
         TrackingSpeed.mati => null,
