@@ -8,7 +8,10 @@ import 'package:tumbas_servis/core/domain/repository/booking/booking_repository.
 class FakeBookingRepository implements BookingRepository {
   Result<List<Booking>> bookingsResult = const Result.ok([]);
   Result<BookingDraft?> currentDraftResult = const Result.ok(null);
+  Result<BookingDraft>? createDraftResult;
   bool draftDeleted = false;
+  BookingDraft? lastUpdatedDraft;
+  List<BookingDraft> updateDraftCalls = [];
 
   @override
   Future<Result<List<Booking>>> getBookings({BookingStatus? status}) async =>
@@ -25,11 +28,14 @@ class FakeBookingRepository implements BookingRepository {
 
   @override
   Future<Result<BookingDraft>> createDraft() async =>
-      throw UnimplementedError();
+      createDraftResult ?? (throw UnimplementedError());
 
   @override
-  Future<Result<BookingDraft>> updateDraft(BookingDraft draft) async =>
-      throw UnimplementedError();
+  Future<Result<BookingDraft>> updateDraft(BookingDraft draft) async {
+    lastUpdatedDraft = draft;
+    updateDraftCalls.add(draft);
+    return Result.ok(draft);
+  }
 
   @override
   Future<Result<Booking>> confirmBooking(BookingDraft draft) async =>

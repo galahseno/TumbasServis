@@ -30,5 +30,29 @@
     "plate_number": "AB 3344 KL",
     "year": 2018,
     "model_id": "model_suprax125"
+  },
+  {
+    "id": "motor_005",
+    "owner_id": "user_001",
+    "nickname": "Ninja 250",
+    "plate_number": "AB 7788 MN",
+    "year": 2020,
+    "model_id": "model_ninja250"
+  },
+  {
+    "id": "motor_006",
+    "owner_id": "user_001",
+    "nickname": "NMAX 155",
+    "plate_number": "AB 4455 NM",
+    "year": 2022,
+    "model_id": "model_nmax155"
+  },
+  {
+    "id": "motor_007",
+    "owner_id": "user_001",
+    "nickname": "Satria F150",
+    "plate_number": "AB 6677 SF",
+    "year": 2021,
+    "model_id": "model_satriaf150"
   }
 ]

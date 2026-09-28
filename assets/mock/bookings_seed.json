@@ -153,5 +153,40 @@
     "discount": 0,
     "total": 85000,
     "created_at": "2026-09-29T10:00:00.000"
+  },
+  {
+    "id": "bk_seed_005",
+    "code": "TS-261007-0420",
+    "user_id": "user_001",
+    "workshop_id": "ws_001",
+    "units": [
+      {
+        "unit_code": "-A",
+        "motor_id": "motor_005",
+        "motor_snapshot": {
+          "id": "motor_005",
+          "owner_id": "user_001",
+          "nickname": "Ninja 250",
+          "plate_number": "AB 7788 MN",
+          "year": 2020,
+          "model_id": "model_ninja250"
+        },
+        "service_ids": ["svc_berkala"],
+        "part_ids": [],
+        "status": "terjadwal",
+        "status_history": [
+          { "status": "terjadwal", "timestamp": "2026-09-29T11:00:00.000" }
+        ],
+        "subtotal": 85000,
+        "duration_min": 60
+      }
+    ],
+    "schedule_mode": "shared",
+    "shared_slot": { "date": "2026-10-07T00:00:00.000", "hour": 10, "capacity": 5, "booked": 1 },
+    "status": "terjadwal",
+    "subtotal": 85000,
+    "discount": 0,
+    "total": 85000,
+    "created_at": "2026-09-29T11:00:00.000"
   }
 ]

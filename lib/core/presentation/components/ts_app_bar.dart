@@ -2,12 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_icon_button.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_logo.dart';
 
+enum TsAppBarLeading { none, back, close }
+
 class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
   const TsAppBar({
     required this.title,
     super.key,
     this.showBack = false,
     this.onBack,
+    this.leading = TsAppBarLeading.none,
+    this.onLeadingPressed,
+    this.leadingSemanticLabel,
     this.large = false,
     this.bellUnreadCount,
     this.onBellPressed,
@@ -30,6 +35,19 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
   }) =>
       TsAppBar(title: title, showBack: true, onBack: onBack, actions: actions);
 
+  factory TsAppBar.close({
+    required String title,
+    required VoidCallback onClose,
+    String semanticLabel = 'Tutup',
+    List<Widget> actions = const [],
+  }) => TsAppBar(
+    title: title,
+    leading: TsAppBarLeading.close,
+    onLeadingPressed: onClose,
+    leadingSemanticLabel: semanticLabel,
+    actions: actions,
+  );
+
   factory TsAppBar.title(String title) => TsAppBar(title: title);
 
   factory TsAppBar.large(String title) => TsAppBar(title: title, large: true);
@@ -37,6 +55,9 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final String title;
   final bool showBack;
   final VoidCallback? onBack;
+  final TsAppBarLeading leading;
+  final VoidCallback? onLeadingPressed;
+  final String? leadingSemanticLabel;
   final bool large;
   final int? bellUnreadCount;
   final VoidCallback? onBellPressed;
@@ -51,20 +72,33 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
     final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
 
+    final hasBack = showBack || leading == TsAppBarLeading.back;
+    final hasClose = leading == TsAppBarLeading.close;
+    final leadingWidget = hasClose
+        ? TsIconButton(
+            icon: Icons.close_rounded,
+            onPressed: onLeadingPressed,
+            semanticLabel: leadingSemanticLabel ?? 'Tutup',
+          )
+        : hasBack
+        ? TsIconButton(
+            icon: Icons.arrow_back_rounded,
+            onPressed:
+                onLeadingPressed ??
+                onBack ??
+                () => Navigator.of(context).maybePop(),
+            semanticLabel: leadingSemanticLabel ?? 'Kembali',
+          )
+        : null;
+
     return AppBar(
       backgroundColor: scheme.surface,
       surfaceTintColor: Colors.transparent,
       elevation: 0,
       toolbarHeight: preferredSize.height,
       centerTitle: false,
-      leading: showBack
-          ? TsIconButton(
-              icon: Icons.arrow_back_rounded,
-              onPressed: onBack ?? () => Navigator.of(context).maybePop(),
-              semanticLabel: 'Kembali',
-            )
-          : null,
-      leadingWidth: showBack ? 56 : null,
+      leading: leadingWidget,
+      leadingWidth: leadingWidget != null ? 56 : null,
       title:
           titleWidget ??
           Text(

@@ -46,7 +46,7 @@ void main() {
     final result = await repository.getMotors();
     expect(result, isA<Ok<List<Motor>>>());
     final motors = (result as Ok<List<Motor>>).value;
-    expect(motors, hasLength(4));
+    expect(motors, hasLength(7));
     expect(motors.map((m) => m.id), contains('motor_001'));
   });
 
@@ -64,7 +64,7 @@ void main() {
     expect(result, isA<Ok<Motor>>());
 
     final motors = (await repository.getMotors() as Ok<List<Motor>>).value;
-    expect(motors, hasLength(5));
+    expect(motors, hasLength(8));
     expect(motors.map((m) => m.id), contains('motor_new'));
   });
 
@@ -96,7 +96,7 @@ void main() {
     expect(result, isA<Ok<Motor>>());
 
     final motors = (await repository.getMotors() as Ok<List<Motor>>).value;
-    expect(motors, hasLength(4));
+    expect(motors, hasLength(7));
     expect(
       motors.firstWhere((m) => m.id == 'motor_001').nickname,
       'Vario 125 (updated)',

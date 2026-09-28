@@ -125,6 +125,46 @@ abstract final class TsDialog {
     );
   }
 
+  static Future<bool?> confirmSave(
+    BuildContext context, {
+    required String title,
+    required String message,
+    required String confirmLabel,
+    required String cancelLabel,
+  }) {
+    return showDialog<bool>(
+      context: context,
+      builder: (ctx) => _TsDialogShell(
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            _header(ctx, title: title, message: message),
+            const SizedBox(height: 20),
+            Row(
+              children: [
+                Expanded(
+                  child: TsButton(
+                    label: cancelLabel,
+                    type: TsButtonType.ghost,
+                    onPressed: () => Navigator.of(ctx).pop(false),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: TsButton(
+                    label: confirmLabel,
+                    onPressed: () => Navigator.of(ctx).pop(true),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   static Future<void> info(
     BuildContext context, {
     required String title,

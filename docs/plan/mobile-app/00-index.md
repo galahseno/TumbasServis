@@ -173,7 +173,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 10 | [10-foundations-app-shell.md](10-foundations-app-shell.md) | Presentation (foundation) | — | `app/`, `core/presentation/components/` | ✅ | `11-mobile-step10-foundations-app-shell.md` |
 | 11 | [11-auth-s01-s04.md](11-auth-s01-s04.md) | Presentation, phone | P0*/P1 | S01–S04 | ✅ | `12-mobile-step11-auth-s01-s04.md` |
 | 12 | [12-home-s05.md](12-home-s05.md) | Presentation, phone | P0 | S05 + `AppShell` | ✅ | `13-mobile-step12-home-s05.md` |
-| 13 | [13-booking-s10-pilih-motor.md](13-booking-s10-pilih-motor.md) | Presentation, phone | P0 | S10 | ⬜ | `14-mobile-step13-booking-s10-pilih-motor.md` |
+| 13 | [13-booking-s10-pilih-motor.md](13-booking-s10-pilih-motor.md) | Presentation, phone | P0 | S10 | ✅ | `15-mobile-step13-booking-s10-pilih-motor.md` |
 | 14 | [14-booking-s11-detail-servis.md](14-booking-s11-detail-servis.md) | Presentation, phone | P0 | S11 | ⬜ | `15-mobile-step14-booking-s11-detail-servis.md` |
 | 15 | [15-catalog-s12.md](15-catalog-s12.md) | Presentation, phone | P1 | S12 | ⬜ | `16-mobile-step15-catalog-s12.md` |
 | 16 | [16-workshop-s13-s14.md](16-workshop-s13-s14.md) | Presentation, phone | P0/P1 | S13, S14 | ⬜ | `17-mobile-step16-workshop-s13-s14.md` |
