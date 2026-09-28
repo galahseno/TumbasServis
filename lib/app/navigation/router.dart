@@ -16,6 +16,9 @@ import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.d
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/presentation/components/app_shell.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
+import 'package:tumbas_servis/workshop/presentation/detail_bengkel/detail_bengkel_page.dart';
+import 'package:tumbas_servis/workshop/presentation/detail_bengkel/state/detail_bengkel_state.dart';
+import 'package:tumbas_servis/workshop/presentation/pilih_bengkel/pilih_bengkel_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -61,15 +64,21 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.bookingWorkshop,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, _) => const PilihBengkelPage(),
       ),
       GoRoute(
         path: Routes.bookingWorkshopDetailTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) => DetailBengkelPage(
+          workshopId: state.pathParameters['id']!,
+          variant: WorkshopDetailVariant.inFlow,
+        ),
       ),
       GoRoute(
         path: Routes.workshopDetailTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) => DetailBengkelPage(
+          workshopId: state.pathParameters['id']!,
+          variant: WorkshopDetailVariant.standalone,
+        ),
       ),
       GoRoute(
         path: Routes.bookingSchedule,

@@ -178,6 +178,34 @@ void main() {
     },
   );
 
+  test('selectWorkshop persists the chosen workshop id on the draft', () async {
+    await waitForLoad();
+    final notifier = container.read(bookingDraftProvider.notifier);
+
+    await notifier.selectWorkshop('ws_001');
+
+    expect(container.read(bookingDraftProvider)!.workshopId, 'ws_001');
+    expect(bookingRepository.lastUpdatedDraft!.workshopId, 'ws_001');
+  });
+
+  test('standalone entry: reset then selectWorkshop carries only the workshop '
+      'id into a fresh, motor-less draft (S13 skipped)', () async {
+    bookingRepository.createDraftResult = Result.ok(
+      _draft(selectedMotorIds: const ['m1', 'm2']),
+    );
+    await waitForLoad();
+    final notifier = container.read(bookingDraftProvider.notifier);
+
+    bookingRepository.createDraftResult = Result.ok(_draft());
+    await notifier.reset();
+    await notifier.selectWorkshop('ws_005');
+
+    final draft = container.read(bookingDraftProvider)!;
+    expect(draft.workshopId, 'ws_005');
+    expect(draft.selectedMotorIds, isEmpty);
+    expect(bookingRepository.draftDeleted, isTrue);
+  });
+
   group('unit config mutations', () {
     test('toggleService adds then removes a service id', () async {
       bookingRepository.createDraftResult = Result.ok(

@@ -176,7 +176,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 13 | [13-booking-s10-pilih-motor.md](13-booking-s10-pilih-motor.md) | Presentation, phone | P0 | S10 | ✅ | `15-mobile-step13-booking-s10-pilih-motor.md` |
 | 14 | [14-booking-s11-detail-servis.md](14-booking-s11-detail-servis.md) | Presentation, phone | P0 | S11 | ✅ | `15-mobile-step14-booking-s11-detail-servis.md` |
 | 15 | [15-catalog-s12.md](15-catalog-s12.md) | Presentation, phone | P1 | S12 | ✅ | `16-mobile-step15-catalog-s12.md` |
-| 16 | [16-workshop-s13-s14.md](16-workshop-s13-s14.md) | Presentation, phone | P0/P1 | S13, S14 | ⬜ | `17-mobile-step16-workshop-s13-s14.md` |
+| 16 | [16-workshop-s13-s14.md](16-workshop-s13-s14.md) | Presentation, phone | P0/P1 | S13, S14 | ✅ | `17-mobile-step16-workshop-s13-s14.md` |
 | 17 | [17-schedule-s15.md](17-schedule-s15.md) | Presentation, phone | P0 | S15 | ⬜ | `18-mobile-step17-schedule-s15.md` |
 | 18 | [18-summary-voucher-s16-s17.md](18-summary-voucher-s16-s17.md) | Presentation, phone | P0/P1 | S16, S17 | ⬜ | `19-mobile-step18-summary-voucher-s16-s17.md` |
 | 19 | [19-ticket-s18-p0-checkpoint.md](19-ticket-s18-p0-checkpoint.md) | Presentation, phone | P0 | S18 + e2e flow | ⬜ | `20-mobile-step19-ticket-s18-p0-checkpoint.md` |
