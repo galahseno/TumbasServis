@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tumbas_servis/auth/data/repository/session_repository_impl.dart';
 import 'package:tumbas_servis/booking/data/repository/booking_repository_impl.dart';
 import 'package:tumbas_servis/catalog/data/repository/catalog_repository_impl.dart';
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/domain/model/invoice/invoice.dart';
@@ -39,6 +40,7 @@ void main() {
       localStore: localStore,
       mockJsonLoader: MockJsonLoader(),
       latencySimulator: FakeLatencySimulator(),
+      demoModeController: DemoModeController(),
     );
     await sessionRepository.verifyOtp('123456');
 

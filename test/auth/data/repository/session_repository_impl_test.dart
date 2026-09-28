@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:hive_ce/hive_ce.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tumbas_servis/auth/data/repository/session_repository_impl.dart';
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
@@ -22,6 +23,7 @@ void main() {
 
   late Directory tempDir;
   late LocalStore store;
+  late DemoModeController demoModeController;
   late SessionRepositoryImpl repository;
 
   setUp(() async {
@@ -31,10 +33,12 @@ void main() {
       preferences: await SharedPreferences.getInstance(),
       resolveStorageDirectory: () async => tempDir.path,
     );
+    demoModeController = DemoModeController();
     repository = SessionRepositoryImpl(
       localStore: store,
       mockJsonLoader: MockJsonLoader(),
       latencySimulator: FakeLatencySimulator(),
+      demoModeController: demoModeController,
     );
   });
 
@@ -97,6 +101,7 @@ void main() {
       localStore: restartedStore,
       mockJsonLoader: MockJsonLoader(),
       latencySimulator: FakeLatencySimulator(),
+      demoModeController: DemoModeController(),
     );
 
     final result = await restartedRepository.currentUser();
@@ -119,5 +124,15 @@ void main() {
   test('logout while already logged out does not throw', () async {
     final result = await repository.logout();
     expect(result, isA<Ok<void>>());
+  });
+
+  test('login errors once when a network error is armed', () async {
+    demoModeController.armNextWriteError();
+
+    final armedResult = await repository.login('081234567890');
+    expect(armedResult, isA<Error<void>>());
+
+    final nextResult = await repository.login('081234567890');
+    expect(nextResult, isA<Ok<void>>());
   });
 }

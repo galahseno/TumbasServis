@@ -1,14 +1,19 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tumbas_servis/app/app.dart';
 import 'package:tumbas_servis/app/navigation/router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/auth/data/di/auth_data_module.dart';
+import 'package:tumbas_servis/auth/presentation/di/auth_presentation_module.dart';
+import 'package:tumbas_servis/auth/presentation/otp/otp_view_model.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/domain/model/user/user.dart';
+import 'package:tumbas_servis/profile/data/di/profile_data_module.dart';
 
 import '../../support/fake_session_repository.dart';
+import '../../support/fake_settings_repository.dart';
+import '../../support/manual_timer_factory.dart';
 
 const _allRoutePaths = [
   Routes.splash,
@@ -50,6 +55,12 @@ void main() {
     container = ProviderContainer(
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
+        settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository()),
+        // /otp starts a real countdown Timer; a manual (never auto-firing)
+        // factory keeps no real Timer pending past this test's end.
+        otpViewModelProvider.overrideWith(
+          () => OtpViewModel(timerFactory: ManualTimerFactory().call),
+        ),
       ],
     );
     router = container.read(routerProvider);
@@ -59,10 +70,7 @@ void main() {
 
   Future<void> pumpRouter(WidgetTester tester) async {
     await tester.pumpWidget(
-      UncontrolledProviderScope(
-        container: container,
-        child: MaterialApp.router(routerConfig: router),
-      ),
+      UncontrolledProviderScope(container: container, child: const App()),
     );
   }
 
@@ -88,6 +96,15 @@ void main() {
         await tester.pumpAndSettle();
 
         expect(currentPath(), exempt);
+
+        // Splash's own pending navigation timer (no session -> onboarding)
+        // would otherwise still be pending when the container disposes at
+        // tearDown; let it run to completion so no real Timer leaks past
+        // this test.
+        if (exempt == Routes.splash) {
+          await tester.pump(const Duration(milliseconds: 900));
+          await tester.pumpAndSettle();
+        }
       });
     }
 

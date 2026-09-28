@@ -1,19 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
-enum TsButtonType {
-  primary,
-
-  secondary,
-
-  outline,
-
-  ghost,
-
-  danger,
-
-  dangerOutline,
-}
+enum TsButtonType { primary, secondary, outline, ghost, danger, dangerOutline }
 
 class _Palette {
   const _Palette({
@@ -135,37 +123,32 @@ class _TsButtonState extends State<TsButton> {
       context,
     ).textTheme.labelLarge?.copyWith(color: palette.foreground);
 
-    final content = IndexedStack(
-      index: widget.isLoading ? 1 : 0,
-      alignment: Alignment.center,
-      children: [
-        Row(
-          mainAxisSize: MainAxisSize.min,
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (widget.leadingIcon != null) ...[
-              Icon(widget.leadingIcon, size: 20, color: palette.foreground),
-              const SizedBox(width: 8),
-            ],
-            Flexible(
-              child: Text(
-                widget.label,
-                style: labelStyle,
-                overflow: TextOverflow.ellipsis,
-              ),
+    final content = widget.isLoading
+        ? SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 2,
+              valueColor: AlwaysStoppedAnimation(palette.foreground),
             ),
-          ],
-        ),
-        SizedBox(
-          width: 20,
-          height: 20,
-          child: CircularProgressIndicator(
-            strokeWidth: 2,
-            valueColor: AlwaysStoppedAnimation(palette.foreground),
-          ),
-        ),
-      ],
-    );
+          )
+        : Row(
+            mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              if (widget.leadingIcon != null) ...[
+                Icon(widget.leadingIcon, size: 20, color: palette.foreground),
+                const SizedBox(width: 8),
+              ],
+              Flexible(
+                child: Text(
+                  widget.label,
+                  style: labelStyle,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          );
 
     final button = Container(
       height: height,

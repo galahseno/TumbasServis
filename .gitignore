@@ -16,3 +16,6 @@ build/
 android/key.properties
 *.jks
 *.keystore
+
+# Pencil design exports (regenerable from TumbasServis.pen via pencil MCP)
+design/pencil/exports/

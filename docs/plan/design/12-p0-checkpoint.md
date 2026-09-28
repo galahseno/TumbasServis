@@ -23,7 +23,7 @@ Per-step reviews judge screens in isolation. This step judges the **mandatory fl
 - All P0 frames from steps 05–11, all components from steps 02–04.
 - The `/better-interface` reports of steps 05–11 (their LOW lists feed the systemic-LOW sweep).
 
-> **Hand-off from step 11 (2026-09-24):** S18 carries a **real, decodable QR** (~114 small rectangles per code, tile + modules bound to primitives, dark-on-light in both themes). When the Figma import finally runs (step 20) it must check that html2figma keeps the modules crisp (no anti-aliased blur, no merged or dropped rectangles) and that the code still scans from the Figma render. S18 has no app bar and a flat sticky footer; the Tablet-P bar is a full-width strip with a 560 dp inner column. The step 11 PNG exports are not on disk (only `step02` and `step04` exist); step 19 exports the full set.
+> **Hand-off from step 11 (2026-09-24):** S18 carries a **real, decodable QR** (~114 small rectangles per code, tile + modules bound to primitives, dark-on-light in both themes). When the Figma import finally runs (step 20) it must check that html2figma keeps the modules crisp (no anti-aliased blur, no merged or dropped rectangles) and that the code still scans from the Figma render. S18 has no app bar and a flat sticky footer; the Tablet-P bar is a full-width strip with a 560 dp inner column. The step 05–12 PNG exports were deleted from disk and regenerated from the .pen on 2026-09-28 (`design/pencil/exports/step01`–`step12`, node ids unchanged; step 12 is a reconstructed superset — see its `INDEX.md`).
 
 ## Kickoff decisions (2026-09-24, 2 interview rounds)
 

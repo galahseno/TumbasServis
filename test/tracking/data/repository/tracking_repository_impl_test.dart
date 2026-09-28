@@ -97,6 +97,7 @@ void main() {
       localStore: localStore,
       mockJsonLoader: MockJsonLoader(),
       latencySimulator: FakeLatencySimulator(),
+      demoModeController: DemoModeController(),
     );
     await sessionRepository.verifyOtp('123456');
 

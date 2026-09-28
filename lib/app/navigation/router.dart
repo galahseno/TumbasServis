@@ -5,6 +5,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/auth/data/di/auth_data_module.dart';
+import 'package:tumbas_servis/auth/presentation/login/login_page.dart';
+import 'package:tumbas_servis/auth/presentation/onboarding/onboarding_page.dart';
+import 'package:tumbas_servis/auth/presentation/otp/otp_page.dart';
+import 'package:tumbas_servis/auth/presentation/splash/splash_page.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/presentation/components/app_shell.dart';
 
@@ -13,10 +17,13 @@ final routerProvider = Provider<GoRouter>((ref) {
     initialLocation: Routes.splash,
     redirect: (context, state) => _redirect(ref, state),
     routes: [
-      GoRoute(path: Routes.splash, builder: (_, _) => const Placeholder()),
-      GoRoute(path: Routes.onboarding, builder: (_, _) => const Placeholder()),
-      GoRoute(path: Routes.login, builder: (_, _) => const Placeholder()),
-      GoRoute(path: Routes.otp, builder: (_, _) => const Placeholder()),
+      GoRoute(path: Routes.splash, builder: (_, _) => const SplashPage()),
+      GoRoute(
+        path: Routes.onboarding,
+        builder: (_, _) => const OnboardingPage(),
+      ),
+      GoRoute(path: Routes.login, builder: (_, _) => const LoginPage()),
+      GoRoute(path: Routes.otp, builder: (_, _) => const OtpPage()),
       GoRoute(
         path: Routes.notifications,
         builder: (_, _) => const Placeholder(),

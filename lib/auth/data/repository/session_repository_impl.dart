@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_initializing_formals
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
@@ -11,13 +12,16 @@ class SessionRepositoryImpl implements SessionRepository {
     required LocalStore localStore,
     required MockJsonLoader mockJsonLoader,
     required LatencySimulator latencySimulator,
+    required DemoModeController demoModeController,
   }) : _localStore = localStore,
        _mockJsonLoader = mockJsonLoader,
-       _latencySimulator = latencySimulator;
+       _latencySimulator = latencySimulator,
+       _demoModeController = demoModeController;
 
   final LocalStore _localStore;
   final MockJsonLoader _mockJsonLoader;
   final LatencySimulator _latencySimulator;
+  final DemoModeController _demoModeController;
 
   static const _sessionBox = 'session';
   static const _userKey = 'user';
@@ -27,6 +31,9 @@ class SessionRepositoryImpl implements SessionRepository {
   Future<Result<void>> login(String phone) async {
     try {
       await _latencySimulator.simulate();
+      if (_demoModeController.consumeArmedError()) {
+        return Result.error(Exception('Simulated network error.'));
+      }
       return const Result.ok(null);
     } catch (e) {
       return Result.error(e is Exception ? e : Exception(e.toString()));

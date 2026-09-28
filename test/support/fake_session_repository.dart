@@ -4,16 +4,27 @@ import 'package:tumbas_servis/core/domain/repository/session/session_repository.
 
 class FakeSessionRepository implements SessionRepository {
   Result<User?> currentUserResult = const Result.ok(null);
+  Result<void> loginResult = const Result.ok(null);
+  Result<User> Function(String code)? verifyOtpResult;
+  String? lastLoginPhone;
+  String? lastVerifiedCode;
 
   @override
   Future<Result<User?>> currentUser() async => currentUserResult;
 
   @override
-  Future<Result<void>> login(String phone) async => const Result.ok(null);
+  Future<Result<void>> login(String phone) async {
+    lastLoginPhone = phone;
+    return loginResult;
+  }
 
   @override
-  Future<Result<User>> verifyOtp(String code) async =>
-      throw UnimplementedError();
+  Future<Result<User>> verifyOtp(String code) async {
+    lastVerifiedCode = code;
+    final resolver = verifyOtpResult;
+    if (resolver == null) throw UnimplementedError();
+    return resolver(code);
+  }
 
   @override
   Future<Result<void>> logout() async => const Result.ok(null);

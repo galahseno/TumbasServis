@@ -8,5 +8,6 @@ final sessionRepositoryProvider = Provider<SessionRepository>((ref) {
     localStore: ref.watch(localStoreProvider),
     mockJsonLoader: ref.watch(mockJsonLoaderProvider),
     latencySimulator: ref.watch(latencySimulatorProvider),
+    demoModeController: ref.watch(demoModeControllerProvider),
   );
 });

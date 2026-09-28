@@ -20,7 +20,7 @@ Get the approved Pencil design into Figma as a documented file matching the PRD 
 
 ## Inputs
 
-- Step 01 verdict (Route B approved), Starter decision, Figma-compat rules in [`00-index.md`](00-index.md#figma-plugin-compatibility); step 04 test-import record (html2figma version, options that worked). No step 12 test import exists (deferred to this step), and the step 05–11 PNG exports are not on disk: export them again from Pencil.
+- Step 01 verdict (Route B approved), Starter decision, Figma-compat rules in [`00-index.md`](00-index.md#figma-plugin-compatibility); step 04 test-import record (html2figma version, options that worked). No step 12 test import exists (deferred to this step). The step 01–18 PNG exports are on disk again — regenerated from the .pen on 2026-09-28 (`design/pencil/exports/step01`–`step18` + `INDEX.md` each; step 12 is a reconstructed superset, see its `INDEX.md`).
 - Step 19 conversion manifest (components + variants, styles/variables, screens with node ids).
 - Pencil PNG exports (`design/pencil/exports/`) and HTML exports (`design/pencil/exports/html/`) with their `INDEX.md` (node id ↔ frame name).
 - Figma target file, owned by the user (a Draft on Starter unless the plan was upgraded).

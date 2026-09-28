@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class TsTextField extends StatelessWidget {
@@ -16,6 +17,10 @@ class TsTextField extends StatelessWidget {
     this.maxLines = 1,
     this.maxLength,
     this.keyboardType,
+    this.focusNode,
+    this.inputFormatters,
+    this.onSubmitted,
+    this.onEditingComplete,
   });
 
   final String label;
@@ -30,6 +35,10 @@ class TsTextField extends StatelessWidget {
   final int? maxLines;
   final int? maxLength;
   final TextInputType? keyboardType;
+  final FocusNode? focusNode;
+  final List<TextInputFormatter>? inputFormatters;
+  final ValueChanged<String>? onSubmitted;
+  final VoidCallback? onEditingComplete;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +69,10 @@ class TsTextField extends StatelessWidget {
           maxLines: maxLines,
           maxLength: maxLength,
           keyboardType: keyboardType,
+          focusNode: focusNode,
+          inputFormatters: inputFormatters,
+          onSubmitted: onSubmitted,
+          onEditingComplete: onEditingComplete,
           style: textTheme.bodyLarge?.copyWith(
             color: enabled ? scheme.onSurface : ext.textFaint,
           ),
@@ -67,8 +80,21 @@ class TsTextField extends StatelessWidget {
           decoration: InputDecoration(
             hintText: placeholder,
             hintStyle: textTheme.bodyLarge?.copyWith(color: ext.textMuted),
-            prefixText: prefixText,
-            prefixStyle: textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+            prefixIcon: prefixText != null
+                ? Padding(
+                    padding: const EdgeInsets.only(left: 16),
+                    child: Text(
+                      prefixText!,
+                      style: textTheme.bodyLarge?.copyWith(
+                        color: scheme.onSurface,
+                      ),
+                    ),
+                  )
+                : null,
+            prefixIconConstraints: const BoxConstraints(
+              minWidth: 0,
+              minHeight: 0,
+            ),
             suffixIcon: suffixIcon != null
                 ? Icon(suffixIcon, color: ext.textMuted)
                 : null,

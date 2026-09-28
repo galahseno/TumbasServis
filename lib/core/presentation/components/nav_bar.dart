@@ -111,9 +111,12 @@ class _NavBarTabState extends State<_NavBarTab> {
 
     return Focus(
       onFocusChange: (value) => setState(() => _focused = value),
-      child: Material(
-        color: Colors.transparent,
-        child: InkWell(
+      child: Semantics(
+        button: true,
+        selected: widget.selected,
+        label: widget.item.label,
+        child: GestureDetector(
+          behavior: HitTestBehavior.opaque,
           onTap: widget.onTap,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
