@@ -5,6 +5,7 @@ import 'package:tumbas_servis/core/domain/repository/garage/garage_repository.da
 
 class FakeGarageRepository implements GarageRepository {
   Result<List<Motor>> motorsResult = const Result.ok([]);
+  Result<List<MotorModel>> motorModelsResult = const Result.ok([]);
 
   @override
   Future<Result<List<Motor>>> getMotors() async => motorsResult;
@@ -19,6 +20,5 @@ class FakeGarageRepository implements GarageRepository {
   Future<Result<void>> deleteMotor(String id) async => const Result.ok(null);
 
   @override
-  Future<Result<List<MotorModel>>> getMotorModels() async =>
-      const Result.ok([]);
+  Future<Result<List<MotorModel>>> getMotorModels() async => motorModelsResult;
 }

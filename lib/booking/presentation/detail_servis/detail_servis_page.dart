@@ -9,7 +9,6 @@ import 'package:tumbas_servis/booking/presentation/detail_servis/components/comp
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/copy_from_row.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/copy_note.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/copy_source_sheet.dart';
-import 'package:tumbas_servis/booking/presentation/detail_servis/components/part_option_tile.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/service_option_tile.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/sticky_estimate_bar.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/unit_header.dart';
@@ -18,10 +17,12 @@ import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_v
 import 'package:tumbas_servis/booking/presentation/detail_servis/state/detail_servis_state.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/booking/presentation/utils/unit_config_display.dart';
+import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
+import 'package:tumbas_servis/core/presentation/components/part_option_tile.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
@@ -324,10 +325,23 @@ class _DetailServisBody extends StatelessWidget {
                           ),
                         ),
                         TextButton(
-                          onPressed: () => TsSnackbar.info(
-                            context,
-                            'Katalog lengkap segera hadir',
-                          ),
+                          onPressed: () async {
+                            final result = await context.push<List<String>>(
+                              Routes.bookingConfigureParts,
+                              extra: KatalogSelectArgs(
+                                modelId: activeMotor.modelId,
+                                initialPartIds: activeConfig.partIds,
+                                unitNickname: activeMotor.nickname,
+                                unitPlateNumber: activeMotor.plateNumber,
+                              ),
+                            );
+                            if (result != null && context.mounted) {
+                              await draftNotifier.setUnitConfig(
+                                activeMotorId,
+                                activeConfig.copyWith(partIds: result),
+                              );
+                            }
+                          },
                           child: const Text('Lihat semua'),
                         ),
                       ],

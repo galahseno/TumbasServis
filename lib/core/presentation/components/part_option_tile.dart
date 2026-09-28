@@ -8,12 +8,20 @@ class PartOptionTile extends StatefulWidget {
     required this.selected,
     required this.onChanged,
     super.key,
+    this.onTap,
+    this.disabled = false,
+    this.reasonText,
+    this.showCheckbox = true,
   });
 
   final String name;
   final String subtitle;
   final bool selected;
   final ValueChanged<bool> onChanged;
+  final VoidCallback? onTap;
+  final bool disabled;
+  final String? reasonText;
+  final bool showCheckbox;
 
   @override
   State<PartOptionTile> createState() => _PartOptionTileState();
@@ -34,7 +42,11 @@ class _PartOptionTileState extends State<PartOptionTile> {
         color: Colors.transparent,
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: () => widget.onChanged(!widget.selected),
+          onTap:
+              widget.onTap ??
+              (widget.disabled
+                  ? null
+                  : () => widget.onChanged(!widget.selected)),
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 12),
             decoration: BoxDecoration(
@@ -45,13 +57,22 @@ class _PartOptionTileState extends State<PartOptionTile> {
             ),
             child: Row(
               children: [
-                Icon(
-                  widget.selected
-                      ? Icons.check_box_rounded
-                      : Icons.check_box_outline_blank_rounded,
-                  color: widget.selected ? ext.accent : ext.textFaint,
-                ),
-                const SizedBox(width: 12),
+                if (widget.showCheckbox) ...[
+                  GestureDetector(
+                    onTap: widget.disabled
+                        ? null
+                        : () => widget.onChanged(!widget.selected),
+                    child: Icon(
+                      widget.selected
+                          ? Icons.check_box_rounded
+                          : Icons.check_box_outline_blank_rounded,
+                      color: widget.disabled
+                          ? ext.textFaint
+                          : (widget.selected ? ext.accent : ext.textFaint),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                ],
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -59,7 +80,9 @@ class _PartOptionTileState extends State<PartOptionTile> {
                       Text(
                         widget.name,
                         style: textTheme.bodyLarge?.copyWith(
-                          color: scheme.onSurface,
+                          color: widget.disabled
+                              ? ext.textFaint
+                              : scheme.onSurface,
                         ),
                       ),
                       Text(
@@ -68,6 +91,27 @@ class _PartOptionTileState extends State<PartOptionTile> {
                           color: ext.textMuted,
                         ),
                       ),
+                      if (widget.reasonText != null) ...[
+                        const SizedBox(height: 2),
+                        Row(
+                          children: [
+                            Icon(
+                              Icons.info_outline_rounded,
+                              size: 14,
+                              color: ext.warning,
+                            ),
+                            const SizedBox(width: 4),
+                            Expanded(
+                              child: Text(
+                                widget.reasonText!,
+                                style: textTheme.bodySmall?.copyWith(
+                                  color: ext.warningText,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
                     ],
                   ),
                 ),

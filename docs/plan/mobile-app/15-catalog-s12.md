@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | ✅ Approved 2026-09-28 |
 | **Layer** | Presentation, phone |
 | **Priority** | P1 |
 | **Owns** | `catalog/presentation/` (S12, select + browse modes) |
@@ -45,29 +45,41 @@ Category chips "Semua · Oli · Kampas rem · Busi · Aki · Ban · Filter udara
 ## Checklist
 
 ### Build
-- [ ] Open questions answered.
-- [ ] S12 built for select-populated, incompatible-shown, loading, empty, browse-populated, search-keyboard-open, detail (add/incompatible/browse), dirty-close-dialog.
-- [ ] `/booking/configure/parts` and `/catalog` routes wired; S11's "Lihat semua" placeholder replaced.
+- [x] Open questions answered (hand-off = pushed `List<String>` result; browse mode = same `KatalogPage` with a `mode` param, no separate page class — both confirmed with the user at kickoff).
+- [x] S12 built for select-populated, incompatible-shown, loading, empty, browse-populated, search, detail (add/incompatible/browse), dirty-close-dialog. (Search-keyboard-open is a platform IME behavior, not separate code — the search field scrolls into view like any `TextField`.)
+- [x] `/booking/configure/parts` and `/catalog` routes wired; S11's "Lihat semua" placeholder replaced.
 
 ### Quality (flutter analyze / format / tests)
-- [ ] `flutter analyze` → 0 issues.
-- [ ] `dart format --set-exit-if-changed .` → clean.
-- [ ] `flutter test test/catalog/` → green.
-- [ ] Manual run: select-mode round-trip into S11 updates its shortlist; browse-mode from Home shows no unit context.
-- [ ] Screenshots vs. `design/pencil/exports/step15/*.png`.
+- [x] `flutter analyze` → 0 issues.
+- [x] `dart format --set-exit-if-changed .` → clean.
+- [x] `flutter test test/catalog/` → green (9/9).
+- [x] `flutter test` (full suite) → green (345/345), confirming the `PartOptionTile` promotion to `core/` and the S11 rewire didn't regress booking.
+- [ ] Manual run: select-mode round-trip into S11 updates its shortlist; browse-mode from Home shows no unit context. **Not done** — no GUI-automation tool available in this session to drive the app interactively; only verified that `flutter run -d macos` boots to Home with zero runtime exceptions/warnings in the log (confirms DI wiring — `katalogViewModelProvider`, `TsSwitch`, moved `PartOptionTile` — is sound, not that the S12 screens render correctly end-to-end).
+- [ ] Screenshots vs. `design/pencil/exports/step15/*.png`. **Not done**, same reason.
 
 ### Review gate
-- [ ] Status 🔵; show the user both modes + test results.
-- [ ] Review round logged; approval recorded.
+- [x] Status 🔵; show the user both modes + test results.
+- [x] Review round logged; approval recorded.
 
 ### Close (only after approval)
-- [ ] Commit message proposed: `025 - Create Katalog Suku Cadang Screen (S12)`.
-- [ ] Claude session file written (`docs/claude-session/apps/16-mobile-step15-catalog-s12.md`).
-- [ ] Tracker in `00-index.md` set to ✅.
+- [x] Commit message proposed: `025 - Create Katalog Suku Cadang Screen (S12)`.
+- [x] Claude session file written (`docs/claude-session/apps/16-mobile-step15-catalog-s12.md`).
+- [x] Tracker in `00-index.md` set to ✅.
 
 ## Review rounds
+
+#### Round 1 — 2026-09-28
+- **Shown:** file list (new `catalog/presentation/`, `ts_switch.dart`, moved `part_option_tile.dart`, router + S11 rewire), the derived-from-real-data compat rule-line approach, and test results (`flutter analyze` 0 issues, `dart format` clean, `test/catalog/` 9/9, full suite 345/345, `flutter run -d macos` clean boot).
+- **Gap disclosed:** no interactive click-through or screenshot diff vs. `design/pencil/exports/step15/*.png` — no GUI-automation tool available for the native macOS window in this session.
+- **User feedback:** "approve and do rest except commit push"
+- **Changes made:** none (approved as shown).
+- **Outcome:** approved; close steps done, commit/push held for the user.
 
 ## Session log
 
 | Time | Action | Result |
 |---|---|---|
+| 2026-09-28 | Kickoff | Plan mode; explored catalog data layer, S11/routing, design+PRD refs (3 parallel agents); found `PartOptionTile` reuse gap, missing `TsSwitch`, and the category+cc vs. `compatibleModelIds` discrepancy (step 07's deliberate pivot) |
+| 2026-09-28 | Interview | 3 `AskUserQuestion` decisions: pushed-result hand-off, promote `PartOptionTile` to `core/`, build `TsSwitch` as a new shared component |
+| 2026-09-28 | Build | `catalog/presentation/` (di, katalog page/view-model/state, 4 components), `TsSwitch`, `PartOptionTile` moved to `core/presentation/components/`, router + S11 "Lihat semua" wired via `KatalogSelectArgs` typed push |
+| 2026-09-28 | Quality | `flutter analyze` 0 issues, `dart format` clean, `flutter test test/catalog/` 9/9, full suite 345/345; `flutter run -d macos` boots clean (no interactive click-through — no GUI tool available) |

@@ -11,6 +11,8 @@ import 'package:tumbas_servis/auth/presentation/otp/otp_page.dart';
 import 'package:tumbas_servis/auth/presentation/splash/splash_page.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_page.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_page.dart';
+import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
+import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/presentation/components/app_shell.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
@@ -48,9 +50,15 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.bookingConfigureParts,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) => KatalogPage(
+          mode: KatalogMode.select,
+          selectArgs: state.extra as KatalogSelectArgs?,
+        ),
       ),
-      GoRoute(path: Routes.catalog, builder: (_, _) => const Placeholder()),
+      GoRoute(
+        path: Routes.catalog,
+        builder: (_, _) => const KatalogPage(mode: KatalogMode.browse),
+      ),
       GoRoute(
         path: Routes.bookingWorkshop,
         builder: (_, _) => const Placeholder(),
