@@ -289,9 +289,7 @@ as String?,
 /// @nodoc
 mixin _$BookingDraft {
 
- String get id; List<String> get selectedMotorIds; Map<String, UnitConfig> get unitConfigs; String? get workshopId; ScheduleMode get scheduleMode;// Both sharedSlot and unitSlots are kept so toggling scheduleMode is
-// non-destructive; only the active mode's slot(s) count (PRD 05).
- TimeSlot? get sharedSlot; Map<String, TimeSlot> get unitSlots; String? get voucherId; DateTime get createdAt; DateTime get expiresAt;
+ String get id; List<String> get selectedMotorIds; Map<String, UnitConfig> get unitConfigs; String? get workshopId; ScheduleMode get scheduleMode; TimeSlot? get sharedSlot; Map<String, TimeSlot> get unitSlots; String? get voucherId; DateTime get createdAt; DateTime get expiresAt;
 /// Create a copy of BookingDraft
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -524,8 +522,6 @@ class _BookingDraft implements BookingDraft {
 
 @override final  String? workshopId;
 @override final  ScheduleMode scheduleMode;
-// Both sharedSlot and unitSlots are kept so toggling scheduleMode is
-// non-destructive; only the active mode's slot(s) count (PRD 05).
 @override final  TimeSlot? sharedSlot;
  final  Map<String, TimeSlot> _unitSlots;
 @override Map<String, TimeSlot> get unitSlots {

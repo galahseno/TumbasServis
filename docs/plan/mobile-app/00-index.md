@@ -168,7 +168,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 05 | [05-data-core-infra.md](05-data-core-infra.md) | Data | — | `core/data/service/`, `core/data/di/` | ✅ | `06-mobile-step05-data-core-infra.md` |
 | 06 | [06-data-auth-profile.md](06-data-auth-profile.md) | Data | — | `auth/data/`, `profile/data/` | ✅ | `07-mobile-step06-data-auth-profile.md` |
 | 07 | [07-data-garage-catalog.md](07-data-garage-catalog.md) | Data | — | `garage/data/`, `catalog/data/` | ✅ | `08-mobile-step07-data-garage-catalog.md` |
-| 08 | [08-data-workshop-booking.md](08-data-workshop-booking.md) | Data | — | `workshop/data/`, `booking/data/` | ⬜ | `09-mobile-step08-data-workshop-booking.md` |
+| 08 | [08-data-workshop-booking.md](08-data-workshop-booking.md) | Data | — | `workshop/data/`, `booking/data/` | ✅ | `09-mobile-step08-data-workshop-booking.md` |
 | 09 | [09-data-tracking-invoice-review-notification.md](09-data-tracking-invoice-review-notification.md) | Data | — | `tracking/data/`, `invoice/data/`, `review/data/`, `notification/data/` | ⬜ | `10-mobile-step09-data-tracking-invoice-review-notification.md` |
 | 10 | [10-foundations-app-shell.md](10-foundations-app-shell.md) | Presentation (foundation) | — | `app/`, `core/presentation/components/` | ⬜ | `11-mobile-step10-foundations-app-shell.md` |
 | 11 | [11-auth-s01-s04.md](11-auth-s01-s04.md) | Presentation, phone | P0*/P1 | S01–S04 | ⬜ | `12-mobile-step11-auth-s01-s04.md` |

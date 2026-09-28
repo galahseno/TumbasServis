@@ -16,6 +16,7 @@ abstract class Booking with _$Booking {
     required List<BookingUnit> units,
     required ScheduleMode scheduleMode,
     TimeSlot? sharedSlot,
+    Map<String, TimeSlot>? unitSlots,
     required BookingStatus status,
     String? voucherId,
     required int subtotal,

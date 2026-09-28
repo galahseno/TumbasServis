@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Booking {
 
- String get id; String get code; String get userId; String get workshopId; List<BookingUnit> get units; ScheduleMode get scheduleMode; TimeSlot? get sharedSlot; BookingStatus get status; String? get voucherId; int get subtotal; int get discount; int get total; DateTime get createdAt; DateTime? get completedAt;
+ String get id; String get code; String get userId; String get workshopId; List<BookingUnit> get units; ScheduleMode get scheduleMode; TimeSlot? get sharedSlot; Map<String, TimeSlot>? get unitSlots; BookingStatus get status; String? get voucherId; int get subtotal; int get discount; int get total; DateTime get createdAt; DateTime? get completedAt;
 /// Create a copy of Booking
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $BookingCopyWith<Booking> get copyWith => _$BookingCopyWithImpl<Booking>(this as
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Booking&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.workshopId, workshopId) || other.workshopId == workshopId)&&const DeepCollectionEquality().equals(other.units, units)&&(identical(other.scheduleMode, scheduleMode) || other.scheduleMode == scheduleMode)&&(identical(other.sharedSlot, sharedSlot) || other.sharedSlot == sharedSlot)&&(identical(other.status, status) || other.status == status)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.total, total) || other.total == total)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Booking&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.workshopId, workshopId) || other.workshopId == workshopId)&&const DeepCollectionEquality().equals(other.units, units)&&(identical(other.scheduleMode, scheduleMode) || other.scheduleMode == scheduleMode)&&(identical(other.sharedSlot, sharedSlot) || other.sharedSlot == sharedSlot)&&const DeepCollectionEquality().equals(other.unitSlots, unitSlots)&&(identical(other.status, status) || other.status == status)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.total, total) || other.total == total)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,code,userId,workshopId,const DeepCollectionEquality().hash(units),scheduleMode,sharedSlot,status,voucherId,subtotal,discount,total,createdAt,completedAt);
+int get hashCode => Object.hash(runtimeType,id,code,userId,workshopId,const DeepCollectionEquality().hash(units),scheduleMode,sharedSlot,const DeepCollectionEquality().hash(unitSlots),status,voucherId,subtotal,discount,total,createdAt,completedAt);
 
 @override
 String toString() {
-  return 'Booking(id: $id, code: $code, userId: $userId, workshopId: $workshopId, units: $units, scheduleMode: $scheduleMode, sharedSlot: $sharedSlot, status: $status, voucherId: $voucherId, subtotal: $subtotal, discount: $discount, total: $total, createdAt: $createdAt, completedAt: $completedAt)';
+  return 'Booking(id: $id, code: $code, userId: $userId, workshopId: $workshopId, units: $units, scheduleMode: $scheduleMode, sharedSlot: $sharedSlot, unitSlots: $unitSlots, status: $status, voucherId: $voucherId, subtotal: $subtotal, discount: $discount, total: $total, createdAt: $createdAt, completedAt: $completedAt)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $BookingCopyWith<$Res>  {
   factory $BookingCopyWith(Booking value, $Res Function(Booking) _then) = _$BookingCopyWithImpl;
 @useResult
 $Res call({
- String id, String code, String userId, String workshopId, List<BookingUnit> units, ScheduleMode scheduleMode, TimeSlot? sharedSlot, BookingStatus status, String? voucherId, int subtotal, int discount, int total, DateTime createdAt, DateTime? completedAt
+ String id, String code, String userId, String workshopId, List<BookingUnit> units, ScheduleMode scheduleMode, TimeSlot? sharedSlot, Map<String, TimeSlot>? unitSlots, BookingStatus status, String? voucherId, int subtotal, int discount, int total, DateTime createdAt, DateTime? completedAt
 });
 
 
@@ -62,7 +62,7 @@ class _$BookingCopyWithImpl<$Res>
 
 /// Create a copy of Booking
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? code = null,Object? userId = null,Object? workshopId = null,Object? units = null,Object? scheduleMode = null,Object? sharedSlot = freezed,Object? status = null,Object? voucherId = freezed,Object? subtotal = null,Object? discount = null,Object? total = null,Object? createdAt = null,Object? completedAt = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? id = null,Object? code = null,Object? userId = null,Object? workshopId = null,Object? units = null,Object? scheduleMode = null,Object? sharedSlot = freezed,Object? unitSlots = freezed,Object? status = null,Object? voucherId = freezed,Object? subtotal = null,Object? discount = null,Object? total = null,Object? createdAt = null,Object? completedAt = freezed,}) {
   return _then(_self.copyWith(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -71,7 +71,8 @@ as String,workshopId: null == workshopId ? _self.workshopId : workshopId // igno
 as String,units: null == units ? _self.units : units // ignore: cast_nullable_to_non_nullable
 as List<BookingUnit>,scheduleMode: null == scheduleMode ? _self.scheduleMode : scheduleMode // ignore: cast_nullable_to_non_nullable
 as ScheduleMode,sharedSlot: freezed == sharedSlot ? _self.sharedSlot : sharedSlot // ignore: cast_nullable_to_non_nullable
-as TimeSlot?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as TimeSlot?,unitSlots: freezed == unitSlots ? _self.unitSlots : unitSlots // ignore: cast_nullable_to_non_nullable
+as Map<String, TimeSlot>?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BookingStatus,voucherId: freezed == voucherId ? _self.voucherId : voucherId // ignore: cast_nullable_to_non_nullable
 as String?,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
 as int,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable
@@ -175,10 +176,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  Map<String, TimeSlot>? unitSlots,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _Booking() when $default != null:
-return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.unitSlots,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
   return orElse();
 
 }
@@ -196,10 +197,10 @@ return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  Map<String, TimeSlot>? unitSlots,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)  $default,) {final _that = this;
 switch (_that) {
 case _Booking():
-return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.unitSlots,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -216,10 +217,10 @@ return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_t
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( String id,  String code,  String userId,  String workshopId,  List<BookingUnit> units,  ScheduleMode scheduleMode,  TimeSlot? sharedSlot,  Map<String, TimeSlot>? unitSlots,  BookingStatus status,  String? voucherId,  int subtotal,  int discount,  int total,  DateTime createdAt,  DateTime? completedAt)?  $default,) {final _that = this;
 switch (_that) {
 case _Booking() when $default != null:
-return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
+return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_that.scheduleMode,_that.sharedSlot,_that.unitSlots,_that.status,_that.voucherId,_that.subtotal,_that.discount,_that.total,_that.createdAt,_that.completedAt);case _:
   return null;
 
 }
@@ -231,7 +232,7 @@ return $default(_that.id,_that.code,_that.userId,_that.workshopId,_that.units,_t
 
 
 class _Booking implements Booking {
-  const _Booking({required this.id, required this.code, required this.userId, required this.workshopId, required final  List<BookingUnit> units, required this.scheduleMode, this.sharedSlot, required this.status, this.voucherId, required this.subtotal, required this.discount, required this.total, required this.createdAt, this.completedAt}): _units = units;
+  const _Booking({required this.id, required this.code, required this.userId, required this.workshopId, required final  List<BookingUnit> units, required this.scheduleMode, this.sharedSlot, final  Map<String, TimeSlot>? unitSlots, required this.status, this.voucherId, required this.subtotal, required this.discount, required this.total, required this.createdAt, this.completedAt}): _units = units,_unitSlots = unitSlots;
   
 
 @override final  String id;
@@ -247,6 +248,15 @@ class _Booking implements Booking {
 
 @override final  ScheduleMode scheduleMode;
 @override final  TimeSlot? sharedSlot;
+ final  Map<String, TimeSlot>? _unitSlots;
+@override Map<String, TimeSlot>? get unitSlots {
+  final value = _unitSlots;
+  if (value == null) return null;
+  if (_unitSlots is EqualUnmodifiableMapView) return _unitSlots;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableMapView(value);
+}
+
 @override final  BookingStatus status;
 @override final  String? voucherId;
 @override final  int subtotal;
@@ -265,16 +275,16 @@ _$BookingCopyWith<_Booking> get copyWith => __$BookingCopyWithImpl<_Booking>(thi
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Booking&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.workshopId, workshopId) || other.workshopId == workshopId)&&const DeepCollectionEquality().equals(other._units, _units)&&(identical(other.scheduleMode, scheduleMode) || other.scheduleMode == scheduleMode)&&(identical(other.sharedSlot, sharedSlot) || other.sharedSlot == sharedSlot)&&(identical(other.status, status) || other.status == status)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.total, total) || other.total == total)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Booking&&(identical(other.id, id) || other.id == id)&&(identical(other.code, code) || other.code == code)&&(identical(other.userId, userId) || other.userId == userId)&&(identical(other.workshopId, workshopId) || other.workshopId == workshopId)&&const DeepCollectionEquality().equals(other._units, _units)&&(identical(other.scheduleMode, scheduleMode) || other.scheduleMode == scheduleMode)&&(identical(other.sharedSlot, sharedSlot) || other.sharedSlot == sharedSlot)&&const DeepCollectionEquality().equals(other._unitSlots, _unitSlots)&&(identical(other.status, status) || other.status == status)&&(identical(other.voucherId, voucherId) || other.voucherId == voucherId)&&(identical(other.subtotal, subtotal) || other.subtotal == subtotal)&&(identical(other.discount, discount) || other.discount == discount)&&(identical(other.total, total) || other.total == total)&&(identical(other.createdAt, createdAt) || other.createdAt == createdAt)&&(identical(other.completedAt, completedAt) || other.completedAt == completedAt));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,id,code,userId,workshopId,const DeepCollectionEquality().hash(_units),scheduleMode,sharedSlot,status,voucherId,subtotal,discount,total,createdAt,completedAt);
+int get hashCode => Object.hash(runtimeType,id,code,userId,workshopId,const DeepCollectionEquality().hash(_units),scheduleMode,sharedSlot,const DeepCollectionEquality().hash(_unitSlots),status,voucherId,subtotal,discount,total,createdAt,completedAt);
 
 @override
 String toString() {
-  return 'Booking(id: $id, code: $code, userId: $userId, workshopId: $workshopId, units: $units, scheduleMode: $scheduleMode, sharedSlot: $sharedSlot, status: $status, voucherId: $voucherId, subtotal: $subtotal, discount: $discount, total: $total, createdAt: $createdAt, completedAt: $completedAt)';
+  return 'Booking(id: $id, code: $code, userId: $userId, workshopId: $workshopId, units: $units, scheduleMode: $scheduleMode, sharedSlot: $sharedSlot, unitSlots: $unitSlots, status: $status, voucherId: $voucherId, subtotal: $subtotal, discount: $discount, total: $total, createdAt: $createdAt, completedAt: $completedAt)';
 }
 
 
@@ -285,7 +295,7 @@ abstract mixin class _$BookingCopyWith<$Res> implements $BookingCopyWith<$Res> {
   factory _$BookingCopyWith(_Booking value, $Res Function(_Booking) _then) = __$BookingCopyWithImpl;
 @override @useResult
 $Res call({
- String id, String code, String userId, String workshopId, List<BookingUnit> units, ScheduleMode scheduleMode, TimeSlot? sharedSlot, BookingStatus status, String? voucherId, int subtotal, int discount, int total, DateTime createdAt, DateTime? completedAt
+ String id, String code, String userId, String workshopId, List<BookingUnit> units, ScheduleMode scheduleMode, TimeSlot? sharedSlot, Map<String, TimeSlot>? unitSlots, BookingStatus status, String? voucherId, int subtotal, int discount, int total, DateTime createdAt, DateTime? completedAt
 });
 
 
@@ -302,7 +312,7 @@ class __$BookingCopyWithImpl<$Res>
 
 /// Create a copy of Booking
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? code = null,Object? userId = null,Object? workshopId = null,Object? units = null,Object? scheduleMode = null,Object? sharedSlot = freezed,Object? status = null,Object? voucherId = freezed,Object? subtotal = null,Object? discount = null,Object? total = null,Object? createdAt = null,Object? completedAt = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? id = null,Object? code = null,Object? userId = null,Object? workshopId = null,Object? units = null,Object? scheduleMode = null,Object? sharedSlot = freezed,Object? unitSlots = freezed,Object? status = null,Object? voucherId = freezed,Object? subtotal = null,Object? discount = null,Object? total = null,Object? createdAt = null,Object? completedAt = freezed,}) {
   return _then(_Booking(
 id: null == id ? _self.id : id // ignore: cast_nullable_to_non_nullable
 as String,code: null == code ? _self.code : code // ignore: cast_nullable_to_non_nullable
@@ -311,7 +321,8 @@ as String,workshopId: null == workshopId ? _self.workshopId : workshopId // igno
 as String,units: null == units ? _self._units : units // ignore: cast_nullable_to_non_nullable
 as List<BookingUnit>,scheduleMode: null == scheduleMode ? _self.scheduleMode : scheduleMode // ignore: cast_nullable_to_non_nullable
 as ScheduleMode,sharedSlot: freezed == sharedSlot ? _self.sharedSlot : sharedSlot // ignore: cast_nullable_to_non_nullable
-as TimeSlot?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as TimeSlot?,unitSlots: freezed == unitSlots ? _self._unitSlots : unitSlots // ignore: cast_nullable_to_non_nullable
+as Map<String, TimeSlot>?,status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
 as BookingStatus,voucherId: freezed == voucherId ? _self.voucherId : voucherId // ignore: cast_nullable_to_non_nullable
 as String?,subtotal: null == subtotal ? _self.subtotal : subtotal // ignore: cast_nullable_to_non_nullable
 as int,discount: null == discount ? _self.discount : discount // ignore: cast_nullable_to_non_nullable

@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$AppNotification {
 
- String get id; NotificationCategory get category; String get title; String get body; DateTime get timestamp; bool get read;// status -> S21 unit, booking -> S20, invoice -> S23, promo -> S10 (voucherId),
-// reminder -> S10 (motorId). Deep-link target parsing is a presentation concern.
- String? get deepLink;
+ String get id; NotificationCategory get category; String get title; String get body; DateTime get timestamp; bool get read; String? get deepLink;
 /// Create a copy of AppNotification
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -223,8 +221,6 @@ class _AppNotification implements AppNotification {
 @override final  String body;
 @override final  DateTime timestamp;
 @override final  bool read;
-// status -> S21 unit, booking -> S20, invoice -> S23, promo -> S10 (voucherId),
-// reminder -> S10 (motorId). Deep-link target parsing is a presentation concern.
 @override final  String? deepLink;
 
 /// Create a copy of AppNotification

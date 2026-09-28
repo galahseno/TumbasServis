@@ -14,9 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$Workshop {
 
- String get id; String get name; double get rating; int get reviewCount; double get distanceKm; String get address;// Minutes since midnight — the "Buka · sampai 17.00" / "Tutup · buka 08.00" status
-// line and the "Buka sekarang" filter are computed from these + the clock (PRD 05).
- int get openTime; int get closeTime; int get bayCount; String get staticMapAssetPath; List<String> get serviceIds;
+ String get id; String get name; double get rating; int get reviewCount; double get distanceKm; String get address; int get openTime; int get closeTime; int get bayCount; String get staticMapAssetPath; List<String> get serviceIds;
 /// Create a copy of Workshop
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -227,8 +225,6 @@ class _Workshop implements Workshop {
 @override final  int reviewCount;
 @override final  double distanceKm;
 @override final  String address;
-// Minutes since midnight — the "Buka · sampai 17.00" / "Tutup · buka 08.00" status
-// line and the "Buka sekarang" filter are computed from these + the clock (PRD 05).
 @override final  int openTime;
 @override final  int closeTime;
 @override final  int bayCount;
