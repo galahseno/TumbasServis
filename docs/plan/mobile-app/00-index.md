@@ -166,7 +166,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 03 | [03-domain-rules-repositories.md](03-domain-rules-repositories.md) | Domain | — | `core/domain/repository/`, `core/domain/service/` | ✅ | `04-mobile-step03-domain-rules-repositories.md` |
 | 04 | [04-mock-data-assets.md](04-mock-data-assets.md) | Data (content) | — | `assets/mock/*.json` | ✅ | `05-mobile-step04-mock-data-assets.md` |
 | 05 | [05-data-core-infra.md](05-data-core-infra.md) | Data | — | `core/data/service/`, `core/data/di/` | ✅ | `06-mobile-step05-data-core-infra.md` |
-| 06 | [06-data-auth-profile.md](06-data-auth-profile.md) | Data | — | `auth/data/`, `profile/data/` | ⬜ | `07-mobile-step06-data-auth-profile.md` |
+| 06 | [06-data-auth-profile.md](06-data-auth-profile.md) | Data | — | `auth/data/`, `profile/data/` | ✅ | `07-mobile-step06-data-auth-profile.md` |
 | 07 | [07-data-garage-catalog.md](07-data-garage-catalog.md) | Data | — | `garage/data/`, `catalog/data/` | ⬜ | `08-mobile-step07-data-garage-catalog.md` |
 | 08 | [08-data-workshop-booking.md](08-data-workshop-booking.md) | Data | — | `workshop/data/`, `booking/data/` | ⬜ | `09-mobile-step08-data-workshop-booking.md` |
 | 09 | [09-data-tracking-invoice-review-notification.md](09-data-tracking-invoice-review-notification.md) | Data | — | `tracking/data/`, `invoice/data/`, `review/data/`, `notification/data/` | ⬜ | `10-mobile-step09-data-tracking-invoice-review-notification.md` |
