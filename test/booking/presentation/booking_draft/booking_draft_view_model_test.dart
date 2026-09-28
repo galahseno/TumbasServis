@@ -177,4 +177,95 @@ void main() {
       expect(notifier.isMotorSelectable(_motor('motor_done')), isTrue);
     },
   );
+
+  group('unit config mutations', () {
+    test('toggleService adds then removes a service id', () async {
+      bookingRepository.createDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m1']),
+      );
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.toggleService('m1', 'svc_berkala');
+      expect(
+        container.read(bookingDraftProvider)!.unitConfigs['m1']!.serviceIds,
+        ['svc_berkala'],
+      );
+
+      await notifier.toggleService('m1', 'svc_berkala');
+      expect(
+        container.read(bookingDraftProvider)!.unitConfigs['m1']!.serviceIds,
+        isEmpty,
+      );
+    });
+
+    test('togglePart adds then removes a part id', () async {
+      bookingRepository.createDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m1']),
+      );
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.togglePart('m1', 'part_kampas_matic');
+      expect(container.read(bookingDraftProvider)!.unitConfigs['m1']!.partIds, [
+        'part_kampas_matic',
+      ]);
+
+      await notifier.togglePart('m1', 'part_kampas_matic');
+      expect(
+        container.read(bookingDraftProvider)!.unitConfigs['m1']!.partIds,
+        isEmpty,
+      );
+    });
+
+    test('setComplaintNote sets the note for the given unit', () async {
+      bookingRepository.createDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m1']),
+      );
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.setComplaintNote('m1', 'Rem bunyi');
+
+      expect(
+        container.read(bookingDraftProvider)!.unitConfigs['m1']!.complaintNote,
+        'Rem bunyi',
+      );
+    });
+
+    test('setUnitConfig replaces the whole config for a unit', () async {
+      bookingRepository.createDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m1']),
+      );
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.setUnitConfig(
+        'm1',
+        const UnitConfig(serviceIds: ['svc_berkala'], partIds: ['part_a']),
+      );
+
+      final config = container.read(bookingDraftProvider)!.unitConfigs['m1']!;
+      expect(config.serviceIds, ['svc_berkala']);
+      expect(config.partIds, ['part_a']);
+    });
+
+    test(
+      'removeUnit drops the motor from selection and clears its config',
+      () async {
+        bookingRepository.createDraftResult = Result.ok(
+          _draft(selectedMotorIds: const ['m1', 'm2']),
+        );
+        await waitForLoad();
+        final notifier = container.read(bookingDraftProvider.notifier);
+        await notifier.toggleService('m1', 'svc_berkala');
+
+        await notifier.removeUnit('m1');
+
+        final draft = container.read(bookingDraftProvider)!;
+        expect(draft.selectedMotorIds, ['m2']);
+        expect(draft.unitConfigs.containsKey('m1'), isFalse);
+      },
+    );
+  });
 }

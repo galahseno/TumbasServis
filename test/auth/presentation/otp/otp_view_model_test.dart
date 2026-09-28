@@ -14,6 +14,7 @@ import 'package:tumbas_servis/profile/data/di/profile_data_module.dart';
 
 import '../../../support/fake_session_repository.dart';
 import '../../../support/fake_settings_repository.dart';
+import '../../../support/home_screen_fake_overrides.dart';
 import '../../../support/manual_timer_factory.dart';
 
 void main() {
@@ -38,6 +39,7 @@ void main() {
         otpViewModelProvider.overrideWith(
           () => OtpViewModel(timerFactory: timerFactory.call),
         ),
+        ...homeScreenFakeOverrides(),
       ],
     );
     addTearDown(container.dispose);

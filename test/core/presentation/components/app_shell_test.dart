@@ -11,10 +11,8 @@ import 'package:tumbas_servis/core/presentation/components/nav_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/nav_rail.dart';
 
 import '../../../support/fake_session_repository.dart';
+import '../../../support/home_screen_fake_overrides.dart';
 
-/// Substitutes for a manual on-device breakpoint check: pumps the real
-/// AppShell (behind the actual router) at the PRD 06 window-size
-/// breakpoints and asserts the compact->NavBar / medium+->NavRail switch.
 void main() {
   late FakeSessionRepository fakeSessionRepository;
   late ProviderContainer container;
@@ -27,6 +25,7 @@ void main() {
     container = ProviderContainer(
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
+        ...homeScreenFakeOverrides(),
       ],
     );
   });

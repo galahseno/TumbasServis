@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | ✅ Approved |
 | **Layer** | Presentation, phone |
 | **Priority** | P0 (the assessment's core multi-vehicle challenge screen) |
 | **Owns** | `booking/presentation/detail_servis/` (S11) |
@@ -47,29 +47,46 @@ The hardest screen in the app: per-unit chip tabs preserving independent in-prog
 ## Checklist
 
 ### Build
-- [ ] Open questions answered.
-- [ ] S11 built for every PRD 04 state: single unit, multi unit, complaint required, copied, copy-source sheet, all complete, loading, error+retry, remove-unit dialog, keyboard open, long content, stress.
-- [ ] `/booking/configure` route wired.
+- [x] Open questions answered (kickoff interview, see Session log).
+- [x] S11 built for: single unit (chip row hidden), multi unit, complaint required (auto-expand), copied (single-source row), copy-source sheet (2+ sources), all complete (Lanjut enabled), loading (skeleton), error+retry, remove-unit dialog, long content (Flexible/ellipsis fixes from the 360dp widget-test pass). Keyboard-open and true device stress states are code-supported (standard `TsTextField`, scrollable body) but not visually verified — no simulator/emulator available this session (only macOS desktop + a wireless physical iPhone).
+- [x] `/booking/configure` route wired (`DetailServisPage` replaces the `Placeholder`).
 
 ### Quality (flutter analyze / format / tests)
-- [ ] `flutter analyze` → 0 issues.
-- [ ] `dart format --set-exit-if-changed .` → clean.
-- [ ] `flutter test test/booking/presentation/detail_servis/` → green, including the PRD 07-named widget test.
-- [ ] Manual run: 3-unit canonical flow reproduces the design's exact running-estimate numbers at each step.
-- [ ] Screenshots vs. `design/pencil/exports/step07/*.png`.
+- [x] `flutter analyze` → 0 issues.
+- [x] `dart format --set-exit-if-changed .` → clean.
+- [x] `flutter test test/booking/presentation/detail_servis/` → green (14 view-model tests + 2 widget tests), including the PRD 07-named widget test.
+- [ ] Manual run: 3-unit canonical flow reproduces the design's exact running-estimate numbers at each step. **Not done — no emulator available; the same numeric progression (Rp85.000·1j → Rp228.000·1j → Rp428.000·2j) is asserted by the widget test instead, driven through the real widget tree at 360dp.**
+- [ ] Screenshots vs. `design/pencil/exports/step07/*.png`. **Not done, same reason.**
+- [x] Full regression check: `flutter test --concurrency=1` → **341/341 green.** The 7 pre-existing failures (app_shell_test.dart ×3, router_test.dart ×2, splash/otp view-model tests ×2) were root-caused and fixed in this same session (see Session log) — real repos going through `localStoreProvider` need Hive/`path_provider` file I/O, which never resolves under `testWidgets`' fake-time zone; fixed by faking every repository `HomeViewModel`/`DemoContentSeeder` touch (`test/support/home_screen_fake_overrides.dart`). Fixing that also surfaced and fixed a genuine S11 bug: `DetailServisPage` showed an infinite-shimmer loading skeleton forever (never an error) when reached with 0 motors selected, instead of an `EmptyState`.
 
 ### Review gate
-- [ ] Status 🔵; show the user the screen (all states) + the widget-test results.
-- [ ] Review round logged; approval recorded.
+- [x] Status 🔵; show the user the screen (all states) + the widget-test results.
+- [x] Review round logged; approval recorded.
 
 ### Close (only after approval)
-- [ ] Commit message proposed: `024 - Create Booking Flow — Detail Servis (S11)`.
-- [ ] Claude session file written (`docs/claude-session/apps/15-mobile-step14-booking-s11-detail-servis.md`).
-- [ ] Tracker in `00-index.md` set to ✅.
+- [x] Commit message proposed: `024 - Create Booking Flow — Detail Servis (S11)` (user commits/pushes, not Claude).
+- [x] Claude session file written (`docs/claude-session/apps/15-mobile-step14-booking-s11-detail-servis.md`).
+- [x] Tracker in `00-index.md` set to ✅.
 
 ## Review rounds
+
+#### Round 1 — 2026-09-28
+- **Shown:** Full build summary (files, DI/route wiring), test results (14 view-model + 2 widget tests for S11, 5 more for `BookingDraftViewModel`), full-suite regression status, and the not-done items (no live device/simulator screenshot pass).
+- **User feedback:** "approve" — then asked to also fix the 7 pre-existing test failures in the same session, which was done and re-shown (341/341 green).
+- **Changes made:** None to S11 itself from this round beyond the incidental `EmptyState` fix surfaced while fixing the pre-existing failures (see Session log).
+- **Outcome:** Approved.
 
 ## Session log
 
 | Time | Action | Result |
 |---|---|---|
+| 2026-09-28 | Kickoff research (PRD 04/03, design step 07 + session log, existing step-13 code/domain services) | 3 Explore agents; full copy/interaction rules and existing `BookingDraft`/`UnitConfig`/domain-service signatures confirmed |
+| 2026-09-28 | Kickoff interview (4 questions incl. the step's 3 listed open questions + bay-count) | All 4 recommended options accepted: extend `BookingDraftViewModel` for unit-config mutations; "Lihat semua" → snackbar; sync recompute; hardcode `bayCount = 2` |
+| 2026-09-28 | Built domain-adjacent presentation code | `booking_draft_view_model.dart` +5 methods (`toggleService`/`togglePart`/`setComplaintNote`/`setUnitConfig`/`removeUnit`); new `utils/unit_config_display.dart` (pure helpers) |
+| 2026-09-28 | Built `detail_servis/` (state, view model, page, 8 components); wired DI provider + `/booking/configure` route | `flutter analyze` 0 issues, `dart format` clean |
+| 2026-09-28 | Tests: extended `booking_draft_view_model_test.dart` (+5), new `detail_servis_view_model_test.dart` (14 cases), new `detail_servis_page_widget_test.dart` (2 widget tests); extended `FakeCatalogRepository` with settable results | All green; canonical 85k/228k/428k · 1j/1j/2j progression asserted at both the view-model and widget-test level |
+| 2026-09-28 | Fixed 2 real overflow bugs the 360dp widget test caught (`complaint_section.dart` collapsed-row, `copy_from_row.dart` label) and one narrow-row overflow in the page's "Suku cadang / oli" header | Widget tests pass at true phone width |
+| 2026-09-28 | Full-suite regression check, `--concurrency=1`, diffed against `git stash` on `main` | Same 7 pre-existing failures on both; zero regressions from this step |
+| 2026-09-28 | User asked to fix the 7 pre-existing failures in this session too. Root-caused via a scratch diagnostic test: all 7 pump the real router/`App` and reach `HomePage`; `HomeViewModel`/`DemoContentSeeder` touch `localStoreProvider`, whose real impl needs Hive + `path_provider` file I/O — real `dart:io` never completes under `testWidgets`' fake-time zone without `tester.runAsync`, so `HomeViewModel` hung at `isLoading: true` forever (infinite shimmer → `pumpAndSettle` timeout) | New `test/support/home_screen_fake_overrides.dart` fakes every repo `HomeViewModel`/`DemoContentSeeder` touch; wired into all 4 files |
+| 2026-09-28 | Fixing that let `router_test.dart`'s "every declared route" test reach `/booking/configure` for the first time, surfacing a real S11 bug: `DetailServisPage` fell into `_LoadingBody()` (infinite shimmer) forever when 0 motors were selected, rather than an empty state | Fixed: `detail_servis_page.dart` now shows an `EmptyState` ("Belum ada motor dipilih" → "Pilih motor" pops back to S10) when `activeMotorId` resolves to null, distinct from the still-loading case |
+| 2026-09-28 | Full-suite regression re-run, `--concurrency=1` | **341/341 green**, 0 flutter analyze issues |

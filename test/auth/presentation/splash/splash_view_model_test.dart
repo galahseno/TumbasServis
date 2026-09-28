@@ -12,6 +12,7 @@ import 'package:tumbas_servis/profile/data/di/profile_data_module.dart';
 
 import '../../../support/fake_session_repository.dart';
 import '../../../support/fake_settings_repository.dart';
+import '../../../support/home_screen_fake_overrides.dart';
 
 Future<void> _pumpAndFlush(WidgetTester tester, ProviderContainer container) {
   // Reading the notifier's own provider after each pump flushes Riverpod's
@@ -32,6 +33,7 @@ void main() {
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
         settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository()),
+        ...homeScreenFakeOverrides(),
       ],
     );
     addTearDown(container.dispose);
@@ -63,6 +65,7 @@ void main() {
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
         settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository()),
+        ...homeScreenFakeOverrides(),
       ],
     );
     addTearDown(container.dispose);

@@ -75,6 +75,59 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
     );
   }
 
+  UnitConfig _configFor(BookingDraft draft, String motorId) =>
+      draft.unitConfigs[motorId] ??
+      const UnitConfig(serviceIds: [], partIds: []);
+
+  Future<void> toggleService(String motorId, String serviceId) async {
+    final draft = state;
+    if (draft == null) return;
+    final config = _configFor(draft, motorId);
+    final serviceIds = config.serviceIds.contains(serviceId)
+        ? config.serviceIds.where((id) => id != serviceId).toList()
+        : [...config.serviceIds, serviceId];
+    await setUnitConfig(motorId, config.copyWith(serviceIds: serviceIds));
+  }
+
+  Future<void> togglePart(String motorId, String partId) async {
+    final draft = state;
+    if (draft == null) return;
+    final config = _configFor(draft, motorId);
+    final partIds = config.partIds.contains(partId)
+        ? config.partIds.where((id) => id != partId).toList()
+        : [...config.partIds, partId];
+    await setUnitConfig(motorId, config.copyWith(partIds: partIds));
+  }
+
+  Future<void> setComplaintNote(String motorId, String? note) async {
+    final draft = state;
+    if (draft == null) return;
+    final config = _configFor(draft, motorId);
+    await setUnitConfig(motorId, config.copyWith(complaintNote: note));
+  }
+
+  Future<void> setUnitConfig(String motorId, UnitConfig config) async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(
+      draft.copyWith(unitConfigs: {...draft.unitConfigs, motorId: config}),
+    );
+  }
+
+  Future<void> removeUnit(String motorId) async {
+    final draft = state;
+    if (draft == null) return;
+    final unitConfigs = {...draft.unitConfigs}..remove(motorId);
+    await _persist(
+      draft.copyWith(
+        selectedMotorIds: draft.selectedMotorIds
+            .where((id) => id != motorId)
+            .toList(),
+        unitConfigs: unitConfigs,
+      ),
+    );
+  }
+
   Future<void> reset() async {
     await ref.read(bookingRepositoryProvider).deleteDraft();
     if (!ref.mounted) return;
