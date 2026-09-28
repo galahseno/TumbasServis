@@ -52,4 +52,19 @@ class SlotCapacityService {
         siblingsAlreadyPlaced: siblingsAlreadyPlaced,
       ) >
       0;
+
+  SlotChipState splitChipState({
+    required TimeSlot slot,
+    required int siblingsAlreadyPlaced,
+    required DateTime now,
+  }) {
+    if (isPastCutoff(slot: slot, now: now)) return SlotChipState.lewat;
+    final remaining = splitRemainingAfterSiblings(
+      slot: slot,
+      siblingsAlreadyPlaced: siblingsAlreadyPlaced,
+    );
+    if (remaining <= 0) return SlotChipState.full;
+    if (remaining <= _limitedThreshold) return SlotChipState.limited;
+    return SlotChipState.available;
+  }
 }

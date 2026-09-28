@@ -70,6 +70,44 @@ void main() {
       service.canSplitPlaceUnit(slot: slot, siblingsAlreadyPlaced: 1),
       isFalse,
     );
+    expect(
+      service.splitChipState(slot: slot, siblingsAlreadyPlaced: 1, now: _now),
+      SlotChipState.full,
+    );
+  });
+
+  test('split-mode canonical table: sibling at 09.00 lowers only that chip, '
+      '"short" never appears (a split unit only ever needs 1 seat)', () {
+    const remainingByHour = [4, 4, 2, 1, 0, 3, 2, 4, 0];
+    const expected = [
+      SlotChipState.available, // 08
+      SlotChipState.available, // 09 — remaining 4, minus 1 sibling = 3
+      SlotChipState.limited, // 10
+      SlotChipState.limited, // 11
+      SlotChipState.full, // 12
+      SlotChipState.available, // 13
+      SlotChipState.limited, // 14
+      SlotChipState.available, // 15
+      SlotChipState.full, // 16
+    ];
+
+    for (var i = 0; i < remainingByHour.length; i++) {
+      final hour = 8 + i;
+      final slot = _slot(
+        hour: hour,
+        capacity: 5,
+        booked: 5 - remainingByHour[i],
+      );
+      final siblingsAlreadyPlaced = hour == 9 ? 1 : 0;
+      final chip = service.splitChipState(
+        slot: slot,
+        siblingsAlreadyPlaced: siblingsAlreadyPlaced,
+        now: _now,
+      );
+      expect(chip, expected[i], reason: 'hour $hour');
+    }
+
+    expect(expected, isNot(contains(SlotChipState.short)));
   });
 
   group('D+0 cutoff (Lewat)', () {

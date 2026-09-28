@@ -10,6 +10,7 @@ import 'package:tumbas_servis/auth/presentation/onboarding/onboarding_page.dart'
 import 'package:tumbas_servis/auth/presentation/otp/otp_page.dart';
 import 'package:tumbas_servis/auth/presentation/splash/splash_page.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_page.dart';
+import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_page.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
@@ -82,7 +83,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.bookingSchedule,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, _) => const PilihJadwalPage(),
       ),
       GoRoute(
         path: Routes.bookingSummary,

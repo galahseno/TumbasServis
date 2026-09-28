@@ -10,6 +10,7 @@ import 'package:tumbas_servis/core/domain/model/booking/status_event.dart';
 import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
+import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 
 import '../../../support/fake_booking_repository.dart';
 
@@ -204,6 +205,61 @@ void main() {
     expect(draft.workshopId, 'ws_005');
     expect(draft.selectedMotorIds, isEmpty);
     expect(bookingRepository.draftDeleted, isTrue);
+  });
+
+  group('schedule mutations', () {
+    final slot = TimeSlot(
+      date: DateTime(2026, 9, 29),
+      hour: 9,
+      capacity: 5,
+      booked: 1,
+    );
+
+    test('setScheduleMode persists the mode', () async {
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.setScheduleMode(ScheduleMode.split);
+
+      expect(
+        container.read(bookingDraftProvider)!.scheduleMode,
+        ScheduleMode.split,
+      );
+    });
+
+    test('selectSharedSlot then clearSharedSlot round-trips to null', () async {
+      await waitForLoad();
+      final notifier = container.read(bookingDraftProvider.notifier);
+
+      await notifier.selectSharedSlot(slot);
+      expect(container.read(bookingDraftProvider)!.sharedSlot, slot);
+
+      await notifier.clearSharedSlot();
+      expect(container.read(bookingDraftProvider)!.sharedSlot, isNull);
+    });
+
+    test(
+      'selectUnitSlot then clearUnitSlot round-trips that unit only',
+      () async {
+        bookingRepository.createDraftResult = Result.ok(
+          _draft(selectedMotorIds: const ['m1', 'm2']),
+        );
+        await waitForLoad();
+        final notifier = container.read(bookingDraftProvider.notifier);
+
+        await notifier.selectUnitSlot('m1', slot);
+        await notifier.selectUnitSlot('m2', slot);
+        expect(container.read(bookingDraftProvider)!.unitSlots['m1'], slot);
+        expect(container.read(bookingDraftProvider)!.unitSlots['m2'], slot);
+
+        await notifier.clearUnitSlot('m1');
+        expect(
+          container.read(bookingDraftProvider)!.unitSlots.containsKey('m1'),
+          isFalse,
+        );
+        expect(container.read(bookingDraftProvider)!.unitSlots['m2'], slot);
+      },
+    );
   });
 
   group('unit config mutations', () {

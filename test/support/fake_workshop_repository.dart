@@ -3,11 +3,15 @@ import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 import 'package:tumbas_servis/core/domain/repository/workshop/workshop_repository.dart';
 
+String _dateKey(DateTime date) => '${date.year}-${date.month}-${date.day}';
+
 class FakeWorkshopRepository implements WorkshopRepository {
   Result<List<Workshop>> workshopsResult = const Result.ok([]);
   Result<Workshop>? workshopResult;
   Result<List<TimeSlot>> availableSlotsResult = const Result.ok([]);
+  Map<String, Result<List<TimeSlot>>> availableSlotsByDate = {};
   List<bool> openNowOnlyCalls = [];
+  List<DateTime> availableSlotsDateCalls = [];
 
   @override
   Future<Result<List<Workshop>>> getWorkshops({
@@ -34,5 +38,8 @@ class FakeWorkshopRepository implements WorkshopRepository {
   Future<Result<List<TimeSlot>>> getAvailableSlots({
     required String workshopId,
     required DateTime date,
-  }) async => availableSlotsResult;
+  }) async {
+    availableSlotsDateCalls.add(date);
+    return availableSlotsByDate[_dateKey(date)] ?? availableSlotsResult;
+  }
 }

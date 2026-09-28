@@ -13,9 +13,9 @@ import 'package:tumbas_servis/booking/presentation/utils/selection_footer_displa
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
+import 'package:tumbas_servis/core/presentation/components/selection_footer.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
-import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class PilihMotorPage extends ConsumerWidget {
@@ -100,10 +100,17 @@ class PilihMotorPage extends ConsumerWidget {
                             ),
                     ),
                     if (!state.isGarageEmpty)
-                      _SelectionFooter(
-                        selectedCount: selectedCount,
-                        isLoading: state.isLoading,
+                      SelectionFooter(
+                        recapLine:
+                            '$selectedCount dari $bookingDraftMaxMotors motor '
+                            'dipilih',
+                        reasonLine: selectionReasonLine(
+                          isLoading: state.isLoading,
+                          selectedCount: selectedCount,
+                        ),
+                        ctaLabel: 'Lanjut',
                         canContinue: canContinue,
+                        isLoading: state.isLoading,
                         onContinue: () => context.push(Routes.bookingConfigure),
                       ),
                   ],
@@ -232,74 +239,6 @@ class _MotorGrid extends StatelessWidget {
           ),
         );
       },
-    );
-  }
-}
-
-class _SelectionFooter extends StatelessWidget {
-  const _SelectionFooter({
-    required this.selectedCount,
-    required this.isLoading,
-    required this.canContinue,
-    required this.onContinue,
-  });
-
-  final int selectedCount;
-  final bool isLoading;
-  final bool canContinue;
-  final VoidCallback onContinue;
-
-  @override
-  Widget build(BuildContext context) {
-    final scheme = Theme.of(context).colorScheme;
-    final ext = TsThemeExtension.of(context);
-    final textTheme = Theme.of(context).textTheme;
-    final reasonLine = selectionReasonLine(
-      isLoading: isLoading,
-      selectedCount: selectedCount,
-    );
-
-    return Container(
-      padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-      decoration: BoxDecoration(
-        color: scheme.surface,
-        border: Border(top: BorderSide(color: ext.borderDefault)),
-      ),
-      child: Row(
-        children: [
-          Expanded(
-            child: Semantics(
-              liveRegion: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    '$selectedCount dari $bookingDraftMaxMotors motor dipilih',
-                    style: textTheme.labelLarge?.copyWith(color: ext.textBody),
-                  ),
-                  if (reasonLine != null)
-                    Text(
-                      reasonLine,
-                      style: textTheme.bodySmall?.copyWith(
-                        color: ext.textMuted,
-                      ),
-                    ),
-                ],
-              ),
-            ),
-          ),
-          const SizedBox(width: 12),
-          SizedBox(
-            width: 120,
-            child: TsButton(
-              label: 'Lanjut',
-              fullWidth: false,
-              onPressed: (canContinue && !isLoading) ? onContinue : null,
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

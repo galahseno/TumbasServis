@@ -5,6 +5,7 @@ import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
+import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 
 const bookingDraftMaxMotors = 5;
 
@@ -118,6 +119,39 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
     final draft = state;
     if (draft == null) return;
     await _persist(draft.copyWith(workshopId: workshopId));
+  }
+
+  Future<void> setScheduleMode(ScheduleMode mode) async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(draft.copyWith(scheduleMode: mode));
+  }
+
+  Future<void> selectSharedSlot(TimeSlot slot) async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(draft.copyWith(sharedSlot: slot));
+  }
+
+  Future<void> clearSharedSlot() async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(draft.copyWith(sharedSlot: null));
+  }
+
+  Future<void> selectUnitSlot(String motorId, TimeSlot slot) async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(
+      draft.copyWith(unitSlots: {...draft.unitSlots, motorId: slot}),
+    );
+  }
+
+  Future<void> clearUnitSlot(String motorId) async {
+    final draft = state;
+    if (draft == null) return;
+    final unitSlots = {...draft.unitSlots}..remove(motorId);
+    await _persist(draft.copyWith(unitSlots: unitSlots));
   }
 
   Future<void> removeUnit(String motorId) async {
