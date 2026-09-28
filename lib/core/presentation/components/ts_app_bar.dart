@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_icon_button.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_logo.dart';
 
 class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
   const TsAppBar({
@@ -11,17 +12,16 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
     this.bellUnreadCount,
     this.onBellPressed,
     this.actions = const [],
+    this.titleWidget,
   });
 
-  factory TsAppBar.home({
-    required String title,
-    int? bellUnreadCount,
-    VoidCallback? onBellPressed,
-  }) => TsAppBar(
-    title: title,
-    bellUnreadCount: bellUnreadCount,
-    onBellPressed: onBellPressed,
-  );
+  factory TsAppBar.home({int? bellUnreadCount, VoidCallback? onBellPressed}) =>
+      TsAppBar(
+        title: 'TumbasServis',
+        titleWidget: const TsLogo(markOnly: false, size: 28),
+        bellUnreadCount: bellUnreadCount,
+        onBellPressed: onBellPressed,
+      );
 
   factory TsAppBar.back({
     required String title,
@@ -41,6 +41,7 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
   final int? bellUnreadCount;
   final VoidCallback? onBellPressed;
   final List<Widget> actions;
+  final Widget? titleWidget;
 
   @override
   Size get preferredSize => Size.fromHeight(large ? 96 : 64);
@@ -64,11 +65,13 @@ class TsAppBar extends StatelessWidget implements PreferredSizeWidget {
             )
           : null,
       leadingWidth: showBack ? 56 : null,
-      title: Text(
-        title,
-        style: (large ? textTheme.headlineSmall : textTheme.titleLarge)
-            ?.copyWith(color: scheme.onSurface),
-      ),
+      title:
+          titleWidget ??
+          Text(
+            title,
+            style: (large ? textTheme.headlineSmall : textTheme.titleLarge)
+                ?.copyWith(color: scheme.onSurface),
+          ),
       actions: [
         ...actions,
         if (bellUnreadCount != null)

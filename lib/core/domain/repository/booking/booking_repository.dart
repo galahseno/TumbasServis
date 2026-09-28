@@ -6,7 +6,9 @@ import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 
 abstract class BookingRepository {
   Future<Result<BookingDraft>> createDraft();
+  Future<Result<BookingDraft?>> getCurrentDraft();
   Future<Result<BookingDraft>> updateDraft(BookingDraft draft);
+  Future<Result<void>> deleteDraft();
   Future<Result<Booking>> confirmBooking(BookingDraft draft);
   Future<Result<List<Booking>>> getBookings({BookingStatus? status});
   Future<Result<Booking>> getBooking(String id);

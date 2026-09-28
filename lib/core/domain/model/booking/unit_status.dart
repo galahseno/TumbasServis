@@ -33,6 +33,11 @@ extension UnitStatusX on UnitStatus {
   bool get isTerminal =>
       this == UnitStatus.selesai || this == UnitStatus.dibatalkan;
 
+  int get stageIndex {
+    final index = _forwardOrder.indexOf(this);
+    return index == -1 ? 0 : index;
+  }
+
   bool canTransitionTo(UnitStatus target) {
     if (target == UnitStatus.dibatalkan) return !isTerminal;
     final currentIndex = _forwardOrder.indexOf(this);

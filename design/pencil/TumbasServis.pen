@@ -1,5 +1,5 @@
 {
-  "version": "2.17",
+  "version": "2.19",
   "children": [
     {
       "type": "frame",
@@ -67,7 +67,8 @@
           "content": "Description",
           "lineHeight": 1.5714,
           "fontFamily": "$font-family",
-          "fontSize": 14
+          "fontSize": 14,
+          "fontWeight": "normal"
         },
         {
           "type": "rectangle",
@@ -233,7 +234,8 @@
               "content": "Pilih 1–5 motor, atur servis per unit, satu bengkel, satu jadwal, satu tiket. Sistem desain, komponen, dan prototipe klik dari Home sampai Booking Berhasil.",
               "lineHeight": "$type-body-lg-lh",
               "fontFamily": "$font-family",
-              "fontSize": "$type-body-lg-size"
+              "fontSize": "$type-body-lg-size",
+              "fontWeight": "normal"
             }
           ]
         },
@@ -525,7 +527,8 @@
               "content": "Versi 0.1 · 23 Sep 2026",
               "lineHeight": "$type-body-md-lh",
               "fontFamily": "$font-family",
-              "fontSize": "$type-body-md-size"
+              "fontSize": "$type-body-md-size",
+              "fontWeight": "normal"
             },
             {
               "type": "text",
@@ -535,7 +538,8 @@
               "content": "Pencil → Figma · Exo 2 · Material Symbols Rounded",
               "lineHeight": "$type-body-md-lh",
               "fontFamily": "$font-family",
-              "fontSize": "$type-body-md-size"
+              "fontSize": "$type-body-md-size",
+              "fontWeight": "normal"
             }
           ]
         }
@@ -620,7 +624,8 @@
                       "content": "Nama",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -654,7 +659,8 @@
                       "content": "Telepon",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -688,7 +694,8 @@
                       "content": "Tersamar",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -722,7 +729,8 @@
                       "content": "OTP demo",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -783,7 +791,8 @@
                       "content": "Unit A",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -817,7 +826,8 @@
                       "content": "Unit B",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -851,7 +861,8 @@
                       "content": "Unit C",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -921,7 +932,8 @@
                       "content": "Bengkel",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -955,7 +967,8 @@
                       "content": "Rating · jarak",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -989,7 +1002,8 @@
                       "content": "Kapasitas",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1023,7 +1037,8 @@
                       "content": "Alamat",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1057,7 +1072,8 @@
                       "content": "Jadwal",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1118,7 +1134,8 @@
                       "content": "Kode booking",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1152,7 +1169,8 @@
                       "content": "Kode unit",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1186,7 +1204,8 @@
                       "content": "Voucher",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1220,7 +1239,8 @@
                       "content": "Pembayaran",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1254,7 +1274,8 @@
                       "content": "Estimasi S11",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     },
                     {
                       "type": "text",
@@ -1406,7 +1427,8 @@
                   "content": "Servis Berkala",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1423,7 +1445,8 @@
                       "content": "60 mnt",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1442,7 +1465,8 @@
                       "content": "Rp85.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1553,7 +1577,8 @@
                   "content": "Servis Berkala",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1570,7 +1595,8 @@
                       "content": "60 mnt",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1589,7 +1615,8 @@
                       "content": "Rp85.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1613,7 +1640,8 @@
                   "content": "AHM Oil MPX1 0,8 L",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1629,7 +1657,8 @@
                       "fill": "$text-body",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1648,7 +1677,8 @@
                       "content": "Rp58.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1759,7 +1789,8 @@
                   "content": "Servis Berkala",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1776,7 +1807,8 @@
                       "content": "60 mnt",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1795,7 +1827,8 @@
                       "content": "Rp85.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1819,7 +1852,8 @@
                   "content": "AHM Oil MPX2 0,8 L",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1835,7 +1869,8 @@
                       "fill": "$text-body",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1854,7 +1889,8 @@
                       "content": "Rp70.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -1878,7 +1914,8 @@
                   "content": "Kampas Rem Depan",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -1894,7 +1931,8 @@
                       "fill": "$text-body",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -1913,7 +1951,8 @@
                       "content": "Rp45.000",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -2185,7 +2224,8 @@
                   "content": "Estimasi durasi · 3 unit × 60 mnt di 2 bay (makespan)",
                   "lineHeight": 1.5,
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 },
                 {
                   "type": "frame",
@@ -2202,7 +2242,8 @@
                       "content": "2 jam",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 },
@@ -2220,7 +2261,8 @@
                       "fill": "$text-body",
                       "lineHeight": 1.5,
                       "fontFamily": "$font-family",
-                      "fontSize": 13
+                      "fontSize": 13,
+                      "fontWeight": "normal"
                     }
                   ]
                 }
@@ -15448,8 +15490,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -15542,8 +15583,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -15625,8 +15665,7 @@
                       "x": 0,
                       "y": 10
                     },
-                    "blur": 26,
-                    "spread": -8
+                    "blur": 26
                   },
                   "justifyContent": "center",
                   "alignItems": "center",
@@ -16248,8 +16287,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "gap": 4,
@@ -16657,8 +16695,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -16967,8 +17004,7 @@
                             "x": 0,
                             "y": 4
                           },
-                          "blur": "$shadow-sm-2-blur",
-                          "spread": -4
+                          "blur": "$shadow-sm-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -25573,8 +25609,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -25667,8 +25702,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -25750,8 +25784,7 @@
                       "x": 0,
                       "y": 10
                     },
-                    "blur": 26,
-                    "spread": -8
+                    "blur": 26
                   },
                   "justifyContent": "center",
                   "alignItems": "center",
@@ -26376,8 +26409,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "gap": 4,
@@ -26785,8 +26817,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -27095,8 +27126,7 @@
                             "x": 0,
                             "y": 4
                           },
-                          "blur": "$shadow-sm-2-blur",
-                          "spread": -4
+                          "blur": "$shadow-sm-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -34232,8 +34262,7 @@
                           "x": 0,
                           "y": 10
                         },
-                        "blur": 26,
-                        "spread": -8
+                        "blur": 26
                       },
                       "descendants": {
                         "IicoI": {
@@ -39849,8 +39878,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -39978,8 +40006,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -40104,8 +40131,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -40242,8 +40268,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "gap": 12,
@@ -40436,8 +40461,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -40592,8 +40616,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -40752,8 +40775,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -40903,8 +40925,7 @@
                             "x": 0,
                             "y": "$shadow-md-2-y"
                           },
-                          "blur": "$shadow-md-2-blur",
-                          "spread": -10
+                          "blur": "$shadow-md-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -42222,8 +42243,7 @@
                                 "x": 0,
                                 "y": "$glass-shadow-2-y"
                               },
-                              "blur": "$glass-shadow-2-blur",
-                              "spread": "$glass-shadow-2-spread"
+                              "blur": "$glass-shadow-2-blur"
                             }
                           ],
                           "gap": 4,
@@ -42369,8 +42389,7 @@
                                 "x": 0,
                                 "y": "$glass-shadow-2-y"
                               },
-                              "blur": "$glass-shadow-2-blur",
-                              "spread": "$glass-shadow-2-spread"
+                              "blur": "$glass-shadow-2-blur"
                             }
                           ],
                           "gap": 4,
@@ -42524,8 +42543,7 @@
                                 "x": 0,
                                 "y": "$glass-shadow-2-y"
                               },
-                              "blur": "$glass-shadow-2-blur",
-                              "spread": "$glass-shadow-2-spread"
+                              "blur": "$glass-shadow-2-blur"
                             }
                           ],
                           "gap": 4,
@@ -42671,8 +42689,7 @@
                                 "x": 0,
                                 "y": "$glass-shadow-2-y"
                               },
-                              "blur": "$glass-shadow-2-blur",
-                              "spread": "$glass-shadow-2-spread"
+                              "blur": "$glass-shadow-2-blur"
                             }
                           ],
                           "gap": 4,
@@ -48787,8 +48804,7 @@
                           "x": 0,
                           "y": 10
                         },
-                        "blur": 26,
-                        "spread": -8
+                        "blur": 26
                       },
                       "descendants": {
                         "IicoI": {
@@ -63120,8 +63136,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -63328,8 +63343,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -63542,8 +63556,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -63745,8 +63758,7 @@
                             "x": 0,
                             "y": "$glass-shadow-2-y"
                           },
-                          "blur": "$glass-shadow-2-blur",
-                          "spread": "$glass-shadow-2-spread"
+                          "blur": "$glass-shadow-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -66027,8 +66039,7 @@
                             "x": 0,
                             "y": 4
                           },
-                          "blur": "$shadow-sm-2-blur",
-                          "spread": -4
+                          "blur": "$shadow-sm-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -66381,8 +66392,7 @@
                             "x": 0,
                             "y": 4
                           },
-                          "blur": "$shadow-sm-2-blur",
-                          "spread": -4
+                          "blur": "$shadow-sm-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -69041,8 +69051,7 @@
                             "x": 0,
                             "y": 4
                           },
-                          "blur": "$shadow-sm-2-blur",
-                          "spread": -4
+                          "blur": "$shadow-sm-2-blur"
                         }
                       ],
                       "layout": "vertical",
@@ -77905,8 +77914,7 @@
                               "x": 0,
                               "y": 10
                             },
-                            "blur": 26,
-                            "spread": -8
+                            "blur": 26
                           },
                           "descendants": {
                             "zZjKm": {
@@ -78063,8 +78071,7 @@
                               "x": 0,
                               "y": 10
                             },
-                            "blur": 26,
-                            "spread": -8
+                            "blur": 26
                           },
                           "descendants": {
                             "zZjKm": {
@@ -86714,8 +86721,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -107627,8 +107633,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -107781,8 +107786,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -107971,8 +107975,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -108103,8 +108106,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -108329,8 +108331,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -108484,8 +108485,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -159171,8 +159171,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -159771,8 +159770,7 @@
                         "x": 0,
                         "y": 4
                       },
-                      "blur": "$shadow-sm-2-blur",
-                      "spread": -4
+                      "blur": "$shadow-sm-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -163398,6 +163396,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163448,6 +163447,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163498,6 +163498,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163548,6 +163549,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163598,6 +163600,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163648,6 +163651,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163698,6 +163702,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -163748,6 +163753,7 @@
               "textAlign": "center",
               "fontFamily": "$font-family",
               "fontSize": "$type-label-md-size",
+              "fontWeight": "normal",
               "letterSpacing": "$type-label-md-tracking"
             }
           ]
@@ -176150,8 +176156,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -185326,8 +185331,7 @@
                         "x": 0,
                         "y": "$shadow-md-2-y"
                       },
-                      "blur": "$shadow-md-2-blur",
-                      "spread": -10
+                      "blur": "$shadow-md-2-blur"
                     }
                   ],
                   "layout": "vertical",
@@ -196286,6 +196290,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -196595,6 +196600,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -196732,6 +196738,7 @@
                       "lineHeight": "$type-body-sm-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-sm-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-sm-tracking"
                     }
                   ]
@@ -196769,6 +196776,7 @@
                       "lineHeight": "$type-body-sm-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-sm-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-sm-tracking"
                     }
                   ]
@@ -196916,6 +196924,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -197235,6 +197244,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -197302,6 +197312,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -197551,6 +197562,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -197562,6 +197574,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -197614,6 +197627,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -197747,6 +197761,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -197758,6 +197773,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -197810,6 +197826,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -197937,6 +197954,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -197948,6 +197966,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -198000,6 +198019,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -198307,6 +198327,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -198564,6 +198585,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -198849,6 +198871,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -199106,6 +199129,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -199389,6 +199413,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -199646,6 +199671,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -199945,6 +199971,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -200150,8 +200177,7 @@
                 "x": 0,
                 "y": "$shadow-md-2-y"
               },
-              "blur": "$shadow-md-2-blur",
-              "spread": -10
+              "blur": "$shadow-md-2-blur"
             }
           ],
           "layout": "vertical",
@@ -200191,6 +200217,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -200511,6 +200538,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -209930,6 +209958,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -210227,6 +210256,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -210523,6 +210553,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -210790,6 +210821,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -210801,6 +210833,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -210853,6 +210886,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -210978,6 +211012,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     },
                     {
@@ -210989,6 +211024,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -211058,6 +211094,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -211224,6 +211261,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -211430,8 +211468,7 @@
                 "x": 0,
                 "y": "$shadow-md-2-y"
               },
-              "blur": "$shadow-md-2-blur",
-              "spread": -10
+              "blur": "$shadow-md-2-blur"
             }
           ],
           "layout": "vertical",
@@ -211549,6 +211586,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -211819,6 +211857,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -212025,8 +212064,7 @@
                 "x": 0,
                 "y": "$shadow-md-2-y"
               },
-              "blur": "$shadow-md-2-blur",
-              "spread": -10
+              "blur": "$shadow-md-2-blur"
             }
           ],
           "layout": "vertical",
@@ -212066,6 +212104,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -212900,6 +212939,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -213443,6 +213483,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -213755,6 +213796,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -213892,6 +213934,7 @@
                       "lineHeight": "$type-body-sm-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-sm-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-sm-tracking"
                     }
                   ]
@@ -213929,6 +213972,7 @@
                       "lineHeight": "$type-body-sm-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-sm-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-sm-tracking"
                     }
                   ]
@@ -214079,6 +214123,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -214364,6 +214409,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -214375,6 +214421,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -214427,6 +214474,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -214563,6 +214611,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -214574,6 +214623,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -214626,6 +214676,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -214790,6 +214841,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -215047,6 +215099,7 @@
                   "lineHeight": "$type-body-sm-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-sm-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-sm-tracking"
                 },
                 {
@@ -215335,6 +215388,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -215540,8 +215594,7 @@
                 "x": 0,
                 "y": "$shadow-md-2-y"
               },
-              "blur": "$shadow-md-2-blur",
-              "spread": -10
+              "blur": "$shadow-md-2-blur"
             }
           ],
           "layout": "vertical",
@@ -215581,6 +215634,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -216178,6 +216232,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -216402,6 +216457,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -216701,6 +216757,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -216971,6 +217028,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 },
                 {
@@ -216982,6 +217040,7 @@
                   "lineHeight": "$type-body-md-lh",
                   "fontFamily": "$font-family",
                   "fontSize": "$type-body-md-size",
+                  "fontWeight": "normal",
                   "letterSpacing": "$type-body-md-tracking"
                 }
               ]
@@ -217034,6 +217093,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -217162,6 +217222,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     },
                     {
@@ -217173,6 +217234,7 @@
                       "lineHeight": "$type-body-md-lh",
                       "fontFamily": "$font-family",
                       "fontSize": "$type-body-md-size",
+                      "fontWeight": "normal",
                       "letterSpacing": "$type-body-md-tracking"
                     }
                   ]
@@ -217242,6 +217304,7 @@
                           "lineHeight": "$type-body-md-lh",
                           "fontFamily": "$font-family",
                           "fontSize": "$type-body-md-size",
+                          "fontWeight": "normal",
                           "letterSpacing": "$type-body-md-tracking"
                         }
                       ]
@@ -227225,8 +227288,7 @@
                 "x": 0,
                 "y": "$shadow-md-2-y"
               },
-              "blur": "$shadow-md-2-blur",
-              "spread": -10
+              "blur": "$shadow-md-2-blur"
             }
           ],
           "layout": "vertical",
@@ -231935,6 +231997,10 @@
         }
       ]
     },
+    "sand-600": {
+      "type": "color",
+      "value": "#756C65"
+    },
     "text-faint": {
       "type": "color",
       "value": [
@@ -232181,10 +232247,6 @@
           }
         }
       ]
-    },
-    "sand-600": {
-      "type": "color",
-      "value": "#756C65"
     },
     "orange-700": {
       "type": "color",

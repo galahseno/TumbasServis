@@ -127,6 +127,56 @@ void main() {
     });
   });
 
+  group('getCurrentDraft', () {
+    test('returns null when no draft exists, without creating one', () async {
+      final result = await repository.getCurrentDraft();
+      expect(result, isA<Ok<BookingDraft?>>());
+      expect((result as Ok<BookingDraft?>).value, isNull);
+
+      // A peek must never materialize a draft as a side effect.
+      final createResult = (await repository.createDraft()) as Ok<BookingDraft>;
+      expect(createResult.value.selectedMotorIds, isEmpty);
+    });
+
+    test('returns the existing unexpired draft', () async {
+      final created =
+          ((await repository.createDraft()) as Ok<BookingDraft>).value;
+      final result = await repository.getCurrentDraft();
+      expect((result as Ok<BookingDraft?>).value?.id, created.id);
+    });
+
+    test('returns null for an expired draft, without deleting it', () async {
+      final created =
+          ((await repository.createDraft()) as Ok<BookingDraft>).value;
+      clock.setNow(created.expiresAt.add(const Duration(minutes: 1)));
+
+      final result = await repository.getCurrentDraft();
+      expect((result as Ok<BookingDraft?>).value, isNull);
+
+      // createDraft still sees the stale row and replaces it (not a
+      // getCurrentDraft concern, just confirms nothing was force-deleted
+      // in a way that would break createDraft's own expiry handling).
+      final recreated =
+          ((await repository.createDraft()) as Ok<BookingDraft>).value;
+      expect(recreated.id, isNot(created.id));
+    });
+  });
+
+  group('deleteDraft', () {
+    test('clears the stored draft', () async {
+      await repository.createDraft();
+      await repository.deleteDraft();
+
+      final result = await repository.getCurrentDraft();
+      expect((result as Ok<BookingDraft?>).value, isNull);
+    });
+
+    test('is a no-op when there is no draft', () async {
+      final result = await repository.deleteDraft();
+      expect(result, isA<Ok<void>>());
+    });
+  });
+
   group('confirmBooking', () {
     test(
       'produces the canonical 3-unit booking total and code from the slot date',

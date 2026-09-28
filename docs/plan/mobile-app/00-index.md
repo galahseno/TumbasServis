@@ -172,7 +172,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 09 | [09-data-tracking-invoice-review-notification.md](09-data-tracking-invoice-review-notification.md) | Data | — | `tracking/data/`, `invoice/data/`, `review/data/`, `notification/data/` | ✅ | `10-mobile-step09-data-tracking-invoice-review-notification.md` |
 | 10 | [10-foundations-app-shell.md](10-foundations-app-shell.md) | Presentation (foundation) | — | `app/`, `core/presentation/components/` | ✅ | `11-mobile-step10-foundations-app-shell.md` |
 | 11 | [11-auth-s01-s04.md](11-auth-s01-s04.md) | Presentation, phone | P0*/P1 | S01–S04 | ✅ | `12-mobile-step11-auth-s01-s04.md` |
-| 12 | [12-home-s05.md](12-home-s05.md) | Presentation, phone | P0 | S05 + `AppShell` | ⬜ | `13-mobile-step12-home-s05.md` |
+| 12 | [12-home-s05.md](12-home-s05.md) | Presentation, phone | P0 | S05 + `AppShell` | ✅ | `13-mobile-step12-home-s05.md` |
 | 13 | [13-booking-s10-pilih-motor.md](13-booking-s10-pilih-motor.md) | Presentation, phone | P0 | S10 | ⬜ | `14-mobile-step13-booking-s10-pilih-motor.md` |
 | 14 | [14-booking-s11-detail-servis.md](14-booking-s11-detail-servis.md) | Presentation, phone | P0 | S11 | ⬜ | `15-mobile-step14-booking-s11-detail-servis.md` |
 | 15 | [15-catalog-s12.md](15-catalog-s12.md) | Presentation, phone | P1 | S12 | ⬜ | `16-mobile-step15-catalog-s12.md` |
@@ -189,6 +189,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 26 | [26-tablet-booking-flow.md](26-tablet-booking-flow.md) | Presentation, tablet | Bonus | S10, S11, S13–S18 tablet | ⬜ | `27-mobile-step26-tablet-booking-flow.md` |
 | 27 | [27-tablet-remaining-screens.md](27-tablet-remaining-screens.md) | Presentation, tablet | Bonus | S05, S07–S09, S12, S19–S26 tablet | ⬜ | `28-mobile-step27-tablet-remaining-screens.md` |
 | 28 | [28-release-polish.md](28-release-polish.md) | Release | — | APK, README, submission checklist | ⬜ | `29-mobile-step28-release-polish.md` |
+| 29 | [29-util-extraction-home-booking.md](29-util-extraction-home-booking.md) | Refactor | — | Per-feature `mapper/`/`utils/` extraction (Home VM, Booking repo) | 🔵 | `14-mobile-step29-util-extraction.md` |
 
 *S03 is the P0 entry point per PRD 04; S01/S02/S04 are P1.
 

@@ -11,6 +11,7 @@ import 'package:tumbas_servis/auth/presentation/otp/otp_page.dart';
 import 'package:tumbas_servis/auth/presentation/splash/splash_page.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/presentation/components/app_shell.dart';
+import 'package:tumbas_servis/home/presentation/home/home_page.dart';
 
 final routerProvider = Provider<GoRouter>((ref) {
   return GoRouter(
@@ -106,10 +107,7 @@ final routerProvider = Provider<GoRouter>((ref) {
         branches: [
           StatefulShellBranch(
             routes: [
-              GoRoute(
-                path: Routes.home,
-                builder: (_, _) => const Placeholder(),
-              ),
+              GoRoute(path: Routes.home, builder: (_, _) => const HomePage()),
             ],
           ),
           StatefulShellBranch(
