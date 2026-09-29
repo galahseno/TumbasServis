@@ -13,6 +13,7 @@ import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_p
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_page.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_page.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_page.dart';
+import 'package:tumbas_servis/booking/presentation/tiket/tiket_page.dart';
 import 'package:tumbas_servis/booking/presentation/voucher/voucher_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
@@ -97,7 +98,8 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.bookingSuccessTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) =>
+            TiketPage(bookingId: state.pathParameters['bookingId']!),
       ),
 
       GoRoute(

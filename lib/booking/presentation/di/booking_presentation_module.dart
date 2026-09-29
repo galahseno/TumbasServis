@@ -8,6 +8,8 @@ import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_view_
 import 'package:tumbas_servis/booking/presentation/pilih_motor/state/pilih_motor_state.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/state/ringkasan_state.dart';
+import 'package:tumbas_servis/booking/presentation/tiket/state/tiket_state.dart';
+import 'package:tumbas_servis/booking/presentation/tiket/tiket_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/voucher/state/voucher_state.dart';
 import 'package:tumbas_servis/booking/presentation/voucher/voucher_view_model.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
@@ -36,6 +38,10 @@ final ringkasanViewModelProvider =
     NotifierProvider<RingkasanViewModel, RingkasanState>(
       RingkasanViewModel.new,
     );
+
+final tiketViewModelProvider = NotifierProvider<TiketViewModel, TiketState>(
+  TiketViewModel.new,
+);
 
 final voucherViewModelProvider =
     NotifierProvider<VoucherViewModel, VoucherState>(VoucherViewModel.new);

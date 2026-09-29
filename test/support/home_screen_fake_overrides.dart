@@ -17,15 +17,6 @@ import 'fake_notification_repository.dart';
 import 'fake_tracking_repository.dart';
 import 'fake_workshop_repository.dart';
 
-/// Fake-repository overrides for tests that pump the real router/`App` (and
-/// so may render Home): fakes every repository `HomeViewModel` and
-/// `DemoContentSeeder` touch, so nothing needs real Hive/path_provider-backed
-/// storage (which never resolves under `testWidgets`' fake time without
-/// `tester.runAsync`). The booking repo is pre-seeded with the canonical
-/// booking code so `DemoContentSeeder.seedIfNeeded()` short-circuits past its
-/// `confirmBooking` call, which the fake repository doesn't implement.
-// Riverpod 3 doesn't export `Override` as a nameable type, so this return
-// type can't be written explicitly.
 // ignore: strict_top_level_inference
 homeScreenFakeOverrides() {
   final bookingRepository = FakeBookingRepository()
@@ -44,9 +35,7 @@ homeScreenFakeOverrides() {
         createdAt: DateTime(2026, 9, 20),
       ),
     ])
-    // Kept null so HomeViewModel itself renders no DraftResumeCard;
-    // DemoContentSeeder's own `_seedDraft()` needs `createDraftResult` (not
-    // this one) to avoid FakeBookingRepository's unimplemented `createDraft`.
+    ..getBookingResult = Result.error(Exception('unused in router tests'))
     ..currentDraftResult = const Result.ok(null)
     ..createDraftResult = Result.ok(
       BookingDraft(
