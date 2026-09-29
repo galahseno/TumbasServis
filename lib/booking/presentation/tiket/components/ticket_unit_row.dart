@@ -25,6 +25,8 @@ class TicketUnitRow extends StatelessWidget {
               children: [
                 Text(
                   line.motorName,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
                   style: textTheme.titleSmall?.copyWith(
                     color: scheme.onSurface,
                   ),
@@ -40,6 +42,8 @@ class TicketUnitRow extends StatelessWidget {
                   const SizedBox(height: 2),
                   Text(
                     line.slotLine!,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                     style: textTheme.bodySmall?.copyWith(color: ext.textMuted),
                   ),
                 ],

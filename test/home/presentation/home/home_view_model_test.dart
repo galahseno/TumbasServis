@@ -88,8 +88,6 @@ void main() {
   late ProviderContainer container;
 
   setUpAll(() async {
-    // `DateFormatter` needs `id_ID` locale data — `bootstrap()` does this
-    // for the real app; tests must do it themselves once.
     await initializeDateFormatting('id_ID', null);
   });
 

@@ -91,8 +91,6 @@ void main() {
   test('session survives a fresh LocalStore instance (restart)', () async {
     await repository.verifyOtp('123456');
 
-    // Simulate an app restart: close Hive so a new LocalStore can reopen
-    // the same on-disk box, and read the same in-memory SharedPreferences.
     await Hive.close();
     final restartedStore = LocalStore(
       preferences: await SharedPreferences.getInstance(),

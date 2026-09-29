@@ -562,7 +562,6 @@ class _SlowFakeBookingRepository extends FakeBookingRepository {
 
   @override
   Future<Result<BookingDraft>> updateDraft(BookingDraft draft) async {
-    // First write is slow, later ones fast: responses arrive out of order.
     final delay = _calls++ == 0 ? 60 : 5;
     await Future<void>.delayed(Duration(milliseconds: delay));
     return super.updateDraft(draft);

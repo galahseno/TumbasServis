@@ -34,7 +34,7 @@ void main() {
         ),
       ),
     );
-    // Rebuild as disabled (onSelected: null) and confirm tapping is a no-op.
+
     await tester.pumpWidget(
       _wrap(const TsChip(label: 'Matic', selected: false)),
     );

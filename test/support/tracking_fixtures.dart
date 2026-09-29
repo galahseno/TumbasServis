@@ -66,7 +66,6 @@ TimeSlot slotFixture({
   booked: booked,
 );
 
-/// A unit at [status] with a plausible history (one event per stage reached).
 BookingUnit trackedUnit(
   String code,
   UnitStatus status, {

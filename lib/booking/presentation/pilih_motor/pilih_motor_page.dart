@@ -18,6 +18,13 @@ import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
+
+double? _contentMaxWidthFor(WindowSizeClass sizeClass) => switch (sizeClass) {
+  WindowSizeClass.compact => null,
+  WindowSizeClass.medium => 720,
+  WindowSizeClass.expanded || WindowSizeClass.large => 1040,
+};
 
 class PilihMotorPage extends ConsumerStatefulWidget {
   const PilihMotorPage({
@@ -152,6 +159,9 @@ class _PilihMotorPageState extends ConsumerState<PilihMotorPage> {
                         ctaLabel: 'Lanjut',
                         canContinue: canContinue,
                         isLoading: state.isLoading,
+                        maxContentWidth: _contentMaxWidthFor(
+                          context.windowSizeClass,
+                        ),
                         onContinue: () => context.push(Routes.bookingConfigure),
                       ),
                   ],
@@ -179,11 +189,11 @@ class _MotorGrid extends StatelessWidget {
   final BookingDraftViewModel draftNotifier;
   final VoidCallback onAddMotor;
 
-  int _columnsFor(double width) {
-    if (width >= 1024) return 3;
-    if (width >= 600) return 2;
-    return 1;
-  }
+  int _columnsFor(WindowSizeClass sizeClass) => switch (sizeClass) {
+    WindowSizeClass.compact => 1,
+    WindowSizeClass.medium => 2,
+    WindowSizeClass.expanded || WindowSizeClass.large => 3,
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -191,14 +201,19 @@ class _MotorGrid extends StatelessWidget {
 
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = _columnsFor(constraints.maxWidth);
+        final sizeClass = WindowSizeClass.fromWidth(constraints.maxWidth);
+        final columns = _columnsFor(sizeClass);
         const spacing = 12.0;
-        final contentWidth = constraints.maxWidth > 1040
-            ? 1040.0
-            : constraints.maxWidth;
-        final cardWidth = (contentWidth - (columns - 1) * spacing) / columns;
+        const horizontalPadding = 20.0;
+        final maxWidth = _contentMaxWidthFor(sizeClass);
+        final contentWidth = maxWidth == null
+            ? constraints.maxWidth
+            : constraints.maxWidth.clamp(0.0, maxWidth);
+        final innerWidth = contentWidth - horizontalPadding * 2;
+        final cardWidth = (innerWidth - (columns - 1) * spacing) / columns;
 
-        return Center(
+        return Align(
+          alignment: Alignment.topCenter,
           child: SizedBox(
             width: contentWidth,
             child: SingleChildScrollView(

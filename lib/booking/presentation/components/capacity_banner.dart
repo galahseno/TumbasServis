@@ -14,6 +14,7 @@ class CapacityBanner extends StatelessWidget {
     this.onAction,
     this.actionLabel2,
     this.onAction2,
+    this.margin = const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
   });
 
   final CapacityBannerTone tone;
@@ -23,6 +24,7 @@ class CapacityBanner extends StatelessWidget {
   final VoidCallback? onAction;
   final String? actionLabel2;
   final VoidCallback? onAction2;
+  final EdgeInsetsGeometry margin;
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,7 @@ class CapacityBanner extends StatelessWidget {
     return Semantics(
       liveRegion: true,
       child: Container(
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        margin: margin,
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
           color: soft,

@@ -11,6 +11,7 @@ class VoucherCard extends StatelessWidget {
     this.reasonLabel,
     this.enabled = true,
     this.onTap,
+    this.margin = const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
   });
 
   final String title;
@@ -20,6 +21,8 @@ class VoucherCard extends StatelessWidget {
   final String? reasonLabel;
   final bool enabled;
   final VoidCallback? onTap;
+
+  final EdgeInsetsGeometry margin;
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +47,7 @@ class VoucherCard extends StatelessWidget {
         behavior: HitTestBehavior.opaque,
         onTap: enabled ? onTap : null,
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 6),
+          margin: margin,
           padding: const EdgeInsets.all(16),
           decoration: BoxDecoration(
             border: Border.all(

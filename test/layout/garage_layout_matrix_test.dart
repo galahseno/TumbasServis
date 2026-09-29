@@ -23,7 +23,6 @@ import '../support/fake_garage_repository.dart';
 import '../support/fake_session_repository.dart';
 import '../support/garage_fixtures.dart';
 
-/// Phone matrix × text scale for the garage screens (S07–S09).
 const _phoneSizes = [Size(360, 640), Size(412, 915)];
 const _textScales = [1.0, 1.3];
 

@@ -166,7 +166,6 @@ void main() {
       expect(find.text('Estimasi · 2 jam'), findsOneWidget);
       expect(find.textContaining('Pilih layanan untuk'), findsNothing);
 
-      // Switch back to the first tab and confirm nothing bled between units.
       await _tapChip(tester, 'Vario 125');
       await tester.pumpAndSettle();
       expect(find.text('Rp428.000'), findsOneWidget);
@@ -188,8 +187,6 @@ void main() {
         );
       await _pumpPage(tester, bookingRepository: bookingRepository);
 
-      // PCX (active by default is Vario; switch to PCX which has no
-      // selections) is removed immediately, no dialog.
       await _tapChip(tester, 'PCX 160');
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.do_not_disturb_on_rounded));
@@ -199,7 +196,6 @@ void main() {
       expect(find.text('PCX 160'), findsNothing);
       expect(find.text('Beat 110'), findsOneWidget);
 
-      // Vario has selections: removing it asks for confirmation.
       await _tapChip(tester, 'Vario 125');
       await tester.pumpAndSettle();
       await tester.tap(find.byIcon(Icons.do_not_disturb_on_rounded));
@@ -210,7 +206,6 @@ void main() {
       await tester.tap(find.text('Keluarkan'));
       await tester.pumpAndSettle();
 
-      // Down to 1 unit: the chip row (and its remove control) is hidden.
       expect(find.text('Beat 110'), findsNothing);
       expect(find.byIcon(Icons.do_not_disturb_on_rounded), findsNothing);
     },

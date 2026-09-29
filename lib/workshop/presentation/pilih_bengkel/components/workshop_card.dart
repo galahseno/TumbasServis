@@ -14,6 +14,8 @@ class WorkshopCard extends StatelessWidget {
     required this.onTap,
     super.key,
     this.estimateLabel,
+    this.previewed = false,
+    this.highlighted,
   });
 
   final Workshop workshop;
@@ -23,12 +25,17 @@ class WorkshopCard extends StatelessWidget {
   final String? estimateLabel;
   final VoidCallback onTap;
 
+  final bool previewed;
+
+  final bool? highlighted;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
 
+    final emphasized = highlighted ?? chosen;
     final bayLine = estimateLabel == null
         ? '${workshop.bayCount} bay servis'
         : '${workshop.bayCount} bay servis · $estimateLabel';
@@ -49,8 +56,8 @@ class WorkshopCard extends StatelessWidget {
               color: scheme.surfaceContainer,
               borderRadius: BorderRadius.circular(16),
               border: Border.all(
-                color: chosen ? ext.borderAccent : ext.borderDefault,
-                width: chosen ? 2 : 1,
+                color: emphasized ? ext.borderAccent : ext.borderDefault,
+                width: emphasized ? 2 : 1,
               ),
             ),
             child: Column(
@@ -71,6 +78,14 @@ class WorkshopCard extends StatelessWidget {
                     if (chosen) ...[
                       const SizedBox(width: 8),
                       const ChosenTag(),
+                    ],
+                    if (previewed) ...[
+                      const SizedBox(width: 4),
+                      Icon(
+                        Icons.chevron_right_rounded,
+                        size: 20,
+                        color: ext.accent,
+                      ),
                     ],
                   ],
                 ),

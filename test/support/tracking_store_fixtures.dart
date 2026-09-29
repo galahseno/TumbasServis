@@ -1,4 +1,3 @@
-/// Raw `bookings` box rows for tracking data tests.
 Map<String, dynamic> rawUnit(
   String code,
   String status, {

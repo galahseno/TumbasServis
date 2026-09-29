@@ -321,7 +321,7 @@ abstract final class AppTheme {
       height: lineHeight / size, // Flutter's `height` is a multiplier
       fontWeight: FontWeight.values[(weight ~/ 100) - 1],
       fontVariations: [FontVariation('wght', weight.toDouble())],
-      letterSpacing: trackingEm * size, // PRD tracking is em-based
+      letterSpacing: trackingEm * size,
       color: color,
     );
   }

@@ -15,8 +15,6 @@ final voucherDiskon10 = Voucher(
   validUntil: DateTime(2026, 10, 31),
 );
 
-/// Canonical demo booking `TS-260929-0417`: three finished units, Pak Anto on
-/// A + C, Mas Rudi on B, voucher DISKON10 (−Rp42.800 of Rp428.000).
 Booking canonicalFinishedBooking({String id = 'fin1'}) =>
     trackedBooking(id, [
       trackedUnit(
@@ -46,7 +44,6 @@ Booking canonicalFinishedBooking({String id = 'fin1'}) =>
       completedAt: DateTime(2026, 9, 29, 11, 8),
     );
 
-/// One finished unit, one mechanic (seed `bk_seed_001` shape).
 Booking singleMechanicFinishedBooking({String id = 'fin2'}) =>
     trackedBooking(id, [
       trackedUnit(

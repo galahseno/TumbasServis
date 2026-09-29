@@ -1,11 +1,15 @@
+import 'dart:ui' show PointerDeviceKind;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/date_symbol_data_local.dart';
+import 'package:tumbas_servis/app/app_scroll_behavior.dart';
 import 'package:tumbas_servis/app/app_theme.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
+import 'package:tumbas_servis/booking/presentation/pilih_jadwal/components/date_strip_item.dart';
 import 'package:tumbas_servis/catalog/data/di/catalog_data_module.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking.dart';
@@ -115,8 +119,6 @@ void main() {
       ..availableSlotsResult = Result.ok(_slots());
   });
 
-  /// Boots [initial] inside a router that also knows the neighbouring routes,
-  /// so back/forward navigation is real.
   Future<GoRouter> pump(
     WidgetTester tester, {
     required String initial,
@@ -185,7 +187,11 @@ void main() {
           ),
           clockProvider.overrideWithValue(FakeClock(DateTime(2026, 9, 29, 6))),
         ],
-        child: MaterialApp.router(theme: AppTheme.light, routerConfig: router),
+        child: MaterialApp.router(
+          theme: AppTheme.light,
+          scrollBehavior: const AppScrollBehavior(),
+          routerConfig: router,
+        ),
       ),
     );
     await _settle(tester);
@@ -247,7 +253,7 @@ void main() {
     ) async {
       final router = await pump(tester, initial: '/');
       router.go(Routes.bookings);
-      // go() without extra keeps it unfiltered; push with extra filters.
+
       await _settle(tester);
       router.push(Routes.bookings, extra: 'm2');
       await _settle(tester);
@@ -309,7 +315,7 @@ void main() {
         find.text('Sudah check-in — booking tidak bisa dibatalkan'),
         findsOneWidget,
       );
-      // Fleet legend.
+
       expect(find.text('A · Dikerjakan'), findsOneWidget);
       expect(find.text('C · Diperiksa'), findsOneWidget);
     });
@@ -498,6 +504,45 @@ void main() {
       expect(find.text('Simpan jadwal'), findsNothing);
       expect(bookingRepository.rescheduleCalls, isEmpty);
     });
+
+    for (final kind in [PointerDeviceKind.touch, PointerDeviceKind.mouse]) {
+      testWidgets('Ubah jadwal: the date strip scrolls horizontally with '
+          '${kind.name} on a tablet', (tester) async {
+        tester.view.physicalSize = const Size(800, 1280);
+        tester.view.devicePixelRatio = 1;
+        addTearDown(tester.view.reset);
+        await pump(
+          tester,
+          initial: Routes.bookingDetail('t1'),
+          booking: _terjadwal(),
+        );
+
+        await tester.tap(find.text('Ubah jadwal'));
+        await _settle(tester);
+
+        final strip = find.ancestor(
+          of: find.byType(DateStripItem).first,
+          matching: find.byWidgetPredicate(
+            (w) => w is Scrollable && w.axis == Axis.horizontal,
+          ),
+        );
+        double offset() => tester.state<ScrollableState>(strip).position.pixels;
+
+        expect(offset(), 0);
+        final gesture = await tester.startGesture(
+          tester.getCenter(find.byType(DateStripItem).first),
+          kind: kind,
+        );
+        for (var i = 0; i < 10; i++) {
+          await gesture.moveBy(const Offset(-30, 0));
+          await tester.pump(const Duration(milliseconds: 16));
+        }
+        await gesture.up();
+        await _settle(tester);
+
+        expect(offset(), greaterThan(100));
+      });
+    }
 
     testWidgets('Ubah jadwal: a failed save keeps the sheet open with the '
         'inline error', (tester) async {
@@ -716,7 +761,7 @@ void main() {
           await _settle(tester);
           _expectNoException(tester);
 
-          await tester.tapAt(const Offset(10, 10)); // scrim
+          await tester.tapAt(const Offset(10, 10));
           await _settle(tester);
           await tester.tap(find.text('Batalkan'));
           await _settle(tester);

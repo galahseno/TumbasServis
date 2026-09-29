@@ -84,7 +84,6 @@ void main() {
           find.bySemanticsLabel(RegExp('TS-260929-0417-A, $expected, ')),
           findsOneWidget,
         );
-        // Badge (S20/S21).
         expect(
           find.text(badgeOverrides[status] ?? expected),
           findsAtLeastNWidgets(1),

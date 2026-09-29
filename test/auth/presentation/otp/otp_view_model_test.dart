@@ -72,7 +72,6 @@ void main() {
     await tester.tap(find.text('Verifikasi'));
     await tester.pumpAndSettle();
 
-    // Disabled: tapping does not call the repository or navigate away.
     expect(fakeSessionRepository.lastVerifiedCode, isNull);
     expect(find.text('Masukkan kode OTP'), findsOneWidget);
   });

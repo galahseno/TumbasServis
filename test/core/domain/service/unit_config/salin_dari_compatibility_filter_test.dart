@@ -61,8 +61,6 @@ void main() {
   });
 
   test('never copies the complaint note', () {
-    // SalinDariCopyResult has no complaintNote field at all — a source
-    // config's note has no way to reach the copy, checked at compile time.
     const source = UnitConfig(
       serviceIds: ['svc-servis-berkala'],
       partIds: ['part-oli-mpx1'],

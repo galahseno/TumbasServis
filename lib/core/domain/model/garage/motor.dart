@@ -20,9 +20,6 @@ abstract class Motor with _$Motor {
 
   bool get isNicknameValid => nickname.length <= nicknameMaxLength;
 
-  /// Formats a raw plate-number string into `AB 1234 XY` (1-2 letter region code,
-  /// 1-4 digit number, 0-3 letter suffix). Falls back to the cleaned input when it
-  /// doesn't match the expected shape rather than throwing.
   static String formatPlateNumber(String raw) {
     final cleaned = raw.toUpperCase().replaceAll(RegExp(r'[^A-Z0-9]'), '');
     final match = RegExp(

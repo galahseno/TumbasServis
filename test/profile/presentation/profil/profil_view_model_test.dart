@@ -82,7 +82,6 @@ void main() {
     test('persists and applies live via themeModeProvider', () async {
       await settle();
       container.listen(themeModeProvider, (_, _) {});
-      // Let the notifier finish its initial load before changing the mode.
       await Future<void>.delayed(const Duration(milliseconds: 20));
 
       await container.read(provider.notifier).setThemeMode(AppThemeMode.dark);

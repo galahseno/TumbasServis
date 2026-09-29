@@ -191,7 +191,6 @@ void main() {
     await _settle(tester);
 
     expect(find.text('review page'), findsOneWidget);
-    // Replaced, not stacked: back from S24 must not return to S23.
     expect(router.canPop(), isFalse);
   });
 

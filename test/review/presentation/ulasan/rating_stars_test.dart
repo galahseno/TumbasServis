@@ -69,7 +69,6 @@ void main() {
       ),
     );
 
-    // Focus the control through its first star's focus scope.
     Focus.of(
       tester.element(find.byKey(const ValueKey('rating_star_1'))),
     ).requestFocus();

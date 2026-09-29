@@ -14,7 +14,6 @@ Widget _host(ThemeData theme) => MaterialApp(
 
 void main() {
   test('the real booking code (and the 5-unit specimen) encode at ECC Q', () {
-    // Would throw QrInputTooLongException if a fixed version were too small.
     expect(BookingQrCode.moduleCountFor(_code), greaterThanOrEqualTo(21));
     expect(BookingQrCode.moduleCountFor('TS-261002-0418'), greaterThan(0));
   });

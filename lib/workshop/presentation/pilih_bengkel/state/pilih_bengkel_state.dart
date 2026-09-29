@@ -15,5 +15,6 @@ abstract class PilihBengkelState with _$PilihBengkelState {
     @Default(<ServiceType>[]) List<ServiceType> serviceTypes,
     @Default(WorkshopFilter.terdekat) WorkshopFilter filter,
     @Default('') String searchQuery,
+    String? previewedWorkshopId,
   }) = _PilihBengkelState;
 }

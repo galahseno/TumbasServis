@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/components/sheet_header.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 
 class CopySourceCandidate {
   const CopySourceCandidate({
@@ -18,6 +19,18 @@ Future<String?> showCopySourceSheet(
   BuildContext context, {
   required List<CopySourceCandidate> candidates,
 }) {
+  if (!context.windowSizeClass.isCompact) {
+    return showDialog<String>(
+      context: context,
+      builder: (context) => Dialog(
+        clipBehavior: Clip.antiAlias,
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 560),
+          child: _CopySourceSheet(candidates: candidates),
+        ),
+      ),
+    );
+  }
   return showModalBottomSheet<String>(
     context: context,
     isScrollControlled: true,

@@ -72,7 +72,6 @@ void main() {
       isTrue,
     );
 
-    // Keyboard slides in: header rows collapse, focus must survive.
     tester.view.viewInsets = const FakeViewPadding(bottom: 300);
     addTearDown(tester.view.resetViewInsets);
     await tester.pumpAndSettle();

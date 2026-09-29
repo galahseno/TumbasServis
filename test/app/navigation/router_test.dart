@@ -62,8 +62,6 @@ void main() {
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
         settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository()),
-        // /otp starts a real countdown Timer; a manual (never auto-firing)
-        // factory keeps no real Timer pending past this test's end.
         otpViewModelProvider.overrideWith(
           () => OtpViewModel(timerFactory: ManualTimerFactory().call),
         ),
@@ -104,10 +102,6 @@ void main() {
 
         expect(currentPath(), exempt);
 
-        // Splash's own pending navigation timer (no session -> onboarding)
-        // would otherwise still be pending when the container disposes at
-        // tearDown; let it run to completion so no real Timer leaks past
-        // this test.
         if (exempt == Routes.splash) {
           await tester.pump(const Duration(milliseconds: 900));
           await tester.pumpAndSettle();

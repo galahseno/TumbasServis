@@ -177,8 +177,6 @@ void main() {
     late ProviderContainer container;
 
     setUpAll(() async {
-      // `slotRecapLabel` uses `DateFormatter`, which needs `id_ID` locale
-      // data — `bootstrap()` does this for the real app.
       await initializeDateFormatting('id_ID', null);
     });
 
@@ -209,9 +207,6 @@ void main() {
 
     Future<void> waitForLoad() async {
       container.listen(ringkasanViewModelProvider, (_, _) {});
-      // Read the notifier once to construct it, then trigger a reload — the
-      // view model only self-loads via reload(), matching the page's own
-      // "reload on entry" pattern (see ringkasan_page.dart).
       await container.read(ringkasanViewModelProvider.notifier).reload();
     }
 

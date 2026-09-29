@@ -123,8 +123,6 @@ void main() {
 
   group('hasSharedCapacityFor', () {
     test('recomputes booked from store, ignoring stale slot values', () async {
-      // Stale slot claims 5 booked at hour 9, but the store is empty and the
-      // canonical baseline for hour 9 is 1 — a single unit still fits.
       final fits = await validator.hasSharedCapacityFor(
         workshopId: 'ws_001',
         slot: _slot(DateTime(2026, 9, 29), 9, booked: 5),

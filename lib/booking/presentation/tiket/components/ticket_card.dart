@@ -18,6 +18,8 @@ class TicketCard extends StatelessWidget {
     required this.semanticsLabel,
     required this.onCopy,
     required this.onWorkshopTap,
+    this.showUnits = true,
+    this.horizontalMargin = 16,
     super.key,
   });
 
@@ -30,6 +32,9 @@ class TicketCard extends StatelessWidget {
   final VoidCallback onCopy;
   final VoidCallback onWorkshopTap;
 
+  final bool showUnits;
+  final double horizontalMargin;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
@@ -37,6 +42,7 @@ class TicketCard extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return _TicketShell(
+      horizontalMargin: horizontalMargin,
       top: Semantics(
         container: true,
         label: semanticsLabel,
@@ -72,9 +78,11 @@ class TicketCard extends StatelessWidget {
           ],
         ),
       ),
-      middle: Column(
-        children: [for (final line in units) TicketUnitRow(line: line)],
-      ),
+      middle: showUnits
+          ? Column(
+              children: [for (final line in units) TicketUnitRow(line: line)],
+            )
+          : null,
       bottom: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -135,7 +143,14 @@ class TicketCard extends StatelessWidget {
 }
 
 class TicketCardSkeleton extends StatelessWidget {
-  const TicketCardSkeleton({super.key});
+  const TicketCardSkeleton({
+    this.showUnits = true,
+    this.horizontalMargin = 16,
+    super.key,
+  });
+
+  final bool showUnits;
+  final double horizontalMargin;
 
   @override
   Widget build(BuildContext context) {
@@ -143,6 +158,7 @@ class TicketCardSkeleton extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return _TicketShell(
+      horizontalMargin: horizontalMargin,
       top: Column(
         children: [
           Text(
@@ -155,15 +171,17 @@ class TicketCardSkeleton extends StatelessWidget {
           const SkeletonBlock(width: 176, height: 176),
         ],
       ),
-      middle: const Column(
-        children: [
-          SkeletonBlock(height: 44),
-          SizedBox(height: 8),
-          SkeletonBlock(height: 44),
-          SizedBox(height: 8),
-          SkeletonBlock(height: 44),
-        ],
-      ),
+      middle: showUnits
+          ? const Column(
+              children: [
+                SkeletonBlock(height: 44),
+                SizedBox(height: 8),
+                SkeletonBlock(height: 44),
+                SizedBox(height: 8),
+                SkeletonBlock(height: 44),
+              ],
+            )
+          : null,
       bottom: const Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -183,11 +201,13 @@ class _TicketShell extends StatelessWidget {
     required this.top,
     required this.middle,
     required this.bottom,
+    required this.horizontalMargin,
   });
 
   final Widget top;
-  final Widget middle;
+  final Widget? middle;
   final Widget bottom;
+  final double horizontalMargin;
 
   @override
   Widget build(BuildContext context) {
@@ -219,7 +239,7 @@ class _TicketShell extends StatelessWidget {
     );
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.symmetric(horizontal: horizontalMargin),
       child: Container(
         decoration: BoxDecoration(
           color: scheme.surfaceContainer,
@@ -234,11 +254,16 @@ class _TicketShell extends StatelessWidget {
               child: top,
             ),
             tearLine(),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              child: middle,
-            ),
-            tearLine(),
+            if (middle != null) ...[
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 16,
+                  vertical: 4,
+                ),
+                child: middle,
+              ),
+              tearLine(),
+            ],
             Padding(
               padding: const EdgeInsets.fromLTRB(16, 12, 16, 16),
               child: bottom,

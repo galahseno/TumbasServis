@@ -133,7 +133,6 @@ void main() {
       expect(result, isA<Ok<BookingDraft?>>());
       expect((result as Ok<BookingDraft?>).value, isNull);
 
-      // A peek must never materialize a draft as a side effect.
       final createResult = (await repository.createDraft()) as Ok<BookingDraft>;
       expect(createResult.value.selectedMotorIds, isEmpty);
     });
@@ -153,9 +152,6 @@ void main() {
       final result = await repository.getCurrentDraft();
       expect((result as Ok<BookingDraft?>).value, isNull);
 
-      // createDraft still sees the stale row and replaces it (not a
-      // getCurrentDraft concern, just confirms nothing was force-deleted
-      // in a way that would break createDraft's own expiry handling).
       final recreated =
           ((await repository.createDraft()) as Ok<BookingDraft>).value;
       expect(recreated.id, isNot(created.id));

@@ -20,7 +20,6 @@ class FakeTrackingRepository implements TrackingRepository {
     () => StreamController<BookingUnit>.broadcast(sync: true),
   );
 
-  /// Pushes a live update to whoever watches [unit].
   void emit(String bookingId, BookingUnit unit) =>
       _controllerFor(bookingId, unit.unitCode).add(unit);
 

@@ -24,10 +24,6 @@ void main() {
 
   Future<void> pumpAtLogin(WidgetTester tester) async {
     fakeSessionRepository = FakeSessionRepository()
-      // A session avoids the router's global redirect: navigating straight
-      // to `/login` with no session at all makes `_redirect` target
-      // `/login` from `/login`, which go_router never settles on. The login
-      // screen's own behavior doesn't depend on session state either way.
       ..currentUserResult = Result.ok(
         User(id: 'u1', name: 'Budi', phone: '0812'),
       );
@@ -35,8 +31,6 @@ void main() {
       overrides: [
         sessionRepositoryProvider.overrideWithValue(fakeSessionRepository),
         settingsRepositoryProvider.overrideWithValue(FakeSettingsRepository()),
-        // Reaching /otp starts a real countdown Timer; a manual (never
-        // auto-firing) factory keeps no real Timer pending past test end.
         otpViewModelProvider.overrideWith(
           () => OtpViewModel(timerFactory: ManualTimerFactory().call),
         ),
@@ -76,10 +70,6 @@ void main() {
     await tester.tap(find.text('Kirim kode OTP'));
     await tester.pumpAndSettle();
 
-    // Asserted via the OTP screen's own content rather than the router's
-    // route-information string: `push()` (unlike `go()`) doesn't reliably
-    // update `routeInformationProvider.value` in this go_router version even
-    // though the OTP page is genuinely on screen.
     expect(find.text('Masukkan kode OTP'), findsOneWidget);
     expect(fakeSessionRepository.lastLoginPhone, '+6281234567890');
   });

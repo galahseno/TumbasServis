@@ -176,7 +176,7 @@ void main() {
 
     await tester.tap(find.text('Keluar'));
     await _settle(tester);
-    // The confirm action is the second "Keluar" (the dialog's primary).
+
     await tester.tap(find.text('Keluar').last);
     await _settle(tester);
 

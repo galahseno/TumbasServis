@@ -60,7 +60,6 @@ void main() {
   });
 
   Future<String> storedStatus(String code) async {
-    // Let queued writes finish before reading.
     await TrackingStatusWriter.pendingWrites;
     final row = await store.get('bookings', 'bk');
     final units = (row!['units'] as List<dynamic>).cast<Map<String, dynamic>>();

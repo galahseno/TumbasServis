@@ -39,6 +39,21 @@ class PilihBengkelViewModel extends Notifier<PilihBengkelState> {
   void setSearchQuery(String query) =>
       state = state.copyWith(searchQuery: query);
 
+  void previewWorkshop(String workshopId) =>
+      state = state.copyWith(previewedWorkshopId: workshopId);
+
+  Workshop? previewedWorkshop(String? chosenWorkshopId) {
+    final visible = visibleWorkshops;
+    if (visible.isEmpty) return null;
+    for (final id in [state.previewedWorkshopId, chosenWorkshopId]) {
+      if (id == null) continue;
+      for (final workshop in visible) {
+        if (workshop.id == id) return workshop;
+      }
+    }
+    return visible.first;
+  }
+
   Future<void> _load({required bool openNowOnly}) async {
     final workshopRepo = ref.read(workshopRepositoryProvider);
     final catalogRepo = ref.read(catalogRepositoryProvider);

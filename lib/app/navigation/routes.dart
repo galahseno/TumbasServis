@@ -1,4 +1,3 @@
-/// Route path constants (PRD 07's table) — no magic strings elsewhere.
 abstract final class Routes {
   static const splash = '/splash';
   static const onboarding = '/onboarding';

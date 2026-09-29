@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:tumbas_servis/app/app_scroll_behavior.dart';
 import 'package:tumbas_servis/app/app_theme.dart';
 import 'package:tumbas_servis/app/navigation/router.dart';
+import 'package:tumbas_servis/app/orientation_policy.dart';
 import 'package:tumbas_servis/core/domain/repository/settings/app_theme_mode.dart';
 import 'package:tumbas_servis/core/presentation/di/core_presentation_module.dart';
 
@@ -28,6 +30,9 @@ class App extends ConsumerWidget {
       darkTheme: AppTheme.dark,
       themeMode: appThemeMode.toMaterialThemeMode,
       themeAnimationDuration: Duration.zero,
+      scrollBehavior: const AppScrollBehavior(),
+      builder: (context, child) =>
+          OrientationPolicy(child: child ?? const SizedBox.shrink()),
     );
   }
 }

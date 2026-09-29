@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tumbas_servis/core/presentation/components/max_width_box.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
@@ -13,6 +14,7 @@ class ConfirmBar extends StatelessWidget {
     super.key,
     this.loadingLabel,
     this.reasonLine,
+    this.maxContentWidth,
   });
 
   final String totalLabel;
@@ -24,18 +26,16 @@ class ConfirmBar extends StatelessWidget {
   final VoidCallback onConfirm;
   final String? reasonLine;
 
+  final double? maxContentWidth;
+
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Container(
+    final content = Padding(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-      decoration: BoxDecoration(
-        color: scheme.surface,
-        border: Border(top: BorderSide(color: ext.borderDefault)),
-      ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -88,6 +88,16 @@ class ConfirmBar extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    return DecoratedBox(
+      decoration: BoxDecoration(
+        color: scheme.surface,
+        border: Border(top: BorderSide(color: ext.borderDefault)),
+      ),
+      child: maxContentWidth == null
+          ? content
+          : MaxWidthBox(maxWidth: maxContentWidth!, child: content),
     );
   }
 }

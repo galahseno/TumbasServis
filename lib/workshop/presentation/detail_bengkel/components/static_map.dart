@@ -2,40 +2,43 @@ import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class StaticMap extends StatelessWidget {
-  const StaticMap({super.key});
+  const StaticMap({this.height, super.key});
+
+  final double? height;
 
   @override
   Widget build(BuildContext context) {
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
 
-    return AspectRatio(
-      aspectRatio: 16 / 9,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(16),
-        child: ColoredBox(
-          color: scheme.surfaceContainerLow,
-          child: Stack(
-            fit: StackFit.expand,
-            children: [
-              CustomPaint(
-                painter: _StaticMapPainter(
-                  roadColor: ext.borderDefault,
-                  blockColor: scheme.surfaceContainerHighest,
-                ),
+    final map = ClipRRect(
+      borderRadius: BorderRadius.circular(16),
+      child: ColoredBox(
+        color: scheme.surfaceContainerLow,
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            CustomPaint(
+              painter: _StaticMapPainter(
+                roadColor: ext.borderDefault,
+                blockColor: scheme.surfaceContainerHighest,
               ),
-              Center(
-                child: Icon(
-                  Icons.location_on_rounded,
-                  size: 40,
-                  color: ext.accent,
-                ),
+            ),
+            Center(
+              child: Icon(
+                Icons.location_on_rounded,
+                size: 40,
+                color: ext.accent,
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
+    final height = this.height;
+    return height == null
+        ? AspectRatio(aspectRatio: 16 / 9, child: map)
+        : SizedBox(height: height, width: double.infinity, child: map);
   }
 }
 

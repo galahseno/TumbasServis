@@ -6,11 +6,13 @@ class FilterChipRow extends StatelessWidget {
   const FilterChipRow({
     required this.selected,
     required this.onSelected,
+    this.horizontalPadding = 20,
     super.key,
   });
 
   final WorkshopFilter selected;
   final ValueChanged<WorkshopFilter> onSelected;
+  final double horizontalPadding;
 
   static const _labels = {
     WorkshopFilter.bukaSekarang: 'Buka sekarang',
@@ -24,7 +26,7 @@ class FilterChipRow extends StatelessWidget {
       container: true,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Row(
           children: [
             for (final filter in WorkshopFilter.values) ...[

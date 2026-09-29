@@ -15,10 +15,6 @@ import '../../../support/fake_settings_repository.dart';
 import '../../../support/home_screen_fake_overrides.dart';
 
 Future<void> _pumpAndFlush(WidgetTester tester, ProviderContainer container) {
-  // Reading the notifier's own provider after each pump flushes Riverpod's
-  // scheduler for state mutations made inside a bare `Timer`/`Future.delayed`
-  // callback — needed here because `SplashViewModel` drives navigation off a
-  // real timer rather than a widget-triggered rebuild.
   container.read(splashViewModelProvider);
   return tester.pump(const Duration(milliseconds: 500));
 }
@@ -45,9 +41,6 @@ void main() {
     container.read(splashViewModelProvider);
     expect(router.routeInformationProvider.value.uri.path, Routes.splash);
 
-    // 4 rounds (2000ms): tolerates `.autoDispose` recreating the notifier
-    // once early (an unrelated ancestor rebuild racing at t=0) — a fresh
-    // instance still completes its own 800ms floor within this window.
     await _pumpAndFlush(tester, container);
     await _pumpAndFlush(tester, container);
     await _pumpAndFlush(tester, container);

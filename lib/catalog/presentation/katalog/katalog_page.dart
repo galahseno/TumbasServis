@@ -413,16 +413,26 @@ class _PartList extends StatelessWidget {
             itemBuilder: (context, index) => _tile(parts[index]),
           );
         }
-        return GridView.builder(
+        final rowCount = (parts.length / columns).ceil();
+        return ListView.separated(
           padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: columns,
-            mainAxisSpacing: 4,
-            crossAxisSpacing: 12,
-            mainAxisExtent: 76,
+          itemCount: rowCount,
+          separatorBuilder: (_, _) => const SizedBox(height: 4),
+          itemBuilder: (context, row) => IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                for (var col = 0; col < columns; col++) ...[
+                  if (col > 0) const SizedBox(width: 12),
+                  Expanded(
+                    child: row * columns + col < parts.length
+                        ? _tile(parts[row * columns + col])
+                        : const SizedBox.shrink(),
+                  ),
+                ],
+              ],
+            ),
           ),
-          itemCount: parts.length,
-          itemBuilder: (context, index) => _tile(parts[index]),
         );
       },
     );

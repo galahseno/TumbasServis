@@ -1,6 +1,7 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:tumbas_servis/core/presentation/components/max_width_box.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
@@ -11,6 +12,7 @@ class WorkshopCtaBar extends StatelessWidget {
     super.key,
     this.helperLine,
     this.isLoading = false,
+    this.maxWidth,
   });
 
   final String ctaLabel;
@@ -18,12 +20,14 @@ class WorkshopCtaBar extends StatelessWidget {
   final String? helperLine;
   final bool isLoading;
 
+  final double? maxWidth;
+
   @override
   Widget build(BuildContext context) {
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
 
-    return Padding(
+    final bar = Padding(
       padding: EdgeInsets.fromLTRB(
         16,
         8,
@@ -70,5 +74,7 @@ class WorkshopCtaBar extends StatelessWidget {
         ),
       ),
     );
+    final maxWidth = this.maxWidth;
+    return maxWidth == null ? bar : MaxWidthBox(maxWidth: maxWidth, child: bar);
   }
 }

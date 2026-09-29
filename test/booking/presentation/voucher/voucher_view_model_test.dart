@@ -189,7 +189,6 @@ void main() {
 
     Future<void> waitForVoucherLoad() async {
       container.listen(ringkasanViewModelProvider, (_, _) {});
-      // S17 reuses S16's already-loaded lookups, so S16 must load first.
       await container.read(ringkasanViewModelProvider.notifier).reload();
       container.listen(voucherViewModelProvider, (_, _) {});
       for (var i = 0; i < 100; i++) {

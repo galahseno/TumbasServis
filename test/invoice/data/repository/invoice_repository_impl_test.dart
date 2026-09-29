@@ -76,8 +76,6 @@ void main() {
       demoModeController: demoModeController,
     );
 
-    // Force the booking seed to load so bk_seed_001/002/004 exist, then add
-    // one synthetic completed booking with repeated service/part ids.
     await bookingRepository.getBookings();
     await localStore.put('bookings', repeatedBookingId, {
       'id': repeatedBookingId,

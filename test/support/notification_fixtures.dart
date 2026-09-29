@@ -1,6 +1,5 @@
 import 'package:tumbas_servis/core/domain/model/notification/app_notification.dart';
 
-/// "Now" of the design: Tue 29 Sep 2026, 10.30.
 final notificationsNow = DateTime(2026, 9, 29, 10, 30);
 
 AppNotification notificationFixture(
@@ -21,7 +20,6 @@ AppNotification notificationFixture(
   deepLink: deepLink,
 );
 
-/// The nine S06 notifications (2 unread) from design step 18.
 List<AppNotification> designNotifications() => [
   notificationFixture(
     'n1',

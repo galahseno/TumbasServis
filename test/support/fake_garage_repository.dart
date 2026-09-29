@@ -7,7 +7,6 @@ class FakeGarageRepository implements GarageRepository {
   Result<List<Motor>> motorsResult = const Result.ok([]);
   Result<List<MotorModel>> motorModelsResult = const Result.ok([]);
 
-  /// When set, overrides the default "echo the motor back" result.
   Result<Motor>? addMotorResult;
   Result<Motor>? updateMotorResult;
   Result<void> deleteMotorResult = const Result.ok(null);
