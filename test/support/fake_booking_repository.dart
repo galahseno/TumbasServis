@@ -12,6 +12,8 @@ class FakeBookingRepository implements BookingRepository {
   bool draftDeleted = false;
   BookingDraft? lastUpdatedDraft;
   List<BookingDraft> updateDraftCalls = [];
+  Result<Booking>? confirmBookingResult;
+  List<BookingDraft> confirmBookingCalls = [];
 
   @override
   Future<Result<List<Booking>>> getBookings({BookingStatus? status}) async =>
@@ -38,8 +40,10 @@ class FakeBookingRepository implements BookingRepository {
   }
 
   @override
-  Future<Result<Booking>> confirmBooking(BookingDraft draft) async =>
-      throw UnimplementedError();
+  Future<Result<Booking>> confirmBooking(BookingDraft draft) async {
+    confirmBookingCalls.add(draft);
+    return confirmBookingResult ?? (throw UnimplementedError());
+  }
 
   @override
   Future<Result<Booking>> getBooking(String id) async =>

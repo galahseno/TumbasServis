@@ -1,0 +1,414 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:tumbas_servis/app/navigation/routes.dart';
+import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
+import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
+import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/components/confirm_bar.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/components/payment_note.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/components/summary_card.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/components/unit_summary_accordion.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/components/voucher_row.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_view_model.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/state/ringkasan_state.dart';
+import 'package:tumbas_servis/booking/presentation/utils/ringkasan_display.dart';
+import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
+import 'package:tumbas_servis/core/domain/model/catalog/part.dart';
+import 'package:tumbas_servis/core/domain/model/catalog/service_type.dart';
+import 'package:tumbas_servis/core/domain/service/pricing_duration/pricing_calculator.dart';
+import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
+import 'package:tumbas_servis/core/presentation/components/error_state.dart';
+import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
+import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/currency_formatter.dart';
+
+const _pricingCalculator = PricingCalculator();
+
+class RingkasanPage extends ConsumerStatefulWidget {
+  const RingkasanPage({super.key});
+
+  @override
+  ConsumerState<RingkasanPage> createState() => _RingkasanPageState();
+}
+
+class _RingkasanPageState extends ConsumerState<RingkasanPage> {
+  @override
+  void initState() {
+    super.initState();
+    Future(() => ref.read(ringkasanViewModelProvider.notifier).reload());
+  }
+
+  Future<void> _navigateAndReload(String path) async {
+    await context.push(path);
+    if (!mounted) return;
+    ref.read(ringkasanViewModelProvider.notifier).reload();
+  }
+
+  Future<void> _handleClose() async {
+    final confirmed = await showExitBookingDialog(context);
+    if ((confirmed ?? false) && mounted) {
+      Navigator.of(context).pop();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(ringkasanViewModelProvider, (previous, next) {
+      final bookingId = next.confirmedBookingId;
+      if (bookingId != null && previous?.confirmedBookingId != bookingId) {
+        ref.read(bookingDraftProvider.notifier).reset();
+        context.go(Routes.bookingSuccess(bookingId));
+      }
+    });
+
+    final draft = ref.watch(bookingDraftProvider);
+    final state = ref.watch(ringkasanViewModelProvider);
+    final viewModel = ref.read(ringkasanViewModelProvider.notifier);
+    final scheme = Theme.of(context).colorScheme;
+
+    Widget body;
+    if (state.hasError) {
+      body = ErrorState(
+        message: 'Ringkasan gagal dimuat. Coba lagi.',
+        onRetry: viewModel.reload,
+        layout: ErrorStateLayout.fullPage,
+      );
+    } else if (state.isLoading || draft == null) {
+      body = const _LoadingBody();
+    } else if (draft.selectedMotorIds.isEmpty) {
+      body = EmptyState(
+        title: 'Belum ada motor dipilih',
+        body: 'Kembali ke langkah sebelumnya untuk memilih motor.',
+        ctaLabel: 'Pilih motor',
+        onCta: () => Navigator.of(context).pop(),
+      );
+    } else {
+      body = _RingkasanBody(
+        draft: draft,
+        state: state,
+        viewModel: viewModel,
+        onNavigate: _navigateAndReload,
+      );
+    }
+
+    return PopScope(
+      canPop: false,
+      onPopInvokedWithResult: (didPop, _) {
+        if (didPop) return;
+        _handleClose();
+      },
+      child: Scaffold(
+        backgroundColor: scheme.surface,
+        appBar: TsAppBar.close(
+          title: 'Ringkasan',
+          onClose: _handleClose,
+          semanticLabel: 'Tutup booking',
+        ),
+        body: SafeArea(top: false, child: body),
+      ),
+    );
+  }
+}
+
+class _LoadingBody extends StatelessWidget {
+  const _LoadingBody();
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        const BookingStepper(currentStep: 4),
+        Expanded(
+          child: ListView(
+            padding: const EdgeInsets.fromLTRB(20, 8, 20, 12),
+            children: const [
+              SkeletonBlock(height: 96),
+              SizedBox(height: 12),
+              SkeletonBlock(height: 72),
+              SizedBox(height: 8),
+              SkeletonBlock(height: 72),
+              SizedBox(height: 12),
+              SkeletonBlock(height: 64),
+              SizedBox(height: 12),
+              SkeletonBlock(height: 160),
+            ],
+          ),
+        ),
+        const Padding(
+          padding: EdgeInsets.fromLTRB(20, 12, 20, 12),
+          child: SkeletonBlock(height: 72),
+        ),
+      ],
+    );
+  }
+}
+
+class _RingkasanBody extends StatelessWidget {
+  const _RingkasanBody({
+    required this.draft,
+    required this.state,
+    required this.viewModel,
+    required this.onNavigate,
+  });
+
+  final BookingDraft draft;
+  final RingkasanState state;
+  final RingkasanViewModel viewModel;
+  final Future<void> Function(String path) onNavigate;
+
+  @override
+  Widget build(BuildContext context) {
+    final ext = TsThemeExtension.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    final units = buildUnitLines(
+      draft: draft,
+      motorsById: state.motorsById,
+      serviceById: state.serviceById,
+      partById: state.partById,
+    );
+    final unitSubtotals = units.map((u) => u.subtotal).toList();
+    final breakdown = _pricingCalculator.breakdown(
+      unitSubtotals: unitSubtotals,
+      voucher: state.voucher,
+    );
+    final durationCaption = estimateDurationCaption(
+      draft: draft,
+      units: units,
+      bayCount: state.workshop?.bayCount ?? 1,
+    );
+    final canConfirm = !state.slotInvalid && !state.confirming;
+    final reasonLine = state.slotInvalid
+        ? 'Pilih jadwal baru untuk lanjut'
+        : null;
+
+    return Column(
+      children: [
+        BookingStepper(currentStep: 4),
+        Expanded(
+          child: SingleChildScrollView(
+            padding: const EdgeInsets.only(bottom: 12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                if (state.confirmError != null)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 20,
+                      vertical: 8,
+                    ),
+                    child: ErrorState(
+                      message: state.confirmError!,
+                      onRetry: viewModel.confirm,
+                    ),
+                  ),
+                SummaryCard(
+                  workshopName: state.workshop?.name ?? '',
+                  jadwalLine: jadwalSummaryLine(draft, state.motorsById),
+                  jadwalInvalid: state.slotInvalid,
+                  onUbahBengkel: () => onNavigate(Routes.bookingWorkshop),
+                  onUbahJadwal: () => onNavigate(Routes.bookingSchedule),
+                ),
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(20, 8, 20, 4),
+                  child: Text(
+                    'Motor (${units.length})',
+                    style: textTheme.titleSmall?.copyWith(color: ext.textBody),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      for (final unit in units)
+                        UnitSummaryAccordion(
+                          motor: unit.motor,
+                          summaryLine: unitServiceSummary(unit),
+                          expanded: state.expandedMotorIds.contains(
+                            unit.motorId,
+                          ),
+                          onToggle: () =>
+                              viewModel.toggleAccordion(unit.motorId),
+                          onUbah: () => onNavigate(Routes.bookingConfigure),
+                          body: _UnitDetailLines(unit: unit),
+                        ),
+                    ],
+                  ),
+                ),
+                VoucherRow(
+                  variant: state.voucher != null
+                      ? VoucherRowVariant.applied
+                      : VoucherRowVariant.empty,
+                  titleText: state.voucher?.label,
+                  captionText: state.voucher == null ? 'Pilih voucher' : null,
+                  savingText: state.voucher == null
+                      ? null
+                      : 'Hemat ${CurrencyFormatter.format(_pricingCalculator.voucherDiscount(subtotal: breakdown.subtotal, voucher: state.voucher!))}',
+                  onTap: () => onNavigate(Routes.bookingSummaryVoucher),
+                  onHapus: () async {
+                    final removed = state.voucher;
+                    await viewModel.removeVoucher();
+                    if (!context.mounted || removed == null) return;
+                    TsSnackbar.info(
+                      context,
+                      'Voucher dilepas',
+                      actionLabel: 'Urungkan',
+                      onAction: viewModel.undoRemoveVoucher,
+                    );
+                  },
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 20,
+                    vertical: 8,
+                  ),
+                  child: Container(
+                    padding: const EdgeInsets.all(16),
+                    decoration: BoxDecoration(
+                      border: Border.all(color: ext.borderDefault),
+                      borderRadius: BorderRadius.circular(16),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Estimasi biaya',
+                          style: textTheme.titleSmall?.copyWith(
+                            color: ext.textBody,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        for (final unit in units)
+                          _PriceLine(
+                            label: unit.motor.nickname,
+                            value: CurrencyFormatter.format(unit.subtotal),
+                          ),
+                        if (state.voucher != null) ...[
+                          _PriceLine(
+                            label: 'Subtotal',
+                            value: CurrencyFormatter.format(breakdown.subtotal),
+                          ),
+                          _PriceLine(
+                            label: state.voucher!.label,
+                            value:
+                                '−${CurrencyFormatter.format(breakdown.discount)}',
+                          ),
+                        ],
+                        const Divider(height: 20),
+                        _PriceLine(
+                          label: 'Total estimasi',
+                          value: CurrencyFormatter.format(breakdown.total),
+                          emphasized: true,
+                        ),
+                        if (durationCaption.isNotEmpty) ...[
+                          const SizedBox(height: 4),
+                          Text(
+                            durationCaption,
+                            style: textTheme.bodySmall?.copyWith(
+                              color: ext.textMuted,
+                            ),
+                          ),
+                        ],
+                      ],
+                    ),
+                  ),
+                ),
+                const PaymentNote(),
+              ],
+            ),
+          ),
+        ),
+        ConfirmBar(
+          totalValue: CurrencyFormatter.format(breakdown.total),
+          enabled: canConfirm,
+          isLoading: state.confirming,
+          reasonLine: reasonLine,
+          onConfirm: viewModel.confirm,
+        ),
+      ],
+    );
+  }
+}
+
+class _PriceLine extends StatelessWidget {
+  const _PriceLine({
+    required this.label,
+    required this.value,
+    this.emphasized = false,
+  });
+
+  final String label;
+  final String value;
+  final bool emphasized;
+
+  @override
+  Widget build(BuildContext context) {
+    final ext = TsThemeExtension.of(context);
+    final scheme = Theme.of(context).colorScheme;
+    final textTheme = Theme.of(context).textTheme;
+    final style = (emphasized ? textTheme.titleSmall : textTheme.bodyMedium)
+        ?.copyWith(
+          color: emphasized ? scheme.onSurface : ext.textBody,
+          fontFeatures: const [FontFeature.tabularFigures()],
+        );
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 2),
+      child: Row(
+        children: [
+          Expanded(
+            child: Text(
+              label,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: style?.copyWith(fontFeatures: null),
+            ),
+          ),
+          Text(value, style: style),
+        ],
+      ),
+    );
+  }
+}
+
+class _UnitDetailLines extends StatelessWidget {
+  const _UnitDetailLines({required this.unit});
+
+  final RingkasanUnitLine unit;
+
+  @override
+  Widget build(BuildContext context) {
+    final ext = TsThemeExtension.of(context);
+    final textTheme = Theme.of(context).textTheme;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        for (final ServiceType service in unit.services)
+          _PriceLine(
+            label: service.name,
+            value: CurrencyFormatter.format(service.price),
+          ),
+        for (final Part part in unit.parts)
+          _PriceLine(
+            label: part.name,
+            value: CurrencyFormatter.format(part.price),
+          ),
+        if (unit.complaintNote != null && unit.complaintNote!.isNotEmpty) ...[
+          const SizedBox(height: 8),
+          Text(
+            'Keluhan',
+            style: textTheme.labelSmall?.copyWith(color: ext.textMuted),
+          ),
+          Text(
+            unit.complaintNote!,
+            style: textTheme.bodySmall?.copyWith(color: ext.textBody),
+          ),
+        ],
+      ],
+    );
+  }
+}

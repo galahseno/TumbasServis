@@ -9,6 +9,7 @@ class FakeCatalogRepository implements CatalogRepository {
   Result<List<Promo>> promosResult = const Result.ok([]);
   Result<List<ServiceType>> serviceTypesResult = const Result.ok([]);
   Result<List<Part>> partsResult = const Result.ok([]);
+  Result<List<Voucher>> vouchersResult = const Result.ok([]);
 
   @override
   Future<Result<List<ServiceType>>> getServiceTypes() async =>
@@ -18,7 +19,7 @@ class FakeCatalogRepository implements CatalogRepository {
   Future<Result<List<Part>>> getParts({String? modelId}) async => partsResult;
 
   @override
-  Future<Result<List<Voucher>>> getVouchers() async => const Result.ok([]);
+  Future<Result<List<Voucher>>> getVouchers() async => vouchersResult;
 
   @override
   Future<Result<List<Promo>>> getPromos() async => promosResult;

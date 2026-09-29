@@ -2,7 +2,7 @@
 
 | | |
 |---|---|
-| **Status** | ⬜ Not started |
+| **Status** | ✅ Approved 2026-09-28 |
 | **Layer** | Presentation, phone |
 | **Priority** | S16 P0, S17 P1 |
 | **Owns** | `booking/presentation/ringkasan/` (S16), `booking/presentation/voucher/` (S17) |
@@ -42,28 +42,47 @@ Final review + confirm (S16) and the voucher picker (S17, full page reachable on
 ## Checklist
 
 ### Build
-- [ ] Open questions answered.
-- [ ] S16 built for loading, ready-with-voucher, ready-no-voucher, invalid-slot, confirming, confirm-error, split-recap, single-unit, stress. S17 built for loading, populated, empty, single-motor.
-- [ ] `/booking/summary`, `/booking/summary/voucher` routes wired.
+- [x] Open questions answered (kickoff interview, 4 questions, all recommended options accepted — see session log).
+- [x] S16 built: loading, ready-with-voucher, ready-no-voucher, invalid-slot (shared mode only, matches the design's own frame matrix), confirming, confirm-error, split-recap, single-unit. S17 built: loading, populated (eligible/ineligible grouped + "Tidak pakai voucher"), empty, single-motor (all ineligible).
+- [x] `/booking/summary`, `/booking/summary/voucher` routes wired to `RingkasanPage`/`VoucherPage`.
+- [ ] Stress frame (360×640, text ×1.3) — not separately verified; no simulator/device was exercised this session (see *Deviations* below).
 
 ### Quality (flutter analyze / format / tests)
-- [ ] `flutter analyze` → 0 issues.
-- [ ] `dart format --set-exit-if-changed .` → clean.
-- [ ] `flutter test test/booking/presentation/ringkasan/ test/booking/presentation/voucher/` → green, canonical total verified.
-- [ ] Screenshots vs. `design/pencil/exports/step10/*.png`.
+- [x] `flutter analyze` → 0 issues.
+- [x] `dart format --set-exit-if-changed .` → clean on every step-18 file. (A repo-wide run also reformatted 7 unrelated pre-existing files elsewhere — those were reverted, left untouched, out of this step's scope.)
+- [x] `flutter test test/booking/presentation/ringkasan/ test/booking/presentation/voucher/ test/booking/presentation/components/capacity_banner_test.dart` → 10/10 green, canonical Rp385.200 total verified (subtotal 428000 → 10% DISKON10 → 42800 discount → 385200 total); full `flutter test` → 380/380 green (no regressions).
+- [ ] Screenshots vs. `design/pencil/exports/step10/*.png` — **not done**, see *Deviations*.
 
 ### Review gate
-- [ ] Status 🔵; show the user both screens (all states) + test results.
-- [ ] Review round logged; approval recorded.
+- [x] Status 🔵; user shown the file list + test results below.
+- [x] Review round logged; approval recorded.
 
 ### Close (only after approval)
-- [ ] Commit message proposed: `028 - Create Booking Flow — Ringkasan & Voucher (S16, S17)`.
-- [ ] Claude session file written (`docs/claude-session/apps/19-mobile-step18-summary-voucher-s16-s17.md`).
-- [ ] Tracker in `00-index.md` set to ✅.
+- [x] Commit message proposed: `028 - Create Booking Flow — Ringkasan & Voucher (S16, S17)`.
+- [x] Claude session file written (`docs/claude-session/apps/19-mobile-step18-summary-voucher-s16-s17.md`).
+- [x] Tracker in `00-index.md` set to ✅.
+
+## Deviations from the original scope
+
+- **No visual verification this session.** Only a macOS desktop target and a wireless physical iPhone were available (no simulator/emulator), so the app was not run and no screenshots were taken against `design/pencil/exports/step10/*.png`. Everything else (structure, copy, states, logic) was built and unit-tested against the design doc's exact numbers/copy, but pixel/spacing parity is unverified — flag this explicitly at review.
+- **"Ubah `<motor>`" always opens S11 on its default active unit**, not the specific tapped unit — `DetailServisViewModel` resolves its own active tab internally and doesn't yet accept a target motor id from the route. Follow-up, not a blocker for P0.
+- **`NoVoucherOption`/`VoucherCard` design components were merged into one `VoucherCard`** (used with `title: 'Tidak pakai voucher'` for the no-voucher row) rather than building a second component — same visual language, fewer files.
+- **`SummaryCard` dropped the icon tile**, matching the design step's own build note ("with a 40 dp tile the canonical string wrapped to two lines").
+- Split-mode slot-invalidity is not checked on S16 entry (only shared-mode is, matching the design's frame matrix, which has no split+invalid combo state).
 
 ## Review rounds
+
+#### Round 1 — 2026-09-28
+- **Shown:** file list (new `ringkasan/`, `voucher/` folders + display utils, `capacity_banner` amendment, DI/router wiring, fake-repo extensions), `flutter analyze`/`dart format`/`flutter test` results (10/10 new, 380/380 full suite).
+- **User feedback:** "i test all and good, approve"
+- **Changes made:** none.
+- **Outcome:** approved.
 
 ## Session log
 
 | Time | Action | Result |
 |---|---|---|
+| 2026-09-28 | Kickoff | Read step file, design step 10 file + session log (39 frames, kickoff decisions, copy corrections applied post-hoc in steps 12/19), PRD 03/04, and the existing booking-flow code (step 17's `pilih_jadwal`, `booking_draft_view_model`, domain services, DI, router, fakes). 4 `AskUserQuestion` (re-validation timing, confirm-error demo hook, split-duration formula, voucher-undo mechanism) — all recommended options accepted |
+| 2026-09-28 | Build | `capacity_banner.dart` amended (2nd action slot); `booking_draft_view_model.dart` gained `setVoucher`; new `ringkasan/` (page, view model, state, 5 components) and `voucher/` (page, view model, state, 1 component) folders; `ringkasan_display.dart`/`voucher_display.dart` presentation utils; DI providers + router wiring; `fake_booking_repository.dart`/`fake_catalog_repository.dart` extended for `confirmBooking`/`getVouchers` |
+| 2026-09-28 | Fix | Riverpod rejected a synchronous provider-state write from `initState` (`router_test.dart` caught it) — deferred `RingkasanViewModel.reload()` behind `Future(() => …)` |
+| 2026-09-28 | Quality | `flutter analyze` 0 issues; `dart format` clean; new tests 10/10 green (canonical total, slot-invalid banner copy, confirm success/demo-error, voucher undo, eligible/ineligible sort + shortfall text, capacity banner 2-action); full suite 380/380 green |

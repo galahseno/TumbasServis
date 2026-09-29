@@ -6,6 +6,10 @@ import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_vie
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/state/pilih_jadwal_state.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/state/pilih_motor_state.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_view_model.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/state/ringkasan_state.dart';
+import 'package:tumbas_servis/booking/presentation/voucher/state/voucher_state.dart';
+import 'package:tumbas_servis/booking/presentation/voucher/voucher_view_model.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 
 final bookingDraftProvider =
@@ -27,3 +31,11 @@ final pilihJadwalViewModelProvider =
     NotifierProvider<PilihJadwalViewModel, PilihJadwalState>(
       PilihJadwalViewModel.new,
     );
+
+final ringkasanViewModelProvider =
+    NotifierProvider<RingkasanViewModel, RingkasanState>(
+      RingkasanViewModel.new,
+    );
+
+final voucherViewModelProvider =
+    NotifierProvider<VoucherViewModel, VoucherState>(VoucherViewModel.new);

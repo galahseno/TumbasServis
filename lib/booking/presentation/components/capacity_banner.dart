@@ -12,6 +12,8 @@ class CapacityBanner extends StatelessWidget {
     this.body,
     this.actionLabel,
     this.onAction,
+    this.actionLabel2,
+    this.onAction2,
   });
 
   final CapacityBannerTone tone;
@@ -19,6 +21,8 @@ class CapacityBanner extends StatelessWidget {
   final String? body;
   final String? actionLabel;
   final VoidCallback? onAction;
+  final String? actionLabel2;
+  final VoidCallback? onAction2;
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +69,25 @@ class CapacityBanner extends StatelessWidget {
                   if (actionLabel != null && onAction != null)
                     Padding(
                       padding: const EdgeInsets.only(top: 4),
-                      child: TsButton(
-                        label: actionLabel!,
-                        onPressed: onAction,
-                        type: TsButtonType.ghost,
-                        compact: true,
-                        fullWidth: false,
+                      child: Wrap(
+                        spacing: 8,
+                        children: [
+                          TsButton(
+                            label: actionLabel!,
+                            onPressed: onAction,
+                            type: TsButtonType.ghost,
+                            compact: true,
+                            fullWidth: false,
+                          ),
+                          if (actionLabel2 != null && onAction2 != null)
+                            TsButton(
+                              label: actionLabel2!,
+                              onPressed: onAction2,
+                              type: TsButtonType.ghost,
+                              compact: true,
+                              fullWidth: false,
+                            ),
+                        ],
                       ),
                     ),
                 ],

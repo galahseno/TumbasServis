@@ -121,6 +121,12 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
     await _persist(draft.copyWith(workshopId: workshopId));
   }
 
+  Future<void> setVoucher(String? voucherId) async {
+    final draft = state;
+    if (draft == null) return;
+    await _persist(draft.copyWith(voucherId: voucherId));
+  }
+
   Future<void> setScheduleMode(ScheduleMode mode) async {
     final draft = state;
     if (draft == null) return;
