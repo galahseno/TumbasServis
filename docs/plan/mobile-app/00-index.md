@@ -182,7 +182,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 19 | [19-ticket-s18-p0-checkpoint.md](19-ticket-s18-p0-checkpoint.md) | Presentation, phone | P0 | S18 + e2e flow | ✅ | `20-mobile-step19-ticket-s18-p0-checkpoint.md` |
 | 20 | [20-p0-hardening.md](20-p0-hardening.md) | Hardening | — | P0 screens | ✅ | `21-mobile-step20-p0-hardening.md` |
 | 21 | [21-garage-s07-s09.md](21-garage-s07-s09.md) | Presentation, phone | P1 | S07–S09 | ✅ | `22-mobile-step21-garage-s07-s09.md` |
-| 22 | [22-tracking-s19-s22.md](22-tracking-s19-s22.md) | Presentation, phone | P1 | S19–S22 | ⬜ | `23-mobile-step22-tracking-s19-s22.md` |
+| 22 | [22-tracking-s19-s22.md](22-tracking-s19-s22.md) | Presentation, phone | P1 | S19–S22 | ✅ | `23-mobile-step22-tracking-s19-s22.md` |
 | 23 | [23-invoice-review-s23-s24.md](23-invoice-review-s23-s24.md) | Presentation, phone | P1 | S23, S24 | ⬜ | `24-mobile-step23-invoice-review-s23-s24.md` |
 | 24 | [24-notif-profile-demo-s06-s25-s26.md](24-notif-profile-demo-s06-s25-s26.md) | Presentation, phone | P1 | S06, S25, S26 | ⬜ | `25-mobile-step24-notif-profile-demo-s06-s25-s26.md` |
 | 25 | [25-p1-hardening.md](25-p1-hardening.md) | Hardening | — | Full phone app | ⬜ | `26-mobile-step25-p1-hardening.md` |

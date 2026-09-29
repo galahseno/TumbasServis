@@ -1,4 +1,5 @@
 import 'package:tumbas_servis/core/domain/model/result.dart';
+import 'package:tumbas_servis/core/domain/model/workshop/mechanic.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 import 'package:tumbas_servis/core/domain/repository/workshop/workshop_repository.dart';
@@ -10,6 +11,7 @@ class FakeWorkshopRepository implements WorkshopRepository {
   Result<Workshop>? workshopResult;
   Result<List<TimeSlot>> availableSlotsResult = const Result.ok([]);
   Map<String, Result<List<TimeSlot>>> availableSlotsByDate = {};
+  Result<List<Mechanic>> mechanicsResult = const Result.ok([]);
   List<bool> openNowOnlyCalls = [];
   List<DateTime> availableSlotsDateCalls = [];
 
@@ -33,6 +35,9 @@ class FakeWorkshopRepository implements WorkshopRepository {
     }
     return Result.error(Exception('Workshop not found: $id'));
   }
+
+  @override
+  Future<Result<List<Mechanic>>> getMechanics() async => mechanicsResult;
 
   @override
   Future<Result<List<TimeSlot>>> getAvailableSlots({

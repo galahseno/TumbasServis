@@ -10,6 +10,7 @@ class SlotChip extends StatelessWidget {
     required this.selected,
     this.onTap,
     this.onDisabledTap,
+    this.captionOverride,
     super.key,
   });
 
@@ -21,6 +22,8 @@ class SlotChip extends StatelessWidget {
 
   final VoidCallback? onDisabledTap;
 
+  final String? captionOverride;
+
   bool get _enabled =>
       onTap != null &&
       chipState != SlotChipState.lewat &&
@@ -29,6 +32,7 @@ class SlotChip extends StatelessWidget {
   String get _timeLabel => '${hour.toString().padLeft(2, '0')}.00';
 
   String? get _caption {
+    if (captionOverride != null) return captionOverride;
     switch (chipState) {
       case SlotChipState.limited:
       case SlotChipState.short:

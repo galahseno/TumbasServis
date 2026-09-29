@@ -15,6 +15,10 @@ class FakeBookingRepository implements BookingRepository {
   Result<Booking>? confirmBookingResult;
   Result<Booking>? getBookingResult;
   List<BookingDraft> confirmBookingCalls = [];
+  Result<void> cancelBookingResult = const Result.ok(null);
+  Result<Booking>? rescheduleBookingResult;
+  final List<({String id, String? unitCode, String? reason})> cancelCalls = [];
+  final List<({String id, TimeSlot? slot})> rescheduleCalls = [];
 
   @override
   Future<Result<List<Booking>>> getBookings({BookingStatus? status}) async =>
@@ -51,13 +55,23 @@ class FakeBookingRepository implements BookingRepository {
       getBookingResult ?? (throw UnimplementedError());
 
   @override
-  Future<Result<void>> cancelBooking(String id, {String? unitCode}) async =>
-      throw UnimplementedError();
+  Future<Result<void>> cancelBooking(
+    String id, {
+    String? unitCode,
+    String? reason,
+  }) async {
+    cancelCalls.add((id: id, unitCode: unitCode, reason: reason));
+    return cancelBookingResult;
+  }
 
   @override
   Future<Result<Booking>> rescheduleBooking({
     required String id,
     TimeSlot? newSharedSlot,
     Map<String, TimeSlot>? newUnitSlots,
-  }) async => throw UnimplementedError();
+  }) async {
+    rescheduleCalls.add((id: id, slot: newSharedSlot));
+    return rescheduleBookingResult ??
+        Result.error(Exception('reschedule failed'));
+  }
 }

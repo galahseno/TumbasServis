@@ -46,6 +46,7 @@ class TrackingRepositoryImpl implements TrackingRepository {
         unawaited(
           _findUnit(bookingId, unitCode).then((initial) {
             if (initial != null && !controller.isClosed) {
+              _hydrateIfUntracked(bookingId, unitCode, initial.status);
               controller.add(initial);
             }
           }),
@@ -54,11 +55,13 @@ class TrackingRepositoryImpl implements TrackingRepository {
           status,
         ) {
           unawaited(
-            _findUnit(bookingId, unitCode).then((unit) {
-              if (unit != null && !controller.isClosed) {
-                controller.add(unit.copyWith(status: status));
-              }
-            }),
+            TrackingStatusWriter.pendingWrites
+                .then((_) => _findUnit(bookingId, unitCode))
+                .then((unit) {
+                  if (unit != null && !controller.isClosed) {
+                    controller.add(unit.copyWith(status: status));
+                  }
+                }),
           );
         });
       },
@@ -81,6 +84,7 @@ class TrackingRepositoryImpl implements TrackingRepository {
       if (unit.status.isTerminal) {
         return Result.error(Exception('Unit ini sudah dalam status akhir.'));
       }
+      _hydrateIfUntracked(bookingId, unitCode, unit.status);
       _trackingSimulator.advance(bookingId, unitCode);
       final newStatus = _trackingSimulator.currentStatus(bookingId, unitCode);
       await _statusWriter.writeAdvance(
@@ -114,6 +118,15 @@ class TrackingRepositoryImpl implements TrackingRepository {
     } catch (e) {
       return Result.error(e is Exception ? e : Exception(e.toString()));
     }
+  }
+
+  void _hydrateIfUntracked(
+    String bookingId,
+    String unitCode,
+    UnitStatus status,
+  ) {
+    if (_trackingSimulator.isTracking(bookingId, unitCode)) return;
+    _trackingSimulator.hydrate(bookingId, unitCode, status);
   }
 
   Future<BookingUnit?> _findUnit(String bookingId, String unitCode) async {

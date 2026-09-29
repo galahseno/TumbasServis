@@ -20,9 +20,9 @@ import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class PilihMotorPage extends ConsumerStatefulWidget {
-  const PilihMotorPage({super.key, this.preselectMotorId});
+  const PilihMotorPage({super.key, this.preselectMotorIds = const []});
 
-  final String? preselectMotorId;
+  final List<String> preselectMotorIds;
 
   @override
   ConsumerState<PilihMotorPage> createState() => _PilihMotorPageState();
@@ -36,9 +36,8 @@ class _PilihMotorPageState extends ConsumerState<PilihMotorPage> {
       if (!mounted) return;
       final draftNotifier = ref.read(bookingDraftProvider.notifier);
       await draftNotifier.refreshActiveBookings();
-      final preselectId = widget.preselectMotorId;
-      if (preselectId != null && mounted) {
-        await draftNotifier.preselectMotor(preselectId);
+      if (widget.preselectMotorIds.isNotEmpty && mounted) {
+        await draftNotifier.preselectMotors(widget.preselectMotorIds);
       }
       _noticePrunedMotors();
     });

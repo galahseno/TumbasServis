@@ -128,6 +128,56 @@ void main() {
     expect(container.read(bookingDraftProvider)!.selectedMotorIds, isEmpty);
   });
 
+  test('preselectMotors selects in order, skips in-service motors and '
+      'caps at five', () async {
+    bookingRepository.bookingsResult = Result.ok([
+      Booking(
+        id: 'bk_1',
+        code: 'TS-1',
+        userId: 'user_001',
+        workshopId: 'ws_001',
+        units: [
+          BookingUnit(
+            unitCode: '-A',
+            motorId: 'm2',
+            motorSnapshot: _motor('m2'),
+            serviceIds: const [],
+            partIds: const [],
+            status: UnitStatus.dikerjakan,
+            statusHistory: [
+              StatusEvent(
+                status: UnitStatus.dikerjakan,
+                timestamp: DateTime(2026, 9, 29),
+              ),
+            ],
+            subtotal: 0,
+            durationMin: 60,
+          ),
+        ],
+        scheduleMode: ScheduleMode.shared,
+        status: BookingStatus.berlangsung,
+        subtotal: 0,
+        discount: 0,
+        total: 0,
+        createdAt: DateTime(2026, 9, 29),
+      ),
+    ]);
+    bookingRepository.createDraftResult = Result.ok(_draft());
+    await waitForLoad();
+    final notifier = container.read(bookingDraftProvider.notifier);
+    await notifier.refreshActiveBookings();
+
+    await notifier.preselectMotors(['m1', 'm2', 'm3', 'm4', 'm5', 'm6', 'm7']);
+
+    expect(container.read(bookingDraftProvider)!.selectedMotorIds, [
+      'm1',
+      'm3',
+      'm4',
+      'm5',
+      'm6',
+    ]);
+  });
+
   test('deselectMotor removes a motor id', () async {
     bookingRepository.createDraftResult = Result.ok(
       _draft(selectedMotorIds: const ['motor_001', 'motor_002']),

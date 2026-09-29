@@ -24,6 +24,10 @@ import 'package:tumbas_servis/garage/presentation/garasi/garasi_page.dart';
 import 'package:tumbas_servis/garage/presentation/motor_detail/motor_detail_page.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/motor_form_page.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
+import 'package:tumbas_servis/tracking/presentation/detail_booking/detail_booking_page.dart';
+import 'package:tumbas_servis/tracking/presentation/di/tracking_presentation_module.dart';
+import 'package:tumbas_servis/tracking/presentation/lacak_unit/lacak_unit_page.dart';
+import 'package:tumbas_servis/tracking/presentation/riwayat/riwayat_page.dart';
 import 'package:tumbas_servis/workshop/presentation/detail_bengkel/detail_bengkel_page.dart';
 import 'package:tumbas_servis/workshop/presentation/detail_bengkel/state/detail_bengkel_state.dart';
 import 'package:tumbas_servis/workshop/presentation/pilih_bengkel/pilih_bengkel_page.dart';
@@ -58,8 +62,13 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: Routes.bookingVehicles,
-        builder: (_, state) =>
-            PilihMotorPage(preselectMotorId: state.extra as String?),
+        builder: (_, state) => PilihMotorPage(
+          preselectMotorIds: switch (state.extra) {
+            final String id => [id],
+            final List<String> ids => ids,
+            _ => const [],
+          },
+        ),
       ),
       GoRoute(
         path: Routes.bookingConfigure,
@@ -114,11 +123,15 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: Routes.bookingDetailTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) =>
+            DetailBookingPage(bookingId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.bookingUnitDetailTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) => LacakUnitPage(
+          bookingId: state.pathParameters['id']!,
+          unitCode: state.pathParameters['unitCode']!,
+        ),
       ),
 
       GoRoute(
@@ -136,8 +149,12 @@ final routerProvider = Provider<GoRouter>((ref) {
       ),
 
       StatefulShellRoute.indexedStack(
-        builder: (context, state, navigationShell) =>
-            AppShell(navigationShell: navigationShell),
+        builder: (context, state, navigationShell) => Consumer(
+          builder: (context, ref, _) => AppShell(
+            navigationShell: navigationShell,
+            onBranchSelected: (index) => _onBranchSelected(ref, index),
+          ),
+        ),
         branches: [
           StatefulShellBranch(
             routes: [
@@ -148,7 +165,8 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.bookings,
-                builder: (_, _) => const Placeholder(),
+                builder: (_, state) =>
+                    RiwayatPage(motorFilterId: state.extra as String?),
               ),
             ],
           ),
@@ -173,6 +191,14 @@ final routerProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+const _riwayatBranch = 1;
+
+void _onBranchSelected(WidgetRef ref, int index) {
+  if (index != _riwayatBranch) return;
+  final provider = riwayatViewModelProvider(null);
+  if (ref.exists(provider)) ref.read(provider.notifier).refresh();
+}
 
 const _redirectExempt = {Routes.splash, Routes.onboarding, Routes.otp};
 

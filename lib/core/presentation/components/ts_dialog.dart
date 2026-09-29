@@ -84,6 +84,20 @@ abstract final class TsDialog {
     );
   }
 
+  static Widget headerBlock(
+    BuildContext context, {
+    required String title,
+    required String message,
+  }) => _header(context, title: title, message: message);
+
+  static Future<T?> custom<T>(
+    BuildContext context, {
+    required WidgetBuilder builder,
+  }) => showDialog<T>(
+    context: context,
+    builder: (ctx) => _TsDialogShell(child: builder(ctx)),
+  );
+
   static Future<bool?> confirmDestructive(
     BuildContext context, {
     required String title,

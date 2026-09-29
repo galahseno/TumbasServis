@@ -75,9 +75,12 @@ class HomePage extends ConsumerWidget {
                         for (final display in state.activeBookings) ...[
                           ActiveBookingCard(
                             display: display,
-                            onTap: () => context.push(
-                              Routes.bookingDetail(display.booking.id),
-                            ),
+                            onTap: () async {
+                              await context.push(
+                                Routes.bookingDetail(display.booking.id),
+                              );
+                              viewModel.refresh();
+                            },
                           ),
                           const SizedBox(height: 8),
                         ],

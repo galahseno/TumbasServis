@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/date_symbol_data_local.dart';
 import 'package:tumbas_servis/app/app.dart';
 import 'package:tumbas_servis/app/navigation/router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
@@ -50,6 +51,10 @@ void main() {
   late FakeSessionRepository fakeSessionRepository;
   late ProviderContainer container;
   late GoRouter router;
+
+  setUpAll(() async {
+    await initializeDateFormatting('id_ID', null);
+  });
 
   setUp(() {
     fakeSessionRepository = FakeSessionRepository();

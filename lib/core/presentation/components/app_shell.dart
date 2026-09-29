@@ -4,11 +4,18 @@ import 'package:tumbas_servis/core/presentation/components/nav_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/nav_rail.dart';
 
 class AppShell extends StatelessWidget {
-  const AppShell({required this.navigationShell, super.key});
+  const AppShell({
+    required this.navigationShell,
+    super.key,
+    this.onBranchSelected,
+  });
 
   final StatefulNavigationShell navigationShell;
 
+  final ValueChanged<int>? onBranchSelected;
+
   void _onTap(int index) {
+    onBranchSelected?.call(index);
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,

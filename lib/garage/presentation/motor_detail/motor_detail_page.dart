@@ -188,8 +188,6 @@ class _DetailContent extends StatelessWidget {
           title: 'Riwayat servis',
           onSeeAll: state.showSeeAllHistory
               ? () {
-                  // TODO(step22/S19): consume this `extra` (motor id) to
-                  // pre-filter Riwayat to this motor.
                   context.push(Routes.bookings, extra: motor.id);
                 }
               : null,

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -9,6 +11,7 @@ import 'package:tumbas_servis/core/data/service/photo_picker_service.dart';
 import 'package:tumbas_servis/core/data/service/status_notification_coordinator.dart';
 import 'package:tumbas_servis/core/data/service/system_clock.dart';
 import 'package:tumbas_servis/core/data/service/tracking_simulator.dart';
+import 'package:tumbas_servis/core/data/service/tracking_sync_coordinator.dart';
 import 'package:tumbas_servis/core/domain/service/clock.dart';
 import 'package:tumbas_servis/notification/data/di/notification_data_module.dart';
 
@@ -70,3 +73,16 @@ final statusNotificationCoordinatorProvider =
       ref.onDispose(coordinator.dispose);
       return coordinator;
     });
+
+final trackingSyncCoordinatorProvider = Provider<TrackingSyncCoordinator>((
+  ref,
+) {
+  final coordinator = TrackingSyncCoordinator(
+    trackingSimulator: ref.watch(trackingSimulatorProvider),
+    localStore: ref.watch(localStoreProvider),
+    clock: ref.watch(clockProvider),
+  );
+  unawaited(coordinator.start());
+  ref.onDispose(coordinator.dispose);
+  return coordinator;
+});

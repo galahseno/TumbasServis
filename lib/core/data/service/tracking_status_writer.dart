@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/slot_occupancy_calculator.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_status.dart';
@@ -11,6 +13,18 @@ class TrackingStatusWriter {
   static const bookingsBox = SlotOccupancyCalculator.bookingsBox;
   static const _statusDerivation = BookingStatusDerivation();
 
+  static const _mechanicPool = ['mech_002', 'mech_001'];
+
+  static Future<void> _queue = Future<void>.value();
+
+  static Future<void> get pendingWrites => _queue;
+
+  static Future<void> _enqueue(Future<void> Function() task) {
+    final run = _queue.then((_) => task());
+    _queue = run.catchError((Object _) {});
+    return run;
+  }
+
   Future<void> writeAdvance({
     required LocalStore localStore,
     required Clock clock,
@@ -22,7 +36,9 @@ class TrackingStatusWriter {
     clock: clock,
     bookingId: bookingId,
     unitCode: unitCode,
-    mutate: (unit) {
+    mutate: (unit, index) {
+      final stored = UnitStatusX.fromString(unit['status'] as String?);
+      if (stored == status || stored.isTerminal) return false;
       unit['status'] = status.name;
       final history = (unit['status_history'] as List<dynamic>)
           .cast<Map<String, dynamic>>();
@@ -31,6 +47,10 @@ class TrackingStatusWriter {
         'timestamp': clock.now().toIso8601String(),
       });
       unit['status_history'] = history;
+      if (status != UnitStatus.terjadwal && unit['mechanic_id'] == null) {
+        unit['mechanic_id'] = _mechanicPool[index % _mechanicPool.length];
+      }
+      return true;
     },
   );
 
@@ -44,7 +64,11 @@ class TrackingStatusWriter {
     clock: clock,
     bookingId: bookingId,
     unitCode: unitCode,
-    mutate: (unit) {
+    mutate: (unit, index) {
+      if (UnitStatusX.fromString(unit['status'] as String?) ==
+          UnitStatus.terjadwal) {
+        return false;
+      }
       unit['status'] = UnitStatus.terjadwal.name;
       unit['status_history'] = [
         {
@@ -52,6 +76,7 @@ class TrackingStatusWriter {
           'timestamp': clock.now().toIso8601String(),
         },
       ];
+      return true;
     },
   );
 
@@ -60,21 +85,15 @@ class TrackingStatusWriter {
     required Clock clock,
     required String bookingId,
     required String unitCode,
-    required void Function(Map<String, dynamic> unit) mutate,
-  }) async {
+    required bool Function(Map<String, dynamic> unit, int index) mutate,
+  }) => _enqueue(() async {
     final row = await localStore.get(bookingsBox, bookingId);
     if (row == null) return;
     final units = (row['units'] as List<dynamic>).cast<Map<String, dynamic>>();
-    Map<String, dynamic>? target;
-    for (final unit in units) {
-      if (unit['unit_code'] == unitCode) {
-        target = unit;
-        break;
-      }
-    }
-    if (target == null) return;
+    final index = units.indexWhereUnit(unitCode);
+    if (index == -1) return;
 
-    mutate(target);
+    if (!mutate(units[index], index)) return;
 
     final unitStatuses = units
         .map((u) => UnitStatusX.fromString(u['status'] as String?))
@@ -87,5 +106,10 @@ class TrackingStatusWriter {
     row['units'] = units;
 
     await localStore.put(bookingsBox, bookingId, row);
-  }
+  });
+}
+
+extension on List<Map<String, dynamic>> {
+  int indexWhereUnit(String unitCode) =>
+      indexWhere((unit) => unit['unit_code'] == unitCode);
 }

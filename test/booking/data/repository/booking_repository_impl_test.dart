@@ -285,6 +285,29 @@ void main() {
       },
     );
 
+    test('stores the reason in the Dibatalkan event note', () async {
+      final booking =
+          ((await repository.confirmBooking(canonicalDraft())) as Ok<Booking>)
+              .value;
+
+      await repository.cancelBooking(
+        booking.id,
+        unitCode: '-B',
+        reason: 'Jadwal bentrok',
+      );
+      await repository.cancelBooking(booking.id, unitCode: '-C');
+
+      final updated =
+          ((await repository.getBooking(booking.id)) as Ok<Booking>).value;
+      String? noteOf(String code) => updated.units
+          .firstWhere((u) => u.unitCode == code)
+          .statusHistory
+          .last
+          .note;
+      expect(noteOf('-B'), 'Dibatalkan oleh pengguna: Jadwal bentrok');
+      expect(noteOf('-C'), 'Dibatalkan oleh pengguna.');
+    });
+
     test(
       'single-unit cancel recomputes pricing and drops the voucher once minUnits is no longer met',
       () async {
@@ -381,6 +404,33 @@ void main() {
       expect(
         updated.units.first.statusHistory.last.note,
         contains('Dijadwal ulang'),
+      );
+    });
+
+    test('still reschedules after one unit was cancelled (cancelled units '
+        'no longer block or count)', () async {
+      final booking =
+          ((await repository.confirmBooking(canonicalDraft())) as Ok<Booking>)
+              .value;
+      await repository.cancelBooking(booking.id, unitCode: '-C');
+
+      final result = await repository.rescheduleBooking(
+        id: booking.id,
+        newSharedSlot: TimeSlot(
+          date: DateTime(2026, 9, 29),
+          hour: 15,
+          capacity: 5,
+          booked: 1,
+        ),
+      );
+
+      expect(result, isA<Ok<Booking>>());
+      final updated = (result as Ok<Booking>).value;
+      expect(updated.sharedSlot!.hour, 15);
+      final cancelled = updated.units.firstWhere((u) => u.unitCode == '-C');
+      expect(
+        cancelled.statusHistory.last.note,
+        isNot(contains('Dijadwal ulang')),
       );
     });
 

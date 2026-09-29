@@ -13,6 +13,7 @@ Future<void> bootstrap() async {
   final container = ProviderContainer(
     overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
   );
+  container.read(trackingSyncCoordinatorProvider);
   container.read(statusNotificationCoordinatorProvider);
 
   runApp(UncontrolledProviderScope(container: container, child: const App()));

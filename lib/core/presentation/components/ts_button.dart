@@ -34,6 +34,7 @@ class TsButton extends StatefulWidget {
     this.compact = false,
     this.fullWidth = true,
     this.emphasized = false,
+    this.loadingLabel,
   });
 
   final String label;
@@ -46,6 +47,8 @@ class TsButton extends StatefulWidget {
   final bool fullWidth;
 
   final bool emphasized;
+
+  final String? loadingLabel;
 
   @override
   State<TsButton> createState() => _TsButtonState();
@@ -139,15 +142,32 @@ class _TsButtonState extends State<TsButton> {
       context,
     ).textTheme.labelLarge?.copyWith(color: palette.foreground);
 
+    final spinner = SizedBox(
+      width: 20,
+      height: 20,
+      child: CircularProgressIndicator(
+        strokeWidth: 2,
+        valueColor: AlwaysStoppedAnimation(palette.foreground),
+      ),
+    );
     final content = widget.isLoading
-        ? SizedBox(
-            width: 20,
-            height: 20,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-              valueColor: AlwaysStoppedAnimation(palette.foreground),
-            ),
-          )
+        ? (widget.loadingLabel == null
+              ? spinner
+              : Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    spinner,
+                    const SizedBox(width: 8),
+                    Flexible(
+                      child: Text(
+                        widget.loadingLabel!,
+                        style: labelStyle,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ],
+                ))
         : Row(
             mainAxisSize: MainAxisSize.min,
             mainAxisAlignment: MainAxisAlignment.center,

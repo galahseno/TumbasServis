@@ -85,10 +85,14 @@ class _TsChipState extends State<TsChip> {
                         Icon(widget.leadingIcon, size: 16, color: foreground),
                         const SizedBox(width: 6),
                       ],
-                      Text(
-                        widget.label,
-                        style: textTheme.labelLarge?.copyWith(
-                          color: foreground,
+                      Flexible(
+                        child: Text(
+                          widget.label,
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.labelLarge?.copyWith(
+                            color: foreground,
+                          ),
                         ),
                       ),
                     ],

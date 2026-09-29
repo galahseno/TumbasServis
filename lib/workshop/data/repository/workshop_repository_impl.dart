@@ -4,6 +4,7 @@ import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/data/service/slot_occupancy_calculator.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
+import 'package:tumbas_servis/core/domain/model/workshop/mechanic.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 import 'package:tumbas_servis/core/domain/repository/workshop/workshop_repository.dart';
@@ -57,6 +58,30 @@ class WorkshopRepositoryImpl implements WorkshopRepository {
         return Result.error(Exception('Workshop not found: $id'));
       }
       return Result.ok(workshop);
+    } catch (e) {
+      return Result.error(e is Exception ? e : Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<List<Mechanic>>> getMechanics() async {
+    try {
+      await _latencySimulator.simulate();
+      final json =
+          await _mockJsonLoader.load('mechanics.json') as List<dynamic>;
+      return Result.ok(
+        json
+            .cast<Map<String, dynamic>>()
+            .map(
+              (m) => Mechanic(
+                id: m['id'] as String,
+                name: m['name'] as String,
+                avatarInitial: m['avatar_initial'] as String,
+                rating: (m['rating'] as num).toDouble(),
+              ),
+            )
+            .toList(),
+      );
     } catch (e) {
       return Result.error(e is Exception ? e : Exception(e.toString()));
     }

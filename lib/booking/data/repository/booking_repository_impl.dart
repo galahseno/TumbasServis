@@ -357,7 +357,11 @@ class BookingRepositoryImpl implements BookingRepository {
   }
 
   @override
-  Future<Result<void>> cancelBooking(String id, {String? unitCode}) async {
+  Future<Result<void>> cancelBooking(
+    String id, {
+    String? unitCode,
+    String? reason,
+  }) async {
     try {
       await _latencySimulator.simulate();
       await _ensureSeeded();
@@ -367,6 +371,9 @@ class BookingRepositoryImpl implements BookingRepository {
       }
       final booking = row.toBooking();
       final now = _clock.now();
+      final cancelNote = (reason == null || reason.trim().isEmpty)
+          ? 'Dibatalkan oleh pengguna.'
+          : 'Dibatalkan oleh pengguna: ${reason.trim()}';
 
       List<BookingUnit> updatedUnits;
       if (unitCode == null) {
@@ -384,7 +391,7 @@ class BookingRepositoryImpl implements BookingRepository {
                   StatusEvent(
                     status: UnitStatus.dibatalkan,
                     timestamp: now,
-                    note: 'Dibatalkan oleh pengguna.',
+                    note: cancelNote,
                   ),
                 ],
               ),
@@ -411,7 +418,7 @@ class BookingRepositoryImpl implements BookingRepository {
                         StatusEvent(
                           status: UnitStatus.dibatalkan,
                           timestamp: now,
-                          note: 'Dibatalkan oleh pengguna.',
+                          note: cancelNote,
                         ),
                       ],
                     ),
@@ -497,7 +504,12 @@ class BookingRepositoryImpl implements BookingRepository {
             ),
           );
         }
-        if (booking.units.any((u) => u.status != UnitStatus.terjadwal)) {
+
+        final activeUnits = booking.units
+            .where((u) => u.status != UnitStatus.dibatalkan)
+            .toList();
+        if (activeUnits.isEmpty ||
+            activeUnits.any((u) => u.status != UnitStatus.terjadwal)) {
           return Result.error(
             Exception('Booking ini sudah tidak bisa dijadwal ulang.'),
           );
@@ -505,22 +517,25 @@ class BookingRepositoryImpl implements BookingRepository {
         if (!await _capacityValidator.hasSharedCapacityFor(
           workshopId: booking.workshopId,
           slot: newSharedSlot,
-          unitCount: booking.units.length,
+          unitCount: activeUnits.length,
         )) {
           return Result.error(Exception('Slot penuh, silakan pilih jam lain.'));
         }
         final updatedUnits = booking.units
             .map(
-              (u) => u.copyWith(
-                statusHistory: [
-                  ...u.statusHistory,
-                  StatusEvent(
-                    status: UnitStatus.terjadwal,
-                    timestamp: now,
-                    note: 'Dijadwal ulang ke ${newSharedSlot.auditLabel}.',
-                  ),
-                ],
-              ),
+              (u) => u.status == UnitStatus.dibatalkan
+                  ? u
+                  : u.copyWith(
+                      statusHistory: [
+                        ...u.statusHistory,
+                        StatusEvent(
+                          status: UnitStatus.terjadwal,
+                          timestamp: now,
+                          note:
+                              'Dijadwal ulang ke ${newSharedSlot.auditLabel}.',
+                        ),
+                      ],
+                    ),
             )
             .toList();
         final updated = booking.copyWith(

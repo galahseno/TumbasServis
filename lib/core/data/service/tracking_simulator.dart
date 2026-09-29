@@ -10,6 +10,12 @@ typedef TrackingTimerFactory =
 Timer _defaultTimerFactory(Duration duration, void Function() callback) =>
     Timer(duration, callback);
 
+typedef TrackingTransition = ({
+  String bookingId,
+  String unitCode,
+  UnitStatus status,
+});
+
 class TrackingSimulator {
   TrackingSimulator({
     required DemoModeController demoModeController,
@@ -23,6 +29,8 @@ class TrackingSimulator {
   final Map<String, StreamController<UnitStatus>> _controllers = {};
   final Map<String, UnitStatus> _currentStatus = {};
   final Map<String, Timer> _timers = {};
+  final StreamController<TrackingTransition> _transitions =
+      StreamController<TrackingTransition>.broadcast(sync: true);
 
   static const List<UnitStatus> _forwardOrder = [
     UnitStatus.terjadwal,
@@ -43,6 +51,20 @@ class TrackingSimulator {
           () => StreamController<UnitStatus>.broadcast(sync: true),
         )
         .stream;
+  }
+
+  Stream<TrackingTransition> get transitions => _transitions.stream;
+
+  bool isTracking(String bookingId, String unitCode) =>
+      _currentStatus.containsKey(_keyFor(bookingId, unitCode));
+
+  void hydrate(String bookingId, String unitCode, UnitStatus status) {
+    final key = _keyFor(bookingId, unitCode);
+    _currentStatus[key] = status;
+    _timers.remove(key)?.cancel();
+    if (status != UnitStatus.terjadwal && !status.isTerminal) {
+      _scheduleNext(bookingId, unitCode);
+    }
   }
 
   UnitStatus currentStatus(String bookingId, String unitCode) =>
@@ -118,7 +140,16 @@ class TrackingSimulator {
 
   void _emit(String key) {
     final status = _currentStatus[key];
-    if (status != null) _controllers[key]?.add(status);
+    if (status == null) return;
+    if (!_transitions.isClosed) {
+      final parts = key.split('|');
+      _transitions.add((
+        bookingId: parts[0],
+        unitCode: parts[1],
+        status: status,
+      ));
+    }
+    _controllers[key]?.add(status);
   }
 
   void dispose() {
@@ -130,5 +161,6 @@ class TrackingSimulator {
       controller.close();
     }
     _controllers.clear();
+    _transitions.close();
   }
 }

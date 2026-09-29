@@ -26,6 +26,12 @@ The notification inbox, account/settings (theme toggle, logout), and the reviewe
 1. S26's "Reset semua data" — confirm the exact scope (garage, bookings, draft, notification read-state, invoices, reviews restored to the step-04 seed; session/theme/demo settings kept) is implemented as one `DemoModeController.resetSeed()` call that every repository impl (steps 06–09) already supports, or whether some repositories need a retroactive `resetToSeed()` method added now.
 2. Deep-link routing from S06 taps — confirm each PRD 04 mapping (status→S21, booking→S20, invoice→S23, promo→S10+voucher, reminder→S10+motor) is wired via `go_router`'s path + query params, not ad-hoc `Navigator.push`.
 
+### Carry-over from step 22 (found while building S19–S22)
+
+- **Deep-link mismatch:** `StatusNotificationCoordinator` writes `deepLink: '/tracking/$bookingId/$unitCode'`, but the real S21 route is `Routes.bookingUnitDetail` = `/bookings/:id/unit/:unitCode`. Fix the coordinator (and its test) when wiring S06 taps, or map the legacy path in the resolver.
+- **S26 "Majukan semua / Reset semua":** step 22 now persists *every* `TrackingSimulator` transition through `TrackingSyncCoordinator`, so `advanceAll()/resetAll()` no longer desync the store. Still prefer looping `TrackingRepository.advanceUnitStatus/resetUnitStatus` per unit so S21's shortcut and S26 share exactly one path (plus its error handling / armed-error one-shot).
+- **Mechanics:** `WorkshopRepository.getMechanics()` exists now (S21 `MechanicCard`); S26's preview can reuse it.
+
 ## Scope
 
 ### Files / classes to build

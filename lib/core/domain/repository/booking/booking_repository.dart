@@ -12,7 +12,11 @@ abstract class BookingRepository {
   Future<Result<Booking>> confirmBooking(BookingDraft draft);
   Future<Result<List<Booking>>> getBookings({BookingStatus? status});
   Future<Result<Booking>> getBooking(String id);
-  Future<Result<void>> cancelBooking(String id, {String? unitCode});
+  Future<Result<void>> cancelBooking(
+    String id, {
+    String? unitCode,
+    String? reason,
+  });
   Future<Result<Booking>> rescheduleBooking({
     required String id,
     TimeSlot? newSharedSlot,

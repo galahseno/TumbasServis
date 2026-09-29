@@ -33,6 +33,7 @@ void main() {
 
   const bookingId = 'bk_track_test';
   const unitCode = '-A';
+  const bookingsBox = 'bookings';
 
   Map<String, dynamic> singleUnitBookingJson({required String status}) => {
     'id': bookingId,
@@ -136,6 +137,44 @@ void main() {
 
   Future<Booking> booking() async =>
       ((await bookingRepository.getBooking(bookingId)) as Ok<Booking>).value;
+
+  group('after a relaunch (fresh simulator, persisted status)', () {
+    test('advance continues forward from the stored status instead of '
+        'restarting at check-in', () async {
+      await localStore.put(
+        bookingsBox,
+        bookingId,
+        singleUnitBookingJson(status: 'dikerjakan'),
+      );
+
+      final result = await repository.advanceUnitStatus(
+        bookingId: bookingId,
+        unitCode: unitCode,
+      );
+
+      expect(result, isA<Ok<void>>());
+      expect((await booking()).units.single.status.name, 'qc');
+    });
+
+    test('watchUnitStatus hydrates the simulator so later ticks continue '
+        'from the stored status', () async {
+      await localStore.put(
+        bookingsBox,
+        bookingId,
+        singleUnitBookingJson(status: 'diperiksa'),
+      );
+
+      final first = await repository
+          .watchUnitStatus(bookingId: bookingId, unitCode: unitCode)
+          .first;
+
+      expect(first.status.name, 'diperiksa');
+      expect(
+        trackingSimulator.currentStatus(bookingId, unitCode).name,
+        'diperiksa',
+      );
+    });
+  });
 
   group('advanceUnitStatus', () {
     setUp(() async {

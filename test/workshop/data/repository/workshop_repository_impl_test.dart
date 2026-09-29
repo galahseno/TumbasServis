@@ -7,6 +7,7 @@ import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/data/service/slot_occupancy_calculator.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
+import 'package:tumbas_servis/core/domain/model/workshop/mechanic.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 import 'package:tumbas_servis/core/domain/service/scheduling/slot_capacity_service.dart';
@@ -42,6 +43,18 @@ void main() {
   tearDown(() async {
     await Hive.close();
     tempDir.deleteSync(recursive: true);
+  });
+
+  test('getMechanics loads the six mock mechanics', () async {
+    final result = await repository.getMechanics();
+
+    expect(result, isA<Ok<List<Mechanic>>>());
+    final mechanics = (result as Ok<List<Mechanic>>).value;
+    expect(mechanics, hasLength(6));
+    final rudi = mechanics.firstWhere((m) => m.id == 'mech_001');
+    expect(rudi.name, 'Mas Rudi');
+    expect(rudi.avatarInitial, 'R');
+    expect(rudi.rating, 4.8);
   });
 
   test('getWorkshops returns all 5 workshops sorted by distance', () async {
