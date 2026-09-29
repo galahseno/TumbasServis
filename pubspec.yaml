@@ -61,7 +61,6 @@ dev_dependencies:
   freezed: ^3.2.5
   build_runner: ^2.15.1
   json_serializable: ^6.14.1
-  flutter_native_splash: ^2.4.8
   flutter_launcher_icons: ^0.14.4
 
 # For information on the generic Dart part of this file, see the
@@ -87,3 +86,15 @@ flutter:
         - asset: assets/fonts/Exo2-Variable.ttf
         - asset: assets/fonts/Exo2-Italic-Variable.ttf
           style: italic
+
+# App icon: circular splash tile (TsLogo look) — masters in assets/icon/ (not bundled).
+# Regenerate with `dart run flutter_launcher_icons`.
+flutter_launcher_icons:
+  android: true
+  ios: false
+  image_path: assets/icon/app_icon.png
+  adaptive_icon_background: "#C24C1D"
+  adaptive_icon_foreground: assets/icon/app_icon_fg.png
+  macos:
+    generate: true
+    image_path: assets/icon/app_icon_macos.png

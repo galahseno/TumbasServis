@@ -61,7 +61,9 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                 style: textTheme.bodyLarge?.copyWith(color: ext.textMuted),
               ),
               const SizedBox(height: 4),
-              Row(
+              Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
                 children: [
                   Text(
                     '+62 ${maskPhoneDisplay(state.phoneDigits)}',
@@ -70,7 +72,6 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                       fontWeight: FontWeight.w600,
                     ),
                   ),
-                  const SizedBox(width: 8),
                   AuthLink(
                     label: 'Ganti nomor',
                     onPressed: () => Navigator.of(context).maybePop(),
@@ -126,10 +127,12 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                         color: ext.infoText,
                       ),
                       const SizedBox(width: 6),
-                      Text(
-                        'Kode demo: 123456',
-                        style: textTheme.labelLarge?.copyWith(
-                          color: ext.infoText,
+                      Flexible(
+                        child: Text(
+                          'Kode demo: 123456',
+                          style: textTheme.labelLarge?.copyWith(
+                            color: ext.infoText,
+                          ),
                         ),
                       ),
                     ],
@@ -163,10 +166,12 @@ class _OtpPageState extends ConsumerState<OtpPage> {
                       color: ext.textMuted,
                     ),
                     const SizedBox(width: 4),
-                    Text(
-                      'Masukkan 6 digit kode',
-                      style: textTheme.bodySmall?.copyWith(
-                        color: ext.textMuted,
+                    Flexible(
+                      child: Text(
+                        'Masukkan 6 digit kode',
+                        style: textTheme.bodySmall?.copyWith(
+                          color: ext.textMuted,
+                        ),
                       ),
                     ),
                   ],

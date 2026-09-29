@@ -15,12 +15,19 @@ class OnboardingArt extends StatelessWidget {
       width: double.infinity,
       color: scheme.primaryContainer,
       padding: const EdgeInsets.fromLTRB(24, 24, 24, 32),
-      child: Center(
-        child: switch (slide) {
-          1 => const _MotorCardsVignette(),
-          2 => const _TimelineVignette(),
-          _ => const _TicketVignette(),
-        },
+      child: LayoutBuilder(
+        builder: (context, constraints) => Center(
+          child: FittedBox(
+            child: SizedBox(
+              width: constraints.maxWidth,
+              child: switch (slide) {
+                1 => const _MotorCardsVignette(),
+                2 => const _TimelineVignette(),
+                _ => const _TicketVignette(),
+              },
+            ),
+          ),
+        ),
       ),
     );
   }

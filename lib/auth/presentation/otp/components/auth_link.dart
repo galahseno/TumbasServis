@@ -39,12 +39,14 @@ class AuthLink extends StatelessWidget {
                   Icon(leadingIcon, size: 16, color: color),
                   const SizedBox(width: 4),
                 ],
-                Text(
-                  label,
-                  style: textTheme.labelLarge?.copyWith(
-                    color: color,
-                    fontWeight: FontWeight.w600,
-                    decoration: _enabled ? TextDecoration.underline : null,
+                Flexible(
+                  child: Text(
+                    label,
+                    style: textTheme.labelLarge?.copyWith(
+                      color: color,
+                      fontWeight: FontWeight.w600,
+                      decoration: _enabled ? TextDecoration.underline : null,
+                    ),
                   ),
                 ),
               ],

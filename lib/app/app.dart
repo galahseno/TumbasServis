@@ -21,6 +21,7 @@ class App extends ConsumerWidget {
     final appThemeMode = ref.watch(themeModeProvider);
 
     return MaterialApp.router(
+      title: 'Tumbas Service',
       debugShowCheckedModeBanner: false,
       routerConfig: ref.watch(routerProvider),
       theme: AppTheme.light,

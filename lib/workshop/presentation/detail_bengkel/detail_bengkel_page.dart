@@ -331,7 +331,9 @@ class _AddressRow extends StatelessWidget {
           ],
         ),
         const SizedBox(height: 8),
-        Row(
+        Wrap(
+          spacing: 8,
+          runSpacing: 8,
           children: [
             TsButton(
               label: 'Salin',
@@ -341,7 +343,6 @@ class _AddressRow extends StatelessWidget {
               leadingIcon: Icons.copy_rounded,
               onPressed: onCopy,
             ),
-            const SizedBox(width: 8),
             TsButton(
               label: 'Buka di Maps',
               type: TsButtonType.outline,

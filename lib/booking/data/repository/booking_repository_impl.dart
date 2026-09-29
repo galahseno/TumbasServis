@@ -606,7 +606,12 @@ class BookingRepositoryImpl implements BookingRepository {
     return null;
   }
 
-  Future<void> _ensureSeeded() async {
+  Future<void>? _seeding;
+
+  Future<void> _ensureSeeded() =>
+      _seeding ??= _seedIfEmpty().whenComplete(() => _seeding = null);
+
+  Future<void> _seedIfEmpty() async {
     final existing = await _localStore.getAll(_bookingsBox);
     if (existing.isNotEmpty) return;
     final json =

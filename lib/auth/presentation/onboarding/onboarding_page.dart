@@ -85,46 +85,57 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
               flex: 45,
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(24, 24, 24, 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          _titles[state.currentSlide],
-                          style: textTheme.headlineSmall?.copyWith(
-                            color: scheme.onSurface,
-                          ),
+                child: LayoutBuilder(
+                  builder: (context, constraints) => SingleChildScrollView(
+                    child: ConstrainedBox(
+                      constraints: BoxConstraints(
+                        minHeight: constraints.maxHeight,
+                      ),
+                      child: IntrinsicHeight(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  _titles[state.currentSlide],
+                                  style: textTheme.headlineSmall?.copyWith(
+                                    color: scheme.onSurface,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                Text(
+                                  _bodies[state.currentSlide],
+                                  style: textTheme.bodyLarge?.copyWith(
+                                    color: ext.textMuted,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            PageIndicator(
+                              count: OnboardingViewModel.slideCount,
+                              currentIndex: state.currentSlide,
+                            ),
+                            TsButton(
+                              label: isLastSlide ? 'Mulai' : 'Lanjut',
+                              onPressed: () {
+                                if (isLastSlide) {
+                                  viewModel.finish();
+                                } else {
+                                  _controller.nextPage(
+                                    duration: const Duration(milliseconds: 250),
+                                    curve: Curves.easeOut,
+                                  );
+                                }
+                              },
+                            ),
+                          ],
                         ),
-                        const SizedBox(height: 12),
-                        Text(
-                          _bodies[state.currentSlide],
-                          style: textTheme.bodyLarge?.copyWith(
-                            color: ext.textMuted,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                    PageIndicator(
-                      count: OnboardingViewModel.slideCount,
-                      currentIndex: state.currentSlide,
-                    ),
-                    TsButton(
-                      label: isLastSlide ? 'Mulai' : 'Lanjut',
-                      onPressed: () {
-                        if (isLastSlide) {
-                          viewModel.finish();
-                        } else {
-                          _controller.nextPage(
-                            duration: const Duration(milliseconds: 250),
-                            curve: Curves.easeOut,
-                          );
-                        }
-                      },
-                    ),
-                  ],
+                  ),
                 ),
               ),
             ),
