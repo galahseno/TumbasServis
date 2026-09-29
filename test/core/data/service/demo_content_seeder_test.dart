@@ -28,6 +28,8 @@ void main() {
   late BookingRepositoryImpl bookingRepository;
   late TrackingRepositoryImpl trackingRepository;
   late DemoContentSeeder seeder;
+  late DemoModeController seedingController;
+  late TrackingSimulator simulator;
 
   setUp(() async {
     SharedPreferences.setMockInitialValues({});
@@ -38,6 +40,8 @@ void main() {
     );
     final clock = FakeClock(DateTime(2026, 9, 29, 9, 0));
     final latency = FakeLatencySimulator();
+    seedingController = DemoModeController();
+    simulator = TrackingSimulator(demoModeController: DemoModeController());
 
     final sessionRepository = SessionRepositoryImpl(
       localStore: localStore,
@@ -65,9 +69,7 @@ void main() {
       sessionRepository: sessionRepository,
     );
     trackingRepository = TrackingRepositoryImpl(
-      trackingSimulator: TrackingSimulator(
-        demoModeController: DemoModeController(),
-      ),
+      trackingSimulator: simulator,
       localStore: localStore,
       latencySimulator: latency,
       clock: clock,
@@ -76,6 +78,7 @@ void main() {
     seeder = DemoContentSeeder(
       bookingRepository: bookingRepository,
       trackingRepository: trackingRepository,
+      demoModeController: seedingController,
     );
   });
 
@@ -103,6 +106,21 @@ void main() {
             .value;
     expect(draft, isNotNull);
     expect(draft!.selectedMotorIds, [DemoContentSeeder.draftMotorId]);
+  });
+
+  test('marks the controller as seeding only while it runs', () async {
+    final seedingDuringTransitions = <bool>[];
+    final subscription = simulator.transitions.listen(
+      (_) => seedingDuringTransitions.add(seedingController.isSeeding),
+    );
+
+    expect(seedingController.isSeeding, isFalse);
+    await seeder.seedIfNeeded();
+    await subscription.cancel();
+
+    expect(seedingDuringTransitions, isNotEmpty);
+    expect(seedingDuringTransitions.every((seeding) => seeding), isTrue);
+    expect(seedingController.isSeeding, isFalse);
   });
 
   test('is idempotent: a second call does not duplicate the booking', () async {

@@ -9,5 +9,6 @@ final Provider<NotificationRepository> notificationRepositoryProvider =
         localStore: ref.watch(localStoreProvider),
         mockJsonLoader: ref.watch(mockJsonLoaderProvider),
         latencySimulator: ref.watch(latencySimulatorProvider),
+        clock: ref.watch(clockProvider),
       );
     });

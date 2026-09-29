@@ -8,6 +8,7 @@ class FakeSessionRepository implements SessionRepository {
   Result<User> Function(String code)? verifyOtpResult;
   String? lastLoginPhone;
   String? lastVerifiedCode;
+  int logoutCalls = 0;
 
   @override
   Future<Result<User?>> currentUser() async => currentUserResult;
@@ -27,5 +28,8 @@ class FakeSessionRepository implements SessionRepository {
   }
 
   @override
-  Future<Result<void>> logout() async => const Result.ok(null);
+  Future<Result<void>> logout() async {
+    logoutCalls++;
+    return const Result.ok(null);
+  }
 }

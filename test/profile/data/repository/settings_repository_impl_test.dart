@@ -56,4 +56,17 @@ void main() {
     final disabled = await repository.isDemoModeEnabled();
     expect((disabled as Ok<bool>).value, isFalse);
   });
+
+  test('notifications default to enabled and the flag round-trips', () async {
+    final initial = await repository.isNotificationsEnabled();
+    expect((initial as Ok<bool>).value, isTrue);
+
+    await repository.setNotificationsEnabled(false);
+    final off = await repository.isNotificationsEnabled();
+    expect((off as Ok<bool>).value, isFalse);
+
+    await repository.setNotificationsEnabled(true);
+    final on = await repository.isNotificationsEnabled();
+    expect((on as Ok<bool>).value, isTrue);
+  });
 }

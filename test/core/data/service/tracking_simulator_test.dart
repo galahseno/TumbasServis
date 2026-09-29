@@ -155,4 +155,59 @@ void main() {
       });
     });
   });
+
+  group('speed changes and clearAll', () {
+    test('changing speed re-schedules running units at the new interval', () {
+      fakeAsync((async) {
+        final demo = DemoModeController()
+          ..setTrackingSpeed(TrackingSpeed.detik15);
+        final simulator = TrackingSimulator(demoModeController: demo);
+        final statuses = <UnitStatus>[];
+        simulator.watch('bk1', '-A').listen(statuses.add);
+
+        simulator.checkIn('bk1', '-A'); // 15 s timer pending
+        async.elapse(const Duration(seconds: 3));
+        demo.setTrackingSpeed(TrackingSpeed.detik5); // restarts at 5 s
+        async.elapse(const Duration(seconds: 5));
+
+        expect(statuses, [UnitStatus.checkIn, UnitStatus.diperiksa]);
+        simulator.dispose();
+      });
+    });
+
+    test('switching to mati cancels pending auto-advance', () {
+      fakeAsync((async) {
+        final demo = DemoModeController()
+          ..setTrackingSpeed(TrackingSpeed.detik5);
+        final simulator = TrackingSimulator(demoModeController: demo);
+        final statuses = <UnitStatus>[];
+        simulator.watch('bk1', '-A').listen(statuses.add);
+
+        simulator.checkIn('bk1', '-A');
+        demo.setTrackingSpeed(TrackingSpeed.mati);
+        async.elapse(const Duration(minutes: 1));
+
+        expect(statuses, [UnitStatus.checkIn]);
+        simulator.dispose();
+      });
+    });
+
+    test('clearAll drops tracked units and cancels timers', () {
+      fakeAsync((async) {
+        final demo = DemoModeController()
+          ..setTrackingSpeed(TrackingSpeed.detik5);
+        final simulator = TrackingSimulator(demoModeController: demo);
+        final statuses = <UnitStatus>[];
+        simulator.watch('bk1', '-A').listen(statuses.add);
+
+        simulator.checkIn('bk1', '-A');
+        simulator.clearAll();
+        async.elapse(const Duration(minutes: 1));
+
+        expect(simulator.isTracking('bk1', '-A'), isFalse);
+        expect(statuses, [UnitStatus.checkIn]);
+        simulator.dispose();
+      });
+    });
+  });
 }

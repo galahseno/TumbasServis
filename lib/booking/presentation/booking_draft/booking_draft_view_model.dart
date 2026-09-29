@@ -15,6 +15,7 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
   bool _writeQueued = false;
   int _prunedSinceNotice = 0;
   List<String>? _pendingPreselectMotorIds;
+  String? _pendingVoucherId;
 
   @override
   BookingDraft? build() {
@@ -56,11 +57,22 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
     }
   }
 
+  Future<void> preselectVoucher(String voucherId) async {
+    if (state == null) {
+      _pendingVoucherId = voucherId;
+      return;
+    }
+    await setVoucher(voucherId);
+  }
+
   Future<void> _applyPendingPreselect() async {
     final motorIds = _pendingPreselectMotorIds;
+    final voucherId = _pendingVoucherId;
     _pendingPreselectMotorIds = null;
-    if (motorIds == null || !ref.mounted) return;
-    await preselectMotors(motorIds);
+    _pendingVoucherId = null;
+    if (!ref.mounted) return;
+    if (motorIds != null) await preselectMotors(motorIds);
+    if (voucherId != null && ref.mounted) await setVoucher(voucherId);
   }
 
   Future<void> _loadActiveBookingMotorIds() async {

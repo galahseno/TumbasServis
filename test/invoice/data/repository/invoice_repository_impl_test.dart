@@ -24,6 +24,7 @@ void main() {
   late LocalStore localStore;
   late FakeClock clock;
   late InvoiceRepositoryImpl repository;
+  late DemoModeController demoModeController;
 
   const repeatedBookingId = 'bk_repeated_ids_test';
 
@@ -35,6 +36,7 @@ void main() {
       resolveStorageDirectory: () async => tempDir.path,
     );
     clock = FakeClock(DateTime(2026, 9, 29, 9));
+    demoModeController = DemoModeController();
 
     final sessionRepository = SessionRepositoryImpl(
       localStore: localStore,
@@ -71,6 +73,7 @@ void main() {
         mockJsonLoader: MockJsonLoader(),
         latencySimulator: FakeLatencySimulator(),
       ),
+      demoModeController: demoModeController,
     );
 
     // Force the booking seed to load so bk_seed_001/002/004 exist, then add
@@ -203,6 +206,23 @@ void main() {
           ((await repository.getInvoice('bk_seed_001')) as Ok<Invoice>).value;
       expect(unchanged.paidAt, paidAt);
     });
+
+    test(
+      'armed error fails markPaid once, leaves it unpaid, then clears',
+      () async {
+        demoModeController.armNextWriteError();
+
+        final failed = await repository.markPaid('bk_seed_001');
+        expect(failed, isA<Error<void>>());
+        final unpaid =
+            ((await repository.getInvoice('bk_seed_001')) as Ok<Invoice>).value;
+        expect(unpaid.isPaid, isFalse);
+        expect(demoModeController.isErrorArmed, isFalse);
+
+        final retried = await repository.markPaid('bk_seed_001');
+        expect(retried, isA<Ok<void>>());
+      },
+    );
 
     test(
       'propagates the same error as getInvoice for a non-selesai booking',

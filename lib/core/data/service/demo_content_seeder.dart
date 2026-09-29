@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_initializing_formals
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
@@ -11,11 +12,14 @@ class DemoContentSeeder {
   const DemoContentSeeder({
     required BookingRepository bookingRepository,
     required TrackingRepository trackingRepository,
+    DemoModeController? demoModeController,
   }) : _bookingRepository = bookingRepository,
-       _trackingRepository = trackingRepository;
+       _trackingRepository = trackingRepository,
+       _demoModeController = demoModeController;
 
   final BookingRepository _bookingRepository;
   final TrackingRepository _trackingRepository;
+  final DemoModeController? _demoModeController;
 
   static const canonicalBookingCode = 'TS-260929-0417';
   static const draftMotorId = 'motor_004';
@@ -29,8 +33,13 @@ class DemoContentSeeder {
     );
     if (alreadySeeded) return;
 
-    await _seedActiveBooking();
-    await _seedDraft();
+    _demoModeController?.beginSeeding();
+    try {
+      await _seedActiveBooking();
+      await _seedDraft();
+    } finally {
+      _demoModeController?.endSeeding();
+    }
   }
 
   Future<void> _seedActiveBooking() async {

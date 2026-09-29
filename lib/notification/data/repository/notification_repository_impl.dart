@@ -7,23 +7,31 @@ import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/domain/model/notification/app_notification.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/domain/repository/notification/notification_repository.dart';
+import 'package:tumbas_servis/core/domain/service/clock.dart';
 
 class NotificationRepositoryImpl implements NotificationRepository {
   NotificationRepositoryImpl({
     required LocalStore localStore,
     required MockJsonLoader mockJsonLoader,
     required LatencySimulator latencySimulator,
+    required Clock clock,
   }) : _localStore = localStore,
        _mockJsonLoader = mockJsonLoader,
-       _latencySimulator = latencySimulator;
+       _latencySimulator = latencySimulator,
+       _clock = clock {
+    _localStore.notificationsEnabledChanges.listen((_) => _pushUnreadCount());
+  }
 
   final LocalStore _localStore;
   final MockJsonLoader _mockJsonLoader;
   final LatencySimulator _latencySimulator;
+  final Clock _clock;
 
   final _unreadCountController = StreamController<int>.broadcast();
 
   static const _notificationsBox = 'notifications';
+
+  static final seedAnchor = DateTime(2026, 9, 29, 10, 30);
 
   @override
   Future<Result<List<AppNotification>>> getNotifications() async {
@@ -58,9 +66,29 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   @override
+  Future<Result<void>> markAllRead() async {
+    try {
+      await _latencySimulator.simulate();
+      await _ensureSeeded();
+      final rows = await _localStore.getAll(_notificationsBox);
+      for (final row in rows.where((row) => row['read'] != true)) {
+        row['read'] = true;
+        await _localStore.put(_notificationsBox, row['id'] as String, row);
+      }
+      await _pushUnreadCount();
+      return const Result.ok(null);
+    } catch (e) {
+      return Result.error(e is Exception ? e : Exception(e.toString()));
+    }
+  }
+
+  @override
   Future<Result<void>> addNotification(AppNotification notification) async {
     try {
       await _latencySimulator.simulate();
+      if (!_localStore.getNotificationsEnabled()) {
+        return const Result.ok(null);
+      }
       await _ensureSeeded();
       await _localStore.put(
         _notificationsBox,
@@ -85,6 +113,7 @@ class NotificationRepositoryImpl implements NotificationRepository {
   }
 
   Future<int> _computeUnreadCount() async {
+    if (!_localStore.getNotificationsEnabled()) return 0;
     await _ensureSeeded();
     final rows = await _localStore.getAll(_notificationsBox);
     return rows.where((row) => row['read'] != true).length;
@@ -95,7 +124,10 @@ class NotificationRepositoryImpl implements NotificationRepository {
     if (existing.isNotEmpty) return;
     final json =
         await _mockJsonLoader.load('notifications_seed.json') as List<dynamic>;
+    final shift = _clock.now().difference(seedAnchor);
     for (final row in json.cast<Map<String, dynamic>>()) {
+      final rebased = DateTime.parse(row['timestamp'] as String).add(shift);
+      row['timestamp'] = rebased.toIso8601String();
       await _localStore.put(_notificationsBox, row['id'] as String, row);
     }
   }

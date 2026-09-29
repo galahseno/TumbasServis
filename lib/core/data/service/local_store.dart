@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_initializing_formals
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:hive_ce/hive_ce.dart';
@@ -23,6 +24,21 @@ class LocalStore {
   static const _sessionActiveKey = 'local_store.session_active';
   static const _themeModeKey = 'local_store.theme_mode';
   static const _demoModeEnabledKey = 'local_store.demo_mode_enabled';
+  static const _notificationsEnabledKey = 'local_store.notifications_enabled';
+
+  final StreamController<bool> _notificationsEnabledController =
+      StreamController<bool>.broadcast();
+
+  Stream<bool> get notificationsEnabledChanges =>
+      _notificationsEnabledController.stream;
+
+  bool getNotificationsEnabled() =>
+      _preferences.getBool(_notificationsEnabledKey) ?? true;
+
+  Future<void> setNotificationsEnabled(bool value) async {
+    await _preferences.setBool(_notificationsEnabledKey, value);
+    _notificationsEnabledController.add(value);
+  }
 
   bool getSessionFlag() => _preferences.getBool(_sessionActiveKey) ?? false;
 

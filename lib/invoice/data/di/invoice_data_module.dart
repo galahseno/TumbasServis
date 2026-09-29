@@ -13,5 +13,6 @@ final Provider<InvoiceRepository> invoiceRepositoryProvider =
         clock: ref.watch(clockProvider),
         bookingRepository: ref.watch(bookingRepositoryProvider),
         catalogRepository: ref.watch(catalogRepositoryProvider),
+        demoModeController: ref.watch(demoModeControllerProvider),
       );
     });

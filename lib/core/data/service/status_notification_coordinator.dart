@@ -1,6 +1,8 @@
 // ignore_for_file: prefer_initializing_formals
 import 'dart:async';
 
+import 'package:tumbas_servis/app/navigation/routes.dart';
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/slot_occupancy_calculator.dart';
 import 'package:tumbas_servis/core/data/service/tracking_simulator.dart';
@@ -18,15 +20,18 @@ class StatusNotificationCoordinator {
     required LocalStore localStore,
     required NotificationRepository notificationRepository,
     required Clock clock,
+    DemoModeController? demoModeController,
     Duration discoveryInterval = const Duration(seconds: 2),
     TrackingTimerFactory timerFactory = _defaultTimerFactory,
-  }) : _trackingSimulator = trackingSimulator,
+  }) : _demoModeController = demoModeController,
+       _trackingSimulator = trackingSimulator,
        _localStore = localStore,
        _notificationRepository = notificationRepository,
        _clock = clock,
        _discoveryInterval = discoveryInterval,
        _timerFactory = timerFactory;
 
+  final DemoModeController? _demoModeController;
   final TrackingSimulator _trackingSimulator;
   final LocalStore _localStore;
   final NotificationRepository _notificationRepository;
@@ -95,6 +100,7 @@ class StatusNotificationCoordinator {
     String motorNickname,
     UnitStatus status,
   ) async {
+    if (_demoModeController?.isSeeding ?? false) return;
     final phrase = _phraseFor(status);
     if (phrase == null) return;
 
@@ -108,7 +114,7 @@ class StatusNotificationCoordinator {
       body: 'Unit $unitCode $motorNickname $phrase.',
       timestamp: _clock.now(),
       read: false,
-      deepLink: '/tracking/$bookingId/$unitCode',
+      deepLink: Routes.bookingUnitDetail(bookingId, unitCode),
     );
     await _notificationRepository.addNotification(notification);
   }

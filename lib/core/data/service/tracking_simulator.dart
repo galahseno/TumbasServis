@@ -21,7 +21,11 @@ class TrackingSimulator {
     required DemoModeController demoModeController,
     TrackingTimerFactory timerFactory = _defaultTimerFactory,
   }) : _demoModeController = demoModeController,
-       _timerFactory = timerFactory;
+       _timerFactory = timerFactory {
+    _speedSubscription = _demoModeController.speedChanges.listen(
+      (_) => _rescheduleAll(),
+    );
+  }
 
   final DemoModeController _demoModeController;
   final TrackingTimerFactory _timerFactory;
@@ -29,6 +33,7 @@ class TrackingSimulator {
   final Map<String, StreamController<UnitStatus>> _controllers = {};
   final Map<String, UnitStatus> _currentStatus = {};
   final Map<String, Timer> _timers = {};
+  StreamSubscription<TrackingSpeed>? _speedSubscription;
   final StreamController<TrackingTransition> _transitions =
       StreamController<TrackingTransition>.broadcast(sync: true);
 
@@ -108,6 +113,26 @@ class TrackingSimulator {
     }
   }
 
+  void clearAll() {
+    for (final timer in _timers.values) {
+      timer.cancel();
+    }
+    _timers.clear();
+    _currentStatus.clear();
+  }
+
+  void _rescheduleAll() {
+    for (final key in _currentStatus.keys.toList()) {
+      final parts = key.split('|');
+      final current = _currentStatus[key]!;
+      if (current == UnitStatus.terjadwal || current.isTerminal) {
+        _timers.remove(key)?.cancel();
+        continue;
+      }
+      _scheduleNext(parts[0], parts[1]);
+    }
+  }
+
   void _scheduleNext(String bookingId, String unitCode) {
     final key = _keyFor(bookingId, unitCode);
     _timers.remove(key)?.cancel();
@@ -153,6 +178,7 @@ class TrackingSimulator {
   }
 
   void dispose() {
+    _speedSubscription?.cancel();
     for (final timer in _timers.values) {
       timer.cancel();
     }

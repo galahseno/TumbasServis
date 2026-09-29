@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
+import 'package:tumbas_servis/core/data/service/demo_reset_service.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
@@ -59,6 +60,14 @@ final trackingSimulatorProvider = Provider<TrackingSimulator>((ref) {
   return simulator;
 });
 
+final demoResetServiceProvider = Provider<DemoResetService>(
+  (ref) => DemoResetService(
+    localStore: ref.watch(localStoreProvider),
+    trackingSimulator: ref.watch(trackingSimulatorProvider),
+    demoModeController: ref.watch(demoModeControllerProvider),
+  ),
+);
+
 final clockProvider = Provider<Clock>((ref) => SystemClock());
 
 final statusNotificationCoordinatorProvider =
@@ -68,6 +77,7 @@ final statusNotificationCoordinatorProvider =
         localStore: ref.watch(localStoreProvider),
         notificationRepository: ref.watch(notificationRepositoryProvider),
         clock: ref.watch(clockProvider),
+        demoModeController: ref.watch(demoModeControllerProvider),
       );
       coordinator.start();
       ref.onDispose(coordinator.dispose);

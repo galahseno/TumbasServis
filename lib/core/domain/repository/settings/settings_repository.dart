@@ -6,4 +6,6 @@ abstract class SettingsRepository {
   Future<Result<void>> setThemeMode(AppThemeMode mode);
   Future<Result<bool>> isDemoModeEnabled();
   Future<Result<void>> setDemoMode(bool enabled);
+  Future<Result<bool>> isNotificationsEnabled();
+  Future<Result<void>> setNotificationsEnabled(bool enabled);
 }

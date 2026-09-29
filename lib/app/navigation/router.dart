@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
@@ -11,6 +10,7 @@ import 'package:tumbas_servis/auth/presentation/otp/otp_page.dart';
 import 'package:tumbas_servis/auth/presentation/splash/splash_page.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_page.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_page.dart';
+import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_args.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_page.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_page.dart';
 import 'package:tumbas_servis/booking/presentation/tiket/tiket_page.dart';
@@ -25,6 +25,9 @@ import 'package:tumbas_servis/garage/presentation/motor_detail/motor_detail_page
 import 'package:tumbas_servis/garage/presentation/motor_form/motor_form_page.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/invoice_page.dart';
+import 'package:tumbas_servis/notification/presentation/notifikasi/notifikasi_page.dart';
+import 'package:tumbas_servis/profile/presentation/demo_mode/demo_mode_page.dart';
+import 'package:tumbas_servis/profile/presentation/profil/profil_page.dart';
 import 'package:tumbas_servis/review/presentation/ulasan/ulasan_page.dart';
 import 'package:tumbas_servis/tracking/presentation/detail_booking/detail_booking_page.dart';
 import 'package:tumbas_servis/tracking/presentation/di/tracking_presentation_module.dart';
@@ -48,7 +51,7 @@ final routerProvider = Provider<GoRouter>((ref) {
       GoRoute(path: Routes.otp, builder: (_, _) => const OtpPage()),
       GoRoute(
         path: Routes.notifications,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, _) => const NotifikasiPage(),
       ),
 
       GoRoute(
@@ -68,7 +71,12 @@ final routerProvider = Provider<GoRouter>((ref) {
           preselectMotorIds: switch (state.extra) {
             final String id => [id],
             final List<String> ids => ids,
+            final PilihMotorArgs args => args.motorIds,
             _ => const [],
+          },
+          voucherId: switch (state.extra) {
+            final PilihMotorArgs args => args.voucherId,
+            _ => null,
           },
         ),
       ),
@@ -149,7 +157,7 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: Routes.profileDemoMode,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, _) => const DemoModePage(),
       ),
 
       StatefulShellRoute.indexedStack(
@@ -186,7 +194,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.profile,
-                builder: (_, _) => const Placeholder(),
+                builder: (_, _) => const ProfilPage(),
               ),
             ],
           ),

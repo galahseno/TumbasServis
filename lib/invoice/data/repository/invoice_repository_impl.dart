@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_initializing_formals
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking.dart';
@@ -22,17 +23,20 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
     required Clock clock,
     required BookingRepository bookingRepository,
     required CatalogRepository catalogRepository,
+    required DemoModeController demoModeController,
   }) : _localStore = localStore,
        _latencySimulator = latencySimulator,
        _clock = clock,
        _bookingRepository = bookingRepository,
-       _catalogRepository = catalogRepository;
+       _catalogRepository = catalogRepository,
+       _demoModeController = demoModeController;
 
   final LocalStore _localStore;
   final LatencySimulator _latencySimulator;
   final Clock _clock;
   final BookingRepository _bookingRepository;
   final CatalogRepository _catalogRepository;
+  final DemoModeController _demoModeController;
 
   static const _invoicesBox = 'invoices';
 
@@ -50,6 +54,9 @@ class InvoiceRepositoryImpl implements InvoiceRepository {
   Future<Result<void>> markPaid(String bookingId) async {
     try {
       await _latencySimulator.simulate();
+      if (_demoModeController.consumeArmedError()) {
+        return Result.error(Exception('Simulated network error.'));
+      }
       final result = await _getOrCreateInvoice(bookingId);
       if (result is Error<Invoice>) return Result.error(result.error);
       final invoice = (result as Ok<Invoice>).value;

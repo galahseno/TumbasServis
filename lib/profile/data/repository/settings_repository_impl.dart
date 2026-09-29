@@ -47,4 +47,23 @@ class SettingsRepositoryImpl implements SettingsRepository {
       return Result.error(e is Exception ? e : Exception(e.toString()));
     }
   }
+
+  @override
+  Future<Result<bool>> isNotificationsEnabled() async {
+    try {
+      return Result.ok(_localStore.getNotificationsEnabled());
+    } catch (e) {
+      return Result.error(e is Exception ? e : Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<void>> setNotificationsEnabled(bool enabled) async {
+    try {
+      await _localStore.setNotificationsEnabled(enabled);
+      return const Result.ok(null);
+    } catch (e) {
+      return Result.error(e is Exception ? e : Exception(e.toString()));
+    }
+  }
 }

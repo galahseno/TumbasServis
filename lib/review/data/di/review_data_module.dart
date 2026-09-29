@@ -10,5 +10,6 @@ final Provider<ReviewRepository> reviewRepositoryProvider =
         localStore: ref.watch(localStoreProvider),
         latencySimulator: ref.watch(latencySimulatorProvider),
         invoiceRepository: ref.watch(invoiceRepositoryProvider),
+        demoModeController: ref.watch(demoModeControllerProvider),
       );
     });

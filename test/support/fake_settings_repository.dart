@@ -5,6 +5,8 @@ import 'package:tumbas_servis/core/domain/repository/settings/settings_repositor
 class FakeSettingsRepository implements SettingsRepository {
   AppThemeMode themeMode = AppThemeMode.system;
   bool demoModeEnabled = false;
+  bool notificationsEnabled = true;
+  bool failSetNotifications = false;
 
   @override
   Future<Result<AppThemeMode>> getThemeMode() async => Result.ok(themeMode);
@@ -21,6 +23,17 @@ class FakeSettingsRepository implements SettingsRepository {
   @override
   Future<Result<void>> setDemoMode(bool enabled) async {
     demoModeEnabled = enabled;
+    return const Result.ok(null);
+  }
+
+  @override
+  Future<Result<bool>> isNotificationsEnabled() async =>
+      Result.ok(notificationsEnabled);
+
+  @override
+  Future<Result<void>> setNotificationsEnabled(bool enabled) async {
+    if (failSetNotifications) return Result.error(Exception('boom'));
+    notificationsEnabled = enabled;
     return const Result.ok(null);
   }
 }

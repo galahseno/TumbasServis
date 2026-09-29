@@ -95,6 +95,7 @@ void main() {
       localStore: localStore,
       mockJsonLoader: MockJsonLoader(),
       latencySimulator: FakeLatencySimulator(),
+      clock: FakeClock(DateTime(2026, 9, 29, 10, 30)),
     );
     trackingSimulator = TrackingSimulator(
       demoModeController: DemoModeController()
@@ -140,8 +141,47 @@ void main() {
 
     final result = await statusNotifications();
     expect(result, hasLength(5));
-    expect(result.every((n) => n.deepLink == '/tracking/bk1/-A'), isTrue);
+    expect(result.every((n) => n.deepLink == '/bookings/bk1/unit/-A'), isTrue);
   });
+
+  test(
+    'transitions while the demo seeder is running raise no notifications',
+    () async {
+      final demoModeController = DemoModeController()
+        ..setTrackingSpeed(TrackingSpeed.mati);
+      coordinator.dispose();
+      trackingSimulator.dispose();
+      trackingSimulator = TrackingSimulator(
+        demoModeController: demoModeController,
+      );
+      coordinator = StatusNotificationCoordinator(
+        trackingSimulator: trackingSimulator,
+        localStore: localStore,
+        notificationRepository: notificationRepository,
+        clock: FakeClock(DateTime(2026, 9, 29, 10)),
+        demoModeController: demoModeController,
+        timerFactory: pollTimer.call,
+      );
+      await localStore.put(
+        'bookings',
+        'bk1',
+        bookingJson(id: 'bk1', unitCode: '-A', nickname: 'Vario 125'),
+      );
+      coordinator.start();
+      await settle();
+
+      demoModeController.beginSeeding();
+      trackingSimulator.checkIn('bk1', '-A');
+      trackingSimulator.advance('bk1', '-A');
+      await settle();
+      demoModeController.endSeeding();
+      expect(await statusNotifications(), isEmpty);
+
+      trackingSimulator.advance('bk1', '-A'); // real, post-seed transition
+      await settle();
+      expect(await statusNotifications(), hasLength(1));
+    },
+  );
 
   test('repeated discovery polls with no activity do not duplicate '
       'subscriptions/notifications', () async {
@@ -210,7 +250,7 @@ void main() {
 
     final result = await statusNotifications();
     expect(result, hasLength(1));
-    expect(result.first.deepLink, '/tracking/bk_late/-A');
+    expect(result.first.deepLink, '/bookings/bk_late/unit/-A');
   });
 
   test('dispose stops all further notifications', () async {

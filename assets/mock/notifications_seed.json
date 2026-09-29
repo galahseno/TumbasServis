@@ -3,70 +3,70 @@
     "id": "notif_001",
     "category": "status",
     "title": "PCX 160 sedang diperiksa",
-    "body": "Unit -C PCX 160 sedang diperiksa di Bengkel Jaya Motor.",
+    "body": "Montir mulai memeriksa unit -C di Bengkel Jaya Motor.",
     "timestamp": "2026-09-29T10:26:00.000",
     "read": false,
-    "deep_link": "/tracking/bk_active_0417/-C"
+    "deep_link": "/bookings/bk_active_0417/unit/-C"
   },
   {
     "id": "notif_002",
     "category": "status",
     "title": "Beat 110 mulai dikerjakan",
-    "body": "Unit -B Beat 110 mulai dikerjakan di Bengkel Jaya Motor.",
+    "body": "Unit -B dikerjakan oleh Mas Rudi.",
     "timestamp": "2026-09-29T10:18:00.000",
     "read": false,
-    "deep_link": "/tracking/bk_active_0417/-B"
+    "deep_link": "/bookings/bk_active_0417/unit/-B"
   },
   {
     "id": "notif_003",
     "category": "status",
-    "title": "Vario 125 dikerjakan",
-    "body": "Unit -A Vario 125 sedang dikerjakan di Bengkel Jaya Motor.",
+    "title": "Vario 125 mulai dikerjakan",
+    "body": "Unit -A dikerjakan oleh Pak Anto.",
     "timestamp": "2026-09-29T10:05:00.000",
     "read": true,
-    "deep_link": "/tracking/bk_active_0417/-A"
+    "deep_link": "/bookings/bk_active_0417/unit/-A"
   },
   {
     "id": "notif_004",
     "category": "status",
-    "title": "Check-in berhasil",
-    "body": "Booking TS-260929-0417 sudah check-in di Bengkel Jaya Motor.",
+    "title": "Semua motor sudah check-in",
+    "body": "3 motor masuk antrean Bengkel Jaya Motor.",
     "timestamp": "2026-09-29T09:08:00.000",
     "read": true,
-    "deep_link": "/booking/bk_active_0417"
+    "deep_link": "/bookings/bk_active_0417"
   },
   {
     "id": "notif_005",
     "category": "status",
-    "title": "Booking berhasil dibuat",
-    "body": "Booking TS-260929-0417 untuk 3 motor berhasil dibuat.",
+    "title": "Booking berhasil",
+    "body": "TS-260929-0417 · 3 motor · Sel, 29 Sep · 09.00",
     "timestamp": "2026-09-28T15:40:00.000",
     "read": true,
-    "deep_link": "/booking/bk_active_0417"
+    "deep_link": "/bookings/bk_active_0417"
   },
   {
     "id": "notif_006",
     "category": "reminder",
-    "title": "Waktunya ganti oli",
-    "body": "Supra X 125 (AB 3344 KL) sudah waktunya ganti oli.",
-    "timestamp": "2026-09-27T09:00:00.000",
+    "title": "Waktunya ganti oli Supra X 125",
+    "body": "Sudah 3 bulan sejak servis terakhir.",
+    "timestamp": "2026-09-28T09:00:00.000",
     "read": true,
-    "deep_link": "/booking/select-motor?motorId=motor_004"
+    "deep_link": "/booking/vehicles?motorId=motor_004"
   },
   {
     "id": "notif_007",
     "category": "promo",
-    "title": "Promo HEMAT25",
-    "body": "Potongan Rp25.000 untuk belanja minimal Rp300.000. Buruan pakai sebelum kedaluwarsa!",
+    "title": "Potongan Rp25.000 servis",
+    "body": "HEMAT25, min. belanja Rp300.000, berlaku sampai 5 Okt.",
     "timestamp": "2026-09-26T12:00:00.000",
     "read": true,
-    "deep_link": "/booking/select-motor?voucherId=voucher_hemat25"
+    "deep_link": "/booking/vehicles?voucherId=voucher_hemat25"
   },
   {
     "id": "notif_008",
     "category": "status",
     "title": "Servis selesai",
-    "body": "Beat 110 selesai diservis. Invoice TS-260910-0091 tersedia, total Rp143.000.",
+    "body": "Beat 110 · Invoice TS-260910-0091 tersedia, total Rp143.000.",
     "timestamp": "2026-09-10T14:00:00.000",
     "read": true,
     "deep_link": "/invoice/bk_seed_001"
@@ -74,10 +74,10 @@
   {
     "id": "notif_009",
     "category": "promo",
-    "title": "Promo DISKON10",
-    "body": "Diskon 10% untuk servis 2 motor atau lebih. Cek sekarang!",
+    "title": "Diskon 10% servis ≥2 motor",
+    "body": "DISKON10, ajak motor kedua.",
     "timestamp": "2026-09-03T10:00:00.000",
     "read": true,
-    "deep_link": "/booking/select-motor?voucherId=voucher_diskon10"
+    "deep_link": "/booking/vehicles?voucherId=voucher_diskon10"
   }
 ]

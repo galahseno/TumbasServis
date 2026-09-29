@@ -9,6 +9,7 @@ import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/domain/model/user/user.dart';
+import 'package:tumbas_servis/core/domain/repository/settings/app_theme_mode.dart';
 
 import '../../../support/fake_latency_simulator.dart';
 
@@ -119,6 +120,38 @@ void main() {
     expect((current as Ok<User?>).value, isNull);
     expect(await store.get('session', 'user'), isNull);
     expect(store.getSessionFlag(), isFalse);
+  });
+
+  test('logout clears the session only: garage, bookings, draft, theme and '
+      'notifications survive (and a relaunch)', () async {
+    await repository.verifyOtp('123456');
+    for (final box in [
+      'garage',
+      'bookings',
+      'booking_drafts',
+      'notifications',
+    ]) {
+      await store.put(box, 'row', {'id': box});
+    }
+    await store.setThemeMode(AppThemeMode.dark);
+
+    await repository.logout();
+    await Hive.close();
+    final relaunched = LocalStore(
+      preferences: await SharedPreferences.getInstance(),
+      resolveStorageDirectory: () async => tempDir.path,
+    );
+
+    for (final box in [
+      'garage',
+      'bookings',
+      'booking_drafts',
+      'notifications',
+    ]) {
+      expect(await relaunched.get(box, 'row'), {'id': box}, reason: box);
+    }
+    expect(relaunched.getThemeMode(), AppThemeMode.dark);
+    expect(relaunched.getSessionFlag(), isFalse);
   });
 
   test('logout while already logged out does not throw', () async {

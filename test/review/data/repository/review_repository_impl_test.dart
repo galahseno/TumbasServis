@@ -24,6 +24,7 @@ void main() {
   late Directory tempDir;
   late InvoiceRepositoryImpl invoiceRepository;
   late ReviewRepositoryImpl repository;
+  late DemoModeController demoModeController;
 
   const bookingId = 'bk_seed_001';
 
@@ -35,6 +36,7 @@ void main() {
       resolveStorageDirectory: () async => tempDir.path,
     );
     final clock = FakeClock(DateTime(2026, 9, 29, 9));
+    demoModeController = DemoModeController();
 
     final sessionRepository = SessionRepositoryImpl(
       localStore: localStore,
@@ -71,12 +73,14 @@ void main() {
         mockJsonLoader: MockJsonLoader(),
         latencySimulator: FakeLatencySimulator(),
       ),
+      demoModeController: demoModeController,
     );
 
     repository = ReviewRepositoryImpl(
       localStore: localStore,
       latencySimulator: FakeLatencySimulator(),
       invoiceRepository: invoiceRepository,
+      demoModeController: demoModeController,
     );
   });
 
@@ -122,6 +126,22 @@ void main() {
     await invoiceRepository.markPaid(bookingId);
     final result = await repository.submitReview(review());
     expect(result, isA<Ok<void>>());
+  });
+
+  test('armed error fails submitReview once and stores nothing', () async {
+    await invoiceRepository.markPaid(bookingId);
+    demoModeController.armNextWriteError();
+
+    final failed = await repository.submitReview(review());
+    expect(failed, isA<Error<void>>());
+    expect(
+      ((await repository.getReview(bookingId)) as Ok<Review?>).value,
+      isNull,
+    );
+    expect(demoModeController.isErrorArmed, isFalse);
+
+    final retried = await repository.submitReview(review());
+    expect(retried, isA<Ok<void>>());
   });
 
   test('submitReview rejects a workshop comment over 300 characters', () async {

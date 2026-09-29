@@ -1,5 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
+import 'package:tumbas_servis/core/data/di/core_data_module.dart';
 import 'package:tumbas_servis/core/data/service/demo_content_seeder.dart';
 import 'package:tumbas_servis/home/presentation/home/home_view_model.dart';
 import 'package:tumbas_servis/home/presentation/home/state/home_state.dart';
@@ -10,6 +11,7 @@ final Provider<DemoContentSeeder> demoContentSeederProvider =
       return DemoContentSeeder(
         bookingRepository: ref.watch(bookingRepositoryProvider),
         trackingRepository: ref.watch(trackingRepositoryProvider),
+        demoModeController: ref.watch(demoModeControllerProvider),
       );
     });
 

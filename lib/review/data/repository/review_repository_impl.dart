@@ -1,4 +1,5 @@
 // ignore_for_file: prefer_initializing_formals
+import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/domain/model/invoice/invoice.dart';
@@ -12,13 +13,16 @@ class ReviewRepositoryImpl implements ReviewRepository {
     required LocalStore localStore,
     required LatencySimulator latencySimulator,
     required InvoiceRepository invoiceRepository,
+    required DemoModeController demoModeController,
   }) : _localStore = localStore,
        _latencySimulator = latencySimulator,
-       _invoiceRepository = invoiceRepository;
+       _invoiceRepository = invoiceRepository,
+       _demoModeController = demoModeController;
 
   final LocalStore _localStore;
   final LatencySimulator _latencySimulator;
   final InvoiceRepository _invoiceRepository;
+  final DemoModeController _demoModeController;
 
   static const _reviewsBox = 'reviews';
 
@@ -26,6 +30,9 @@ class ReviewRepositoryImpl implements ReviewRepository {
   Future<Result<void>> submitReview(Review review) async {
     try {
       await _latencySimulator.simulate();
+      if (_demoModeController.consumeArmedError()) {
+        return Result.error(Exception('Simulated network error.'));
+      }
       if (!review.isWorkshopCommentValid) {
         return Result.error(Exception('Komentar melebihi 300 karakter.'));
       }
