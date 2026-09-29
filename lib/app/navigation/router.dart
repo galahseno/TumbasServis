@@ -17,8 +17,12 @@ import 'package:tumbas_servis/booking/presentation/tiket/tiket_page.dart';
 import 'package:tumbas_servis/booking/presentation/voucher/voucher_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
+import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/presentation/components/app_shell.dart';
+import 'package:tumbas_servis/garage/presentation/garasi/garasi_page.dart';
+import 'package:tumbas_servis/garage/presentation/motor_detail/motor_detail_page.dart';
+import 'package:tumbas_servis/garage/presentation/motor_form/motor_form_page.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
 import 'package:tumbas_servis/workshop/presentation/detail_bengkel/detail_bengkel_page.dart';
 import 'package:tumbas_servis/workshop/presentation/detail_bengkel/state/detail_bengkel_state.dart';
@@ -41,15 +45,21 @@ final routerProvider = Provider<GoRouter>((ref) {
         builder: (_, _) => const Placeholder(),
       ),
 
-      GoRoute(path: Routes.garageAdd, builder: (_, _) => const Placeholder()),
+      GoRoute(
+        path: Routes.garageAdd,
+        builder: (_, state) =>
+            MotorFormPage(existingMotor: state.extra as Motor?),
+      ),
       GoRoute(
         path: Routes.garageDetailTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) =>
+            MotorDetailPage(motorId: state.pathParameters['id']!),
       ),
 
       GoRoute(
         path: Routes.bookingVehicles,
-        builder: (_, _) => const PilihMotorPage(),
+        builder: (_, state) =>
+            PilihMotorPage(preselectMotorId: state.extra as String?),
       ),
       GoRoute(
         path: Routes.bookingConfigure,
@@ -146,7 +156,7 @@ final routerProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.garage,
-                builder: (_, _) => const Placeholder(),
+                builder: (_, _) => const GarasiPage(),
               ),
             ],
           ),

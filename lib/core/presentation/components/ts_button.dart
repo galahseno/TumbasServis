@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
-enum TsButtonType { primary, secondary, outline, ghost, danger, dangerOutline }
+enum TsButtonType {
+  primary,
+  secondary,
+  outline,
+  ghost,
+  danger,
+  dangerOutline,
+  dangerGhost,
+}
 
 class _Palette {
   const _Palette({
@@ -66,10 +74,13 @@ class _TsButtonState extends State<TsButton> {
         case TsButtonType.outline:
         case TsButtonType.dangerOutline:
         case TsButtonType.ghost:
+        case TsButtonType.dangerGhost:
           return _Palette(
             background: Colors.transparent,
             foreground: ext.textFaint,
-            border: widget.type == TsButtonType.ghost
+            border:
+                widget.type == TsButtonType.ghost ||
+                    widget.type == TsButtonType.dangerGhost
                 ? null
                 : ext.borderDefault,
           );
@@ -109,6 +120,11 @@ class _TsButtonState extends State<TsButton> {
         return _Palette(
           background: _pressed ? scheme.primaryContainer : Colors.transparent,
           foreground: _pressed ? scheme.onPrimaryContainer : ext.textAccent,
+        );
+      case TsButtonType.dangerGhost:
+        return _Palette(
+          background: _pressed ? ext.dangerSoft : Colors.transparent,
+          foreground: ext.dangerText,
         );
     }
   }

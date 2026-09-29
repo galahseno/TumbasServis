@@ -1,20 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tumbas_servis/app/navigation/garage_result.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
+import 'package:tumbas_servis/core/presentation/components/section_title_row.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_dialog.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/components/vehicle_select_card.dart';
 import 'package:tumbas_servis/home/presentation/di/home_presentation_module.dart';
+import 'package:tumbas_servis/home/presentation/home/home_view_model.dart';
 import 'package:tumbas_servis/home/presentation/home/components/active_booking_card.dart';
 import 'package:tumbas_servis/home/presentation/home/components/booking_cta_card.dart';
 import 'package:tumbas_servis/home/presentation/home/components/draft_resume_card.dart';
 import 'package:tumbas_servis/home/presentation/home/components/garage_add_tile.dart';
 import 'package:tumbas_servis/home/presentation/home/components/promo_carousel.dart';
 import 'package:tumbas_servis/home/presentation/home/components/quick_link_tile.dart';
-import 'package:tumbas_servis/home/presentation/home/components/section_title_row.dart';
 
 class HomePage extends ConsumerWidget {
   const HomePage({super.key});
@@ -82,7 +85,7 @@ class HomePage extends ConsumerWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: TextButton(
-                              onPressed: () => context.push(Routes.bookings),
+                              onPressed: () => context.go(Routes.bookings),
                               child: Text(
                                 'Lihat semua (${state.activeBookingsTotalCount})',
                               ),
@@ -111,7 +114,7 @@ class HomePage extends ConsumerWidget {
                       const SizedBox(height: 24),
                       SectionTitleRow(
                         title: 'Garasi saya',
-                        onSeeAll: () => context.push(Routes.garage),
+                        onSeeAll: () => context.go(Routes.garage),
                         seeAllSemanticLabel: 'Lihat semua motor',
                       ),
                       const SizedBox(height: 12),
@@ -124,7 +127,11 @@ class HomePage extends ConsumerWidget {
                           itemBuilder: (context, index) {
                             if (index == state.motors.length) {
                               return GarageAddTile(
-                                onTap: () => context.push(Routes.garageAdd),
+                                onTap: () => _openGarage(
+                                  context,
+                                  viewModel,
+                                  Routes.garageAdd,
+                                ),
                               );
                             }
                             final motor = state.motors[index];
@@ -133,8 +140,11 @@ class HomePage extends ConsumerWidget {
                               plateNumber: motor.plateNumber,
                               inServiceStatus:
                                   state.motorInServiceStatus[motor.id],
-                              onTap: () =>
-                                  context.push(Routes.garageDetail(motor.id)),
+                              onTap: () => _openGarage(
+                                context,
+                                viewModel,
+                                Routes.garageDetail(motor.id),
+                              ),
                             );
                           },
                         ),
@@ -154,6 +164,26 @@ class HomePage extends ConsumerWidget {
               ),
       ),
     );
+  }
+
+  Future<void> _openGarage(
+    BuildContext context,
+    HomeViewModel viewModel,
+    String route,
+  ) async {
+    final result = await context.push<GarageMotorResult>(route);
+    if (!context.mounted) return;
+    await viewModel.refresh();
+    if (!context.mounted) return;
+    final message = switch (result) {
+      GarageMotorResult.created => 'Motor ditambahkan',
+      GarageMotorResult.updated => 'Perubahan disimpan',
+      GarageMotorResult.deleted => 'Motor dihapus',
+      null => null,
+    };
+    if (message != null) {
+      TsSnackbar.success(context, message, aboveNavBar: true);
+    }
   }
 
   Future<void> _confirmDeleteDraft(

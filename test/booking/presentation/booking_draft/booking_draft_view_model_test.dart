@@ -67,6 +67,67 @@ void main() {
     expect(bookingRepository.lastUpdatedDraft!.selectedMotorIds, ['motor_001']);
   });
 
+  test(
+    'preselectMotor before the draft is ready applies once it loads',
+    () async {
+      final notifier = container.read(bookingDraftProvider.notifier);
+      await notifier.preselectMotor('motor_001');
+      await waitForLoad();
+      for (var i = 0; i < 100; i++) {
+        if (container.read(bookingDraftProvider)!.selectedMotorIds.isNotEmpty) {
+          break;
+        }
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+
+      expect(container.read(bookingDraftProvider)!.selectedMotorIds, [
+        'motor_001',
+      ]);
+    },
+  );
+
+  test('preselectMotor skips a motor that is already in service', () async {
+    bookingRepository.bookingsResult = Result.ok([
+      Booking(
+        id: 'bk_1',
+        code: 'TS-1',
+        userId: 'user_001',
+        workshopId: 'ws_001',
+        units: [
+          BookingUnit(
+            unitCode: '-A',
+            motorId: 'motor_001',
+            motorSnapshot: _motor('motor_001'),
+            serviceIds: const [],
+            partIds: const [],
+            status: UnitStatus.dikerjakan,
+            statusHistory: [
+              StatusEvent(
+                status: UnitStatus.dikerjakan,
+                timestamp: DateTime(2026, 9, 29),
+              ),
+            ],
+            subtotal: 0,
+            durationMin: 60,
+          ),
+        ],
+        scheduleMode: ScheduleMode.shared,
+        status: BookingStatus.berlangsung,
+        subtotal: 0,
+        discount: 0,
+        total: 0,
+        createdAt: DateTime(2026, 9, 20),
+      ),
+    ]);
+    await waitForLoad();
+    final notifier = container.read(bookingDraftProvider.notifier);
+    await notifier.refreshActiveBookings();
+
+    await notifier.preselectMotor('motor_001');
+
+    expect(container.read(bookingDraftProvider)!.selectedMotorIds, isEmpty);
+  });
+
   test('deselectMotor removes a motor id', () async {
     bookingRepository.createDraftResult = Result.ok(
       _draft(selectedMotorIds: const ['motor_001', 'motor_002']),

@@ -21,6 +21,8 @@ class TsTextField extends StatelessWidget {
     this.inputFormatters,
     this.onSubmitted,
     this.onEditingComplete,
+    this.readOnly = false,
+    this.onTap,
   });
 
   final String label;
@@ -39,6 +41,8 @@ class TsTextField extends StatelessWidget {
   final List<TextInputFormatter>? inputFormatters;
   final ValueChanged<String>? onSubmitted;
   final VoidCallback? onEditingComplete;
+  final bool readOnly;
+  final VoidCallback? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -73,6 +77,8 @@ class TsTextField extends StatelessWidget {
           inputFormatters: inputFormatters,
           onSubmitted: onSubmitted,
           onEditingComplete: onEditingComplete,
+          readOnly: readOnly,
+          onTap: onTap,
           style: textTheme.bodyLarge?.copyWith(
             color: enabled ? scheme.onSurface : ext.textFaint,
           ),

@@ -7,17 +7,35 @@ class FakeGarageRepository implements GarageRepository {
   Result<List<Motor>> motorsResult = const Result.ok([]);
   Result<List<MotorModel>> motorModelsResult = const Result.ok([]);
 
+  /// When set, overrides the default "echo the motor back" result.
+  Result<Motor>? addMotorResult;
+  Result<Motor>? updateMotorResult;
+  Result<void> deleteMotorResult = const Result.ok(null);
+
+  Motor? lastAddedMotor;
+  Motor? lastUpdatedMotor;
+  String? lastDeletedMotorId;
+
   @override
   Future<Result<List<Motor>>> getMotors() async => motorsResult;
 
   @override
-  Future<Result<Motor>> addMotor(Motor motor) async => Result.ok(motor);
+  Future<Result<Motor>> addMotor(Motor motor) async {
+    lastAddedMotor = motor;
+    return addMotorResult ?? Result.ok(motor);
+  }
 
   @override
-  Future<Result<Motor>> updateMotor(Motor motor) async => Result.ok(motor);
+  Future<Result<Motor>> updateMotor(Motor motor) async {
+    lastUpdatedMotor = motor;
+    return updateMotorResult ?? Result.ok(motor);
+  }
 
   @override
-  Future<Result<void>> deleteMotor(String id) async => const Result.ok(null);
+  Future<Result<void>> deleteMotor(String id) async {
+    lastDeletedMotorId = id;
+    return deleteMotorResult;
+  }
 
   @override
   Future<Result<List<MotorModel>>> getMotorModels() async => motorModelsResult;

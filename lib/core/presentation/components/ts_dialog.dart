@@ -190,13 +190,15 @@ abstract final class TsDialog {
     );
   }
 
-  static Future<void> blockedAction(
+  static Future<T?> blockedAction<T>(
     BuildContext context, {
     required String title,
     required String message,
     String actionLabel = 'Mengerti',
+    String? secondaryActionLabel,
+    T? secondaryActionValue,
   }) {
-    return showDialog<void>(
+    return showDialog<T>(
       context: context,
       builder: (ctx) => _TsDialogShell(
         child: Column(
@@ -211,11 +213,32 @@ abstract final class TsDialog {
               iconColor: TsThemeExtension.of(ctx).warning,
             ),
             const SizedBox(height: 20),
-            TsButton(
-              label: actionLabel,
-              type: TsButtonType.outline,
-              onPressed: () => Navigator.of(ctx).pop(),
-            ),
+            if (secondaryActionLabel != null)
+              Row(
+                children: [
+                  Expanded(
+                    child: TsButton(
+                      label: actionLabel,
+                      type: TsButtonType.ghost,
+                      onPressed: () => Navigator.of(ctx).pop(),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: TsButton(
+                      label: secondaryActionLabel,
+                      onPressed: () =>
+                          Navigator.of(ctx).pop(secondaryActionValue),
+                    ),
+                  ),
+                ],
+              )
+            else
+              TsButton(
+                label: actionLabel,
+                type: TsButtonType.outline,
+                onPressed: () => Navigator.of(ctx).pop(),
+              ),
           ],
         ),
       ),

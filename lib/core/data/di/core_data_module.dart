@@ -5,6 +5,7 @@ import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/latency_simulator.dart';
 import 'package:tumbas_servis/core/data/service/local_store.dart';
 import 'package:tumbas_servis/core/data/service/mock_json_loader.dart';
+import 'package:tumbas_servis/core/data/service/photo_picker_service.dart';
 import 'package:tumbas_servis/core/data/service/status_notification_coordinator.dart';
 import 'package:tumbas_servis/core/data/service/system_clock.dart';
 import 'package:tumbas_servis/core/data/service/tracking_simulator.dart';
@@ -33,6 +34,13 @@ final localStoreProvider = Provider<LocalStore>((ref) {
         (await getApplicationDocumentsDirectory()).path,
   );
 });
+
+final photoPickerServiceProvider = Provider<PhotoPickerService>(
+  (ref) => PhotoPickerService(
+    resolveStorageDirectory: () async =>
+        (await getApplicationDocumentsDirectory()).path,
+  ),
+);
 
 final demoModeControllerProvider = Provider<DemoModeController>((ref) {
   final controller = DemoModeController();
