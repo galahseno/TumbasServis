@@ -24,6 +24,8 @@ import 'package:tumbas_servis/garage/presentation/garasi/garasi_page.dart';
 import 'package:tumbas_servis/garage/presentation/motor_detail/motor_detail_page.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/motor_form_page.dart';
 import 'package:tumbas_servis/home/presentation/home/home_page.dart';
+import 'package:tumbas_servis/invoice/presentation/invoice/invoice_page.dart';
+import 'package:tumbas_servis/review/presentation/ulasan/ulasan_page.dart';
 import 'package:tumbas_servis/tracking/presentation/detail_booking/detail_booking_page.dart';
 import 'package:tumbas_servis/tracking/presentation/di/tracking_presentation_module.dart';
 import 'package:tumbas_servis/tracking/presentation/lacak_unit/lacak_unit_page.dart';
@@ -136,11 +138,13 @@ final routerProvider = Provider<GoRouter>((ref) {
 
       GoRoute(
         path: Routes.invoiceTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) =>
+            InvoicePage(bookingId: state.pathParameters['bookingId']!),
       ),
       GoRoute(
         path: Routes.reviewTemplate,
-        builder: (_, _) => const Placeholder(),
+        builder: (_, state) =>
+            UlasanPage(bookingId: state.pathParameters['bookingId']!),
       ),
 
       GoRoute(

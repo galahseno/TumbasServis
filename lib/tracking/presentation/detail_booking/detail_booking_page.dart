@@ -81,6 +81,18 @@ class DetailBookingPage extends ConsumerWidget {
     }
   }
 
+  Future<void> _openAndRefresh(
+    BuildContext context,
+    WidgetRef ref,
+    String location,
+  ) async {
+    await context.push(location);
+    if (!context.mounted) return;
+    await ref
+        .read(detailBookingViewModelProvider(bookingId).notifier)
+        .refresh();
+  }
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final provider = detailBookingViewModelProvider(bookingId);
@@ -118,6 +130,8 @@ class DetailBookingPage extends ConsumerWidget {
                         booking: booking,
                         onReschedule: () => _reschedule(context, ref, state),
                         onCancel: () => _cancel(context, ref, state),
+                        onOpen: (location) =>
+                            _openAndRefresh(context, ref, location),
                       ),
                     ),
                   ),
@@ -134,12 +148,14 @@ class _DetailContent extends StatelessWidget {
     required this.booking,
     required this.onReschedule,
     required this.onCancel,
+    required this.onOpen,
   });
 
   final DetailBookingState state;
   final Booking booking;
   final VoidCallback onReschedule;
   final VoidCallback onCancel;
+  final ValueChanged<String> onOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -218,21 +234,21 @@ class _DetailContent extends StatelessWidget {
           _ActionButton(
             label: 'Lihat invoice',
             icon: Icons.receipt_long_rounded,
-            onPressed: () => context.push(Routes.invoice(booking.id)),
+            onPressed: () => onOpen(Routes.invoice(booking.id)),
           ),
           const SizedBox(height: 12),
           if (state.hasReview)
             _ActionButton(
               label: 'Lihat ulasan',
               icon: Icons.star_rounded,
-              onPressed: () => context.push(Routes.review(booking.id)),
+              onPressed: () => onOpen(Routes.review(booking.id)),
             )
           else
             _ActionButton(
               label: 'Beri ulasan',
               icon: Icons.star_border_rounded,
               onPressed: state.canReview
-                  ? () => context.push(Routes.review(booking.id))
+                  ? () => onOpen(Routes.review(booking.id))
                   : null,
               reason: state.canReview ? null : DetailBookingState.unpaidReview,
             ),

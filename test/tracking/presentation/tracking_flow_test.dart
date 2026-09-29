@@ -341,6 +341,28 @@ void main() {
       expect(find.text('Tandai lunas di invoice dulu'), findsNothing);
     });
 
+    testWidgets('returning from S23 after paying unlocks "Beri ulasan"', (
+      tester,
+    ) async {
+      final router = await pump(
+        tester,
+        initial: Routes.bookingDetail('s1'),
+        booking: _selesai(),
+      );
+      expect(find.text('Tandai lunas di invoice dulu'), findsOneWidget);
+
+      await tester.tap(find.text('Lihat invoice'));
+      await _settle(tester);
+      expect(find.text('invoice page'), findsOneWidget);
+
+      invoiceRepository.paid = true;
+      router.pop();
+      await _settle(tester);
+
+      expect(find.text('Tandai lunas di invoice dulu'), findsNothing);
+      expect(find.text('Beri ulasan'), findsOneWidget);
+    });
+
     testWidgets('Dibatalkan: shows the cancel date and Booking lagi', (
       tester,
     ) async {

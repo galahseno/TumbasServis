@@ -4,15 +4,21 @@ import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class ConfirmBar extends StatelessWidget {
   const ConfirmBar({
+    required this.totalLabel,
     required this.totalValue,
+    required this.ctaLabel,
     required this.enabled,
     required this.isLoading,
     required this.onConfirm,
     super.key,
+    this.loadingLabel,
     this.reasonLine,
   });
 
+  final String totalLabel;
   final String totalValue;
+  final String ctaLabel;
+  final String? loadingLabel;
   final bool enabled;
   final bool isLoading;
   final VoidCallback onConfirm;
@@ -45,7 +51,7 @@ class ConfirmBar extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Total estimasi',
+                        totalLabel,
                         style: textTheme.bodySmall?.copyWith(
                           color: ext.textMuted,
                         ),
@@ -75,7 +81,8 @@ class ConfirmBar extends StatelessWidget {
           ),
           const SizedBox(height: 12),
           TsButton(
-            label: isLoading ? 'Mengonfirmasi…' : 'Konfirmasi booking',
+            label: ctaLabel,
+            loadingLabel: loadingLabel,
             isLoading: isLoading,
             onPressed: (enabled && !isLoading) ? onConfirm : null,
           ),

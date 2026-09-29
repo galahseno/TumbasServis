@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
-import 'package:tumbas_servis/booking/presentation/ringkasan/components/confirm_bar.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/components/payment_note.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/components/summary_card.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/components/unit_summary_accordion.dart';
@@ -16,6 +15,7 @@ import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/catalog/part.dart';
 import 'package:tumbas_servis/core/domain/model/catalog/service_type.dart';
 import 'package:tumbas_servis/core/domain/service/pricing_duration/pricing_calculator.dart';
+import 'package:tumbas_servis/core/presentation/components/confirm_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
@@ -308,6 +308,9 @@ class _RingkasanBody extends StatelessWidget {
           ),
         ),
         ConfirmBar(
+          totalLabel: 'Total estimasi',
+          ctaLabel: 'Konfirmasi booking',
+          loadingLabel: 'Mengonfirmasi…',
           totalValue: CurrencyFormatter.format(breakdown.total),
           enabled: canConfirm,
           isLoading: state.confirming,

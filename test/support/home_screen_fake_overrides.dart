@@ -6,14 +6,18 @@ import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_status.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/garage/data/di/garage_data_module.dart';
+import 'package:tumbas_servis/invoice/data/di/invoice_data_module.dart';
 import 'package:tumbas_servis/notification/data/di/notification_data_module.dart';
+import 'package:tumbas_servis/review/data/di/review_data_module.dart';
 import 'package:tumbas_servis/tracking/data/di/tracking_data_module.dart';
 import 'package:tumbas_servis/workshop/data/di/workshop_data_module.dart';
 
 import 'fake_booking_repository.dart';
 import 'fake_catalog_repository.dart';
 import 'fake_garage_repository.dart';
+import 'fake_invoice_repository.dart';
 import 'fake_notification_repository.dart';
+import 'fake_review_repository.dart';
 import 'fake_tracking_repository.dart';
 import 'fake_workshop_repository.dart';
 
@@ -58,5 +62,7 @@ homeScreenFakeOverrides() {
       FakeNotificationRepository(),
     ),
     trackingRepositoryProvider.overrideWithValue(FakeTrackingRepository()),
+    invoiceRepositoryProvider.overrideWithValue(FakeInvoiceRepository()),
+    reviewRepositoryProvider.overrideWithValue(FakeReviewRepository()),
   ];
 }
