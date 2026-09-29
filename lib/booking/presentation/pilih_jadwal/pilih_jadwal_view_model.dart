@@ -17,8 +17,37 @@ const scheduleSearchWindowDays = 14;
 DateTime dateOnly(DateTime value) =>
     DateTime(value.year, value.month, value.day);
 
+sealed class SlotTapOutcome {
+  const SlotTapOutcome();
+}
+
+class SlotTapSelected extends SlotTapOutcome {
+  const SlotTapSelected();
+}
+
+class SlotTapBlocked extends SlotTapOutcome {
+  const SlotTapBlocked();
+}
+
+class SlotTapShort extends SlotTapOutcome {
+  const SlotTapShort({required this.slot, required this.unitCount});
+
+  final TimeSlot slot;
+  final int unitCount;
+}
+
+class SlotTapSiblingConflict extends SlotTapOutcome {
+  const SlotTapSiblingConflict({required this.slot, required this.nickname});
+
+  final TimeSlot slot;
+  final String nickname;
+}
+
 class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
   static const _service = SlotCapacityService();
+
+  int _sharedRequestId = 0;
+  final Map<String, int> _unitRequestIds = {};
 
   @override
   PilihJadwalState build() {
@@ -101,6 +130,7 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
       from: initialDate,
       unitCount: draft.selectedMotorIds.length,
       slotsOnDate: slots,
+      requestId: _sharedRequestId,
     );
   }
 
@@ -125,6 +155,7 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
     required DateTime from,
     required int unitCount,
     required List<TimeSlot> slotsOnDate,
+    required int requestId,
   }) async {
     if (!isDayPureFull(slotsOnDate)) {
       state = state.copyWith(allFullNextDate: null, allFullSearching: false);
@@ -142,7 +173,7 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
         workshopId: workshop.id,
         date: candidate,
       );
-      if (!ref.mounted) return;
+      if (!ref.mounted || requestId != _sharedRequestId) return;
       if (result is Ok<List<TimeSlot>> &&
           !noHourFits(result.value, unitCount, _now())) {
         state = state.copyWith(
@@ -157,23 +188,29 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
 
   Future<void> selectDate(DateTime date) async {
     final normalized = dateOnly(date);
+    if (normalized == state.sharedDate) return;
+
+    final requestId = ++_sharedRequestId;
     state = state.copyWith(
       sharedDate: normalized,
       sharedSlotsLoading: true,
       allFullNextDate: null,
+      allFullSearching: false,
     );
-    await ref.read(bookingDraftProvider.notifier).clearSharedSlot();
+    final cleared = ref.read(bookingDraftProvider.notifier).clearSharedSlot();
 
     final workshop = state.workshop;
     if (workshop == null) return;
     final result = await ref
         .read(workshopRepositoryProvider)
         .getAvailableSlots(workshopId: workshop.id, date: normalized);
-    if (!ref.mounted) return;
+    if (!ref.mounted || requestId != _sharedRequestId) return;
     final slots = result is Ok<List<TimeSlot>>
         ? result.value
         : const <TimeSlot>[];
     state = state.copyWith(sharedSlots: slots, sharedSlotsLoading: false);
+    await cleared;
+    if (!ref.mounted || requestId != _sharedRequestId) return;
 
     final unitCount =
         ref.read(bookingDraftProvider)?.selectedMotorIds.length ?? 0;
@@ -181,20 +218,26 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
       from: normalized,
       unitCount: unitCount,
       slotsOnDate: slots,
+      requestId: requestId,
     );
   }
 
   SlotChipState sharedChipStateFor(TimeSlot slot, int unitCount) =>
       _service.sharedChipState(slot: slot, unitCount: unitCount, now: _now());
 
-  Future<void> selectSharedSlot(TimeSlot slot, int unitCount) async {
+  Future<SlotTapOutcome> selectSharedSlot(TimeSlot slot, int unitCount) async {
     final chip = sharedChipStateFor(slot, unitCount);
-    if (chip == SlotChipState.lewat ||
-        chip == SlotChipState.full ||
-        chip == SlotChipState.short) {
-      return;
+    switch (chip) {
+      case SlotChipState.lewat:
+      case SlotChipState.full:
+        return const SlotTapBlocked();
+      case SlotChipState.short:
+        return SlotTapShort(slot: slot, unitCount: unitCount);
+      case SlotChipState.limited:
+      case SlotChipState.available:
+        await ref.read(bookingDraftProvider.notifier).selectSharedSlot(slot);
+        return const SlotTapSelected();
     }
-    await ref.read(bookingDraftProvider.notifier).selectSharedSlot(slot);
   }
 
   Future<void> setScheduleMode(ScheduleMode mode) async {
@@ -211,18 +254,22 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
 
   Future<void> selectUnitDate(String motorId, DateTime date) async {
     final normalized = dateOnly(date);
+    final requestId = (_unitRequestIds[motorId] ?? 0) + 1;
+    _unitRequestIds[motorId] = requestId;
     state = state.copyWith(
       unitDates: {...state.unitDates, motorId: normalized},
       unitSlotsLoading: {...state.unitSlotsLoading, motorId},
     );
-    await ref.read(bookingDraftProvider.notifier).clearUnitSlot(motorId);
+    final cleared = ref
+        .read(bookingDraftProvider.notifier)
+        .clearUnitSlot(motorId);
 
     final workshop = state.workshop;
     if (workshop == null) return;
     final result = await ref
         .read(workshopRepositoryProvider)
         .getAvailableSlots(workshopId: workshop.id, date: normalized);
-    if (!ref.mounted) return;
+    if (!ref.mounted || _unitRequestIds[motorId] != requestId) return;
     final slots = result is Ok<List<TimeSlot>>
         ? result.value
         : const <TimeSlot>[];
@@ -231,6 +278,37 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
       unitSlotsByMotor: {...state.unitSlotsByMotor, motorId: slots},
       unitSlotsLoading: loading,
     );
+    await cleared;
+  }
+
+  Future<void> splitFromShortSlot(TimeSlot slot) async {
+    final draftNotifier = ref.read(bookingDraftProvider.notifier);
+    final draft = ref.read(bookingDraftProvider);
+    if (draft == null) return;
+
+    final date = dateOnly(slot.date);
+    final seated = draft.selectedMotorIds.take(slot.remaining).toList();
+    final next = draft.selectedMotorIds
+        .where((id) => !seated.contains(id))
+        .firstOrNull;
+    final daySlots = state.sharedSlots;
+
+    state = state.copyWith(
+      unitDates: {...state.unitDates, for (final id in seated) id: date},
+      unitSlotsByMotor: {
+        ...state.unitSlotsByMotor,
+        for (final id in seated) id: daySlots,
+      },
+      expandedMotorId: next,
+    );
+
+    await draftNotifier.setScheduleMode(ScheduleMode.split);
+    for (final id in seated) {
+      await draftNotifier.selectUnitSlot(id, slot);
+    }
+    if (next != null && !state.unitSlotsByMotor.containsKey(next)) {
+      await selectUnitDate(next, date);
+    }
   }
 
   int _siblingsAlreadyPlaced(
@@ -258,30 +336,44 @@ class PilihJadwalViewModel extends Notifier<PilihJadwalState> {
     now: _now(),
   );
 
+  String? _siblingNickname(TimeSlot slot, String motorId, BookingDraft draft) {
+    final key = slot.slotKey;
+    for (final entry in draft.unitSlots.entries) {
+      if (entry.key != motorId && entry.value.slotKey == key) {
+        return state.motorsById[entry.key]?.nickname ?? 'motor lain';
+      }
+    }
+    return null;
+  }
+
   String? siblingConflictLabel(
     TimeSlot slot,
     String motorId,
     BookingDraft draft,
   ) {
     if (slot.remaining <= 0) return null;
-    final key = slot.slotKey;
-    for (final entry in draft.unitSlots.entries) {
-      if (entry.key != motorId && entry.value.slotKey == key) {
-        final nickname = state.motorsById[entry.key]?.nickname ?? 'motor lain';
-        return '${slot.hour.toString().padLeft(2, '0')}.00 sudah dipakai '
-            '$nickname';
-      }
-    }
-    return null;
+    final nickname = _siblingNickname(slot, motorId, draft);
+    if (nickname == null) return null;
+    return '${slot.hour.toString().padLeft(2, '0')}.00 sudah dipakai '
+        '$nickname';
   }
 
-  Future<void> selectUnitSlot(
+  Future<SlotTapOutcome> selectUnitSlot(
     String motorId,
     TimeSlot slot,
     BookingDraft draft,
   ) async {
     final chip = splitChipStateFor(slot, motorId, draft);
-    if (chip == SlotChipState.lewat || chip == SlotChipState.full) return;
+    if (chip == SlotChipState.lewat) return const SlotTapBlocked();
+    if (chip == SlotChipState.full) {
+      final nickname = slot.remaining > 0
+          ? _siblingNickname(slot, motorId, draft)
+          : null;
+      return nickname == null
+          ? const SlotTapBlocked()
+          : SlotTapSiblingConflict(slot: slot, nickname: nickname);
+    }
     await ref.read(bookingDraftProvider.notifier).selectUnitSlot(motorId, slot);
+    return const SlotTapSelected();
   }
 }

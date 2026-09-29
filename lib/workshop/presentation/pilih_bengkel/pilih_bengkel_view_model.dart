@@ -22,20 +22,19 @@ class PilihBengkelViewModel extends Notifier<PilihBengkelState> {
 
   Future<void> refresh() async {
     state = state.copyWith(isLoading: true, hasError: false);
-    await _load(openNowOnly: state.openNowOnly);
+    await _load(openNowOnly: state.filter == WorkshopFilter.bukaSekarang);
   }
 
-  Future<void> setOpenNowOnly(bool value) async {
-    state = state.copyWith(
-      openNowOnly: value,
-      isLoading: true,
-      hasError: false,
-    );
-    await _load(openNowOnly: value);
+  Future<void> setFilter(WorkshopFilter filter) async {
+    if (filter == state.filter) return;
+    final reload =
+        (filter == WorkshopFilter.bukaSekarang) !=
+        (state.filter == WorkshopFilter.bukaSekarang);
+    state = state.copyWith(filter: filter, isLoading: reload, hasError: false);
+    if (reload) {
+      await _load(openNowOnly: filter == WorkshopFilter.bukaSekarang);
+    }
   }
-
-  void setSortMode(WorkshopSortMode mode) =>
-      state = state.copyWith(sortMode: mode);
 
   void setSearchQuery(String query) =>
       state = state.copyWith(searchQuery: query);
@@ -75,7 +74,7 @@ class PilihBengkelViewModel extends Notifier<PilihBengkelState> {
         : state.workshops
               .where((w) => w.name.toLowerCase().contains(query))
               .toList();
-    if (state.sortMode == WorkshopSortMode.ratingTertinggi) {
+    if (state.filter == WorkshopFilter.ratingTertinggi) {
       return [...filtered]..sort((a, b) => b.rating.compareTo(a.rating));
     }
     return filtered;

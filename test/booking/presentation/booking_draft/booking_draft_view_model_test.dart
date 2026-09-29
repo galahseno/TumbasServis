@@ -352,4 +352,108 @@ void main() {
       },
     );
   });
+
+  test('fast select → deselect never snaps back: writes are serialized and '
+      'a slow earlier response cannot overwrite newer state', () async {
+    final slow = _SlowFakeBookingRepository()
+      ..createDraftResult = Result.ok(_draft());
+    container.dispose();
+    container = ProviderContainer(
+      overrides: [bookingRepositoryProvider.overrideWithValue(slow)],
+    );
+    addTearDown(container.dispose);
+    container.listen(bookingDraftProvider, (_, _) {});
+    await waitForLoad();
+    final notifier = container.read(bookingDraftProvider.notifier);
+
+    final history = <List<String>>[];
+    container.listen(bookingDraftProvider, (_, next) {
+      history.add(next!.selectedMotorIds);
+    });
+
+    final first = notifier.selectMotor('m1');
+    final second = notifier.deselectMotor('m1');
+    final third = notifier.selectMotor('m1');
+    await Future.wait([first, second, third]);
+    await Future<void>.delayed(const Duration(milliseconds: 120));
+
+    expect(container.read(bookingDraftProvider)!.selectedMotorIds, ['m1']);
+    expect(history, [
+      ['m1'],
+      <String>[],
+      ['m1'],
+    ], reason: 'every tap shows immediately, in tap order, no revert');
+    expect(slow.updateDraftCalls.last.selectedMotorIds, ['m1']);
+  });
+
+  test('refreshActiveBookings drops a now-in-service motor (and its config '
+      'and slot) from the draft and counts it once', () async {
+    bookingRepository
+      ..currentDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m1', 'motor_busy']).copyWith(
+          unitConfigs: const {
+            'motor_busy': UnitConfig(serviceIds: ['svc_berkala'], partIds: []),
+          },
+        ),
+      )
+      ..bookingsResult = Result.ok([
+        Booking(
+          id: 'bk_1',
+          code: 'TS-1',
+          userId: 'u',
+          workshopId: 'ws',
+          units: [
+            BookingUnit(
+              unitCode: '-A',
+              motorId: 'motor_busy',
+              motorSnapshot: _motor('motor_busy'),
+              serviceIds: const [],
+              partIds: const [],
+              status: UnitStatus.terjadwal,
+              statusHistory: [
+                StatusEvent(
+                  status: UnitStatus.terjadwal,
+                  timestamp: DateTime(2026, 9, 29),
+                ),
+              ],
+              subtotal: 0,
+              durationMin: 0,
+            ),
+          ],
+          scheduleMode: ScheduleMode.shared,
+          status: BookingStatus.terjadwal,
+          subtotal: 0,
+          discount: 0,
+          total: 0,
+          createdAt: DateTime(2026, 9, 20),
+        ),
+      ]);
+    container.listen(bookingDraftProvider, (_, _) {});
+    final notifier = container.read(bookingDraftProvider.notifier);
+    for (var i = 0; i < 100; i++) {
+      if (container.read(bookingDraftProvider)?.selectedMotorIds.length == 1) {
+        break;
+      }
+      await Future<void>.delayed(const Duration(milliseconds: 5));
+    }
+
+    final draft = container.read(bookingDraftProvider)!;
+    expect(draft.selectedMotorIds, ['m1']);
+    expect(draft.unitConfigs, isEmpty);
+    expect(notifier.takePrunedCount(), 1);
+    expect(notifier.takePrunedCount(), 0);
+    expect(await notifier.refreshActiveBookings(), 0);
+  });
+}
+
+class _SlowFakeBookingRepository extends FakeBookingRepository {
+  var _calls = 0;
+
+  @override
+  Future<Result<BookingDraft>> updateDraft(BookingDraft draft) async {
+    // First write is slow, later ones fast: responses arrive out of order.
+    final delay = _calls++ == 0 ? 60 : 5;
+    await Future<void>.delayed(Duration(milliseconds: delay));
+    return super.updateDraft(draft);
+  }
 }

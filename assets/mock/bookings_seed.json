@@ -127,14 +127,14 @@
     "units": [
       {
         "unit_code": "-A",
-        "motor_id": "motor_004",
+        "motor_id": "motor_006",
         "motor_snapshot": {
-          "id": "motor_004",
+          "id": "motor_006",
           "owner_id": "user_001",
-          "nickname": "Supra X 125",
-          "plate_number": "AB 3344 KL",
-          "year": 2018,
-          "model_id": "model_suprax125"
+          "nickname": "NMAX 155",
+          "plate_number": "AB 4455 NM",
+          "year": 2022,
+          "model_id": "model_nmax155"
         },
         "service_ids": ["svc_berkala"],
         "part_ids": [],

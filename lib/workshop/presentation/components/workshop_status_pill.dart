@@ -30,7 +30,14 @@ class WorkshopStatusPill extends StatelessWidget {
         children: [
           Icon(icon, size: 12, color: text),
           const SizedBox(width: 4),
-          Text(label, style: textTheme.labelSmall?.copyWith(color: text)),
+          Flexible(
+            child: Text(
+              label,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: textTheme.labelSmall?.copyWith(color: text),
+            ),
+          ),
         ],
       ),
     );

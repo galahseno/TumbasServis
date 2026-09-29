@@ -4,17 +4,19 @@ import 'package:tumbas_servis/workshop/presentation/pilih_bengkel/state/pilih_be
 
 class FilterChipRow extends StatelessWidget {
   const FilterChipRow({
-    required this.openNowOnly,
-    required this.sortMode,
-    required this.onOpenNowChanged,
-    required this.onSortModeChanged,
+    required this.selected,
+    required this.onSelected,
     super.key,
   });
 
-  final bool openNowOnly;
-  final WorkshopSortMode sortMode;
-  final ValueChanged<bool> onOpenNowChanged;
-  final ValueChanged<WorkshopSortMode> onSortModeChanged;
+  final WorkshopFilter selected;
+  final ValueChanged<WorkshopFilter> onSelected;
+
+  static const _labels = {
+    WorkshopFilter.bukaSekarang: 'Buka sekarang',
+    WorkshopFilter.terdekat: 'Terdekat',
+    WorkshopFilter.ratingTertinggi: 'Rating tertinggi',
+  };
 
   @override
   Widget build(BuildContext context) {
@@ -25,24 +27,15 @@ class FilterChipRow extends StatelessWidget {
         padding: const EdgeInsets.symmetric(horizontal: 20),
         child: Row(
           children: [
-            TsChip(
-              label: 'Buka sekarang',
-              selected: openNowOnly,
-              onSelected: onOpenNowChanged,
-            ),
-            const SizedBox(width: 8),
-            TsChip(
-              label: 'Terdekat',
-              selected: sortMode == WorkshopSortMode.terdekat,
-              onSelected: (_) => onSortModeChanged(WorkshopSortMode.terdekat),
-            ),
-            const SizedBox(width: 8),
-            TsChip(
-              label: 'Rating tertinggi',
-              selected: sortMode == WorkshopSortMode.ratingTertinggi,
-              onSelected: (_) =>
-                  onSortModeChanged(WorkshopSortMode.ratingTertinggi),
-            ),
+            for (final filter in WorkshopFilter.values) ...[
+              if (filter != WorkshopFilter.values.first)
+                const SizedBox(width: 8),
+              TsChip(
+                label: _labels[filter]!,
+                selected: selected == filter,
+                onSelected: (_) => onSelected(filter),
+              ),
+            ],
           ],
         ),
       ),

@@ -129,6 +129,7 @@ void main() {
     });
 
     Future<void> waitForLoad() async {
+      container.listen(pilihBengkelViewModelProvider, (_, _) {});
       for (var i = 0; i < 100; i++) {
         if (!container.read(pilihBengkelViewModelProvider).isLoading) return;
         await Future<void>.delayed(const Duration(milliseconds: 5));
@@ -141,8 +142,8 @@ void main() {
       final viewModel = container.read(pilihBengkelViewModelProvider.notifier);
 
       expect(
-        container.read(pilihBengkelViewModelProvider).sortMode,
-        WorkshopSortMode.terdekat,
+        container.read(pilihBengkelViewModelProvider).filter,
+        WorkshopFilter.terdekat,
       );
       expect(viewModel.visibleWorkshops.map((w) => w.id), [
         'ws_001',
@@ -161,7 +162,7 @@ void main() {
           pilihBengkelViewModelProvider.notifier,
         );
 
-        viewModel.setSortMode(WorkshopSortMode.ratingTertinggi);
+        await viewModel.setFilter(WorkshopFilter.ratingTertinggi);
 
         expect(viewModel.visibleWorkshops.map((w) => w.id), [
           'ws_003',
@@ -173,16 +174,42 @@ void main() {
       },
     );
 
+    test('filters are mutually exclusive: rating -> buka sekarang -> terdekat '
+        'reloads only when open-now changes', () async {
+      await waitForLoad();
+      final viewModel = container.read(pilihBengkelViewModelProvider.notifier);
+      workshopRepository.openNowOnlyCalls.clear();
+
+      await viewModel.setFilter(WorkshopFilter.ratingTertinggi);
+      expect(workshopRepository.openNowOnlyCalls, isEmpty);
+
+      await viewModel.setFilter(WorkshopFilter.bukaSekarang);
+      expect(workshopRepository.openNowOnlyCalls, [true]);
+
+      await viewModel.setFilter(WorkshopFilter.bukaSekarang);
+      expect(workshopRepository.openNowOnlyCalls, [true]);
+
+      await viewModel.setFilter(WorkshopFilter.terdekat);
+      expect(workshopRepository.openNowOnlyCalls, [true, false]);
+      expect(
+        container.read(pilihBengkelViewModelProvider).filter,
+        WorkshopFilter.terdekat,
+      );
+    });
+
     test('"Buka sekarang" toggle requests the repository with openNowOnly and '
         'reloads', () async {
       await waitForLoad();
       final viewModel = container.read(pilihBengkelViewModelProvider.notifier);
       workshopRepository.workshopsResult = const Result.ok([_jaya]);
 
-      await viewModel.setOpenNowOnly(true);
+      await viewModel.setFilter(WorkshopFilter.bukaSekarang);
 
       expect(workshopRepository.openNowOnlyCalls, contains(true));
-      expect(container.read(pilihBengkelViewModelProvider).openNowOnly, isTrue);
+      expect(
+        container.read(pilihBengkelViewModelProvider).filter,
+        WorkshopFilter.bukaSekarang,
+      );
       expect(viewModel.visibleWorkshops.map((w) => w.id), ['ws_001']);
     });
 

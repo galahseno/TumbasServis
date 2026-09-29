@@ -1,6 +1,7 @@
 // ignore_for_file: prefer_initializing_formals
 import 'package:tumbas_servis/core/domain/model/booking/booking.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
+import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/repository/booking/booking_repository.dart';
@@ -26,9 +27,9 @@ class DemoContentSeeder {
     final alreadySeeded = bookingsResult.value.any(
       (b) => b.code == canonicalBookingCode,
     );
-    if (!alreadySeeded) {
-      await _seedActiveBooking();
-    }
+    if (alreadySeeded) return;
+
+    await _seedActiveBooking();
     await _seedDraft();
   }
 
@@ -80,6 +81,16 @@ class DemoContentSeeder {
   }
 
   Future<void> _seedDraft() async {
+    final bookingsResult = await _bookingRepository.getBookings();
+    if (bookingsResult is Ok<List<Booking>>) {
+      final inService = bookingsResult.value.any(
+        (b) => b.units.any(
+          (u) => u.motorId == draftMotorId && !u.status.isTerminal,
+        ),
+      );
+      if (inService) return;
+    }
+
     final currentResult = await _bookingRepository.getCurrentDraft();
     if (currentResult is Ok<BookingDraft?> && currentResult.value != null) {
       return;

@@ -134,4 +134,44 @@ void main() {
       expect(bookingRepository.draftDeleted, isFalse);
     },
   );
+
+  testWidgets(
+    'rapid taps on a motor card follow the user (select → deselect → select) '
+    'even when the draft write is slow and out of order',
+    (tester) async {
+      final bookingRepository = _SlowFakeBookingRepository()
+        ..createDraftResult = Result.ok(_draft());
+      final garageRepository = FakeGarageRepository()
+        ..motorsResult = Result.ok([_motor('m1')]);
+      await _pumpPage(
+        tester,
+        bookingRepository: bookingRepository,
+        garageRepository: garageRepository,
+      );
+
+      final card = find.text('m1');
+      await tester.tap(card);
+      await tester.pump(const Duration(milliseconds: 10));
+      await tester.tap(card);
+      await tester.pump(const Duration(milliseconds: 10));
+      await tester.tap(card);
+      await tester.pump(const Duration(milliseconds: 10));
+
+      expect(find.text('1 dari 5 motor dipilih'), findsOneWidget);
+      await tester.pumpAndSettle(const Duration(seconds: 1));
+      expect(find.text('1 dari 5 motor dipilih'), findsOneWidget);
+    },
+  );
+}
+
+class _SlowFakeBookingRepository extends FakeBookingRepository {
+  var _calls = 0;
+
+  @override
+  Future<Result<BookingDraft>> updateDraft(BookingDraft draft) async {
+    await Future<void>.delayed(
+      Duration(milliseconds: _calls++ == 0 ? 400 : 20),
+    );
+    return super.updateDraft(draft);
+  }
 }

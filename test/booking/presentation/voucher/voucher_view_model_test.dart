@@ -188,8 +188,10 @@ void main() {
     });
 
     Future<void> waitForVoucherLoad() async {
+      container.listen(ringkasanViewModelProvider, (_, _) {});
       // S17 reuses S16's already-loaded lookups, so S16 must load first.
       await container.read(ringkasanViewModelProvider.notifier).reload();
+      container.listen(voucherViewModelProvider, (_, _) {});
       for (var i = 0; i < 100; i++) {
         if (!container.read(voucherViewModelProvider).isLoading) return;
         await Future<void>.delayed(const Duration(milliseconds: 5));
@@ -238,6 +240,31 @@ void main() {
 
       expect(state.eligible, isEmpty);
       expect(state.ineligible, hasLength(4));
+    });
+
+    test('after Hapus, a fresh visit can select and apply the same voucher '
+        'again (applied flag is not stale)', () async {
+      await waitForVoucherLoad();
+      var notifier = container.read(voucherViewModelProvider.notifier);
+      notifier.selectPending('v-diskon10');
+      await notifier.apply();
+      expect(container.read(voucherViewModelProvider).applied, isTrue);
+
+      await container.read(bookingDraftProvider.notifier).setVoucher(null);
+      container.invalidate(voucherViewModelProvider);
+      for (var i = 0; i < 100; i++) {
+        if (!container.read(voucherViewModelProvider).isLoading) break;
+        await Future<void>.delayed(const Duration(milliseconds: 5));
+      }
+
+      notifier = container.read(voucherViewModelProvider.notifier);
+      expect(container.read(voucherViewModelProvider).applied, isFalse);
+      notifier.selectPending('v-diskon10');
+      expect(notifier.hasPendingChange, isTrue);
+      await notifier.apply();
+
+      expect(container.read(voucherViewModelProvider).applied, isTrue);
+      expect(container.read(bookingDraftProvider)!.voucherId, 'v-diskon10');
     });
 
     test(

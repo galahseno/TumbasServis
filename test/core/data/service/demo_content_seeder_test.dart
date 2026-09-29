@@ -116,4 +116,32 @@ void main() {
       hasLength(1),
     );
   });
+
+  test(
+    'the demo draft motor is free: no non-terminal booking unit uses it, '
+    'so it can be unselected without reading "Sedang dalam servis"',
+    () async {
+      await seeder.seedIfNeeded();
+
+      final bookings =
+          ((await bookingRepository.getBookings()) as Ok<List<Booking>>).value;
+      final inService = bookings
+          .expand((b) => b.units)
+          .where((u) => !u.status.isTerminal)
+          .map((u) => u.motorId);
+      expect(inService, isNot(contains(DemoContentSeeder.draftMotorId)));
+    },
+  );
+
+  test('a cleared draft is not re-seeded on a later launch', () async {
+    await seeder.seedIfNeeded();
+    await bookingRepository.deleteDraft();
+
+    await seeder.seedIfNeeded();
+
+    final draft =
+        ((await bookingRepository.getCurrentDraft()) as Ok<BookingDraft?>)
+            .value;
+    expect(draft, isNull);
+  });
 }

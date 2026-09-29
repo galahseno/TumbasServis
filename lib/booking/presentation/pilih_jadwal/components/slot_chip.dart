@@ -9,6 +9,7 @@ class SlotChip extends StatelessWidget {
     required this.remaining,
     required this.selected,
     this.onTap,
+    this.onDisabledTap,
     super.key,
   });
 
@@ -17,6 +18,8 @@ class SlotChip extends StatelessWidget {
   final int remaining;
   final bool selected;
   final VoidCallback? onTap;
+
+  final VoidCallback? onDisabledTap;
 
   bool get _enabled =>
       onTap != null &&
@@ -99,7 +102,10 @@ class SlotChip extends StatelessWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: _enabled ? onTap : null,
+          onTap: _enabled ? onTap : onDisabledTap,
+          splashFactory: _enabled ? null : NoSplash.splashFactory,
+          highlightColor: _enabled ? null : Colors.transparent,
+          hoverColor: _enabled ? null : Colors.transparent,
           borderRadius: BorderRadius.circular(12),
           child: Container(
             constraints: const BoxConstraints(minHeight: 54),
@@ -113,28 +119,37 @@ class SlotChip extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    if (_icon != null) ...[
-                      Icon(_icon, size: 14, color: foreground),
-                      const SizedBox(width: 4),
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      if (_icon != null) ...[
+                        Icon(_icon, size: 14, color: foreground),
+                        const SizedBox(width: 4),
+                      ],
+                      Text(
+                        _timeLabel,
+                        style: textTheme.labelLarge?.copyWith(
+                          color: foreground,
+                        ),
+                      ),
+                      if (selected) ...[
+                        const SizedBox(width: 4),
+                        Icon(Icons.check_rounded, size: 14, color: foreground),
+                      ],
                     ],
-                    Text(
-                      _timeLabel,
-                      style: textTheme.labelLarge?.copyWith(color: foreground),
-                    ),
-                    if (selected) ...[
-                      const SizedBox(width: 4),
-                      Icon(Icons.check_rounded, size: 14, color: foreground),
-                    ],
-                  ],
+                  ),
                 ),
                 if (_caption != null)
-                  Text(
-                    _caption!,
-                    textAlign: TextAlign.center,
-                    style: textTheme.labelSmall?.copyWith(color: foreground),
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      _caption!,
+                      maxLines: 1,
+                      textAlign: TextAlign.center,
+                      style: textTheme.labelSmall?.copyWith(color: foreground),
+                    ),
                   ),
               ],
             ),

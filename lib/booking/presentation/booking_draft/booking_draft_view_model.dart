@@ -11,6 +11,9 @@ const bookingDraftMaxMotors = 5;
 
 class BookingDraftViewModel extends Notifier<BookingDraft?> {
   Set<String> _motorIdsWithActiveBooking = {};
+  Future<void> _writeChain = Future<void>.value();
+  bool _writeQueued = false;
+  int _prunedSinceNotice = 0;
 
   @override
   BookingDraft? build() {
@@ -21,7 +24,26 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
   Future<void> _load() async {
     final repo = ref.read(bookingRepositoryProvider);
 
-    final bookingsResult = await repo.getBookings();
+    await _loadActiveBookingMotorIds();
+    if (!ref.mounted) return;
+
+    final currentResult = await repo.getCurrentDraft();
+    if (!ref.mounted) return;
+    if (currentResult is Ok<BookingDraft?> && currentResult.value != null) {
+      state = currentResult.value;
+      await refreshActiveBookings();
+      return;
+    }
+
+    final createdResult = await repo.createDraft();
+    if (!ref.mounted) return;
+    if (createdResult is Ok<BookingDraft>) state = createdResult.value;
+  }
+
+  Future<void> _loadActiveBookingMotorIds() async {
+    final bookingsResult = await ref
+        .read(bookingRepositoryProvider)
+        .getBookings();
     if (!ref.mounted) return;
     if (bookingsResult is Ok<List<Booking>>) {
       _motorIdsWithActiveBooking = {
@@ -30,17 +52,42 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
             if (!unit.status.isTerminal) unit.motorId,
       };
     }
+  }
 
-    final currentResult = await repo.getCurrentDraft();
-    if (!ref.mounted) return;
-    if (currentResult is Ok<BookingDraft?> && currentResult.value != null) {
-      state = currentResult.value;
-      return;
-    }
+  Future<int> refreshActiveBookings() async {
+    await _loadActiveBookingMotorIds();
+    if (!ref.mounted) return 0;
+    final draft = state;
+    if (draft == null) return 0;
 
-    final createdResult = await repo.createDraft();
-    if (!ref.mounted) return;
-    if (createdResult is Ok<BookingDraft>) state = createdResult.value;
+    final blocked = draft.selectedMotorIds
+        .where(_motorIdsWithActiveBooking.contains)
+        .toSet();
+    if (blocked.isEmpty) return 0;
+
+    _prunedSinceNotice += blocked.length;
+    await _persist(
+      draft.copyWith(
+        selectedMotorIds: draft.selectedMotorIds
+            .where((id) => !blocked.contains(id))
+            .toList(),
+        unitConfigs: {
+          for (final entry in draft.unitConfigs.entries)
+            if (!blocked.contains(entry.key)) entry.key: entry.value,
+        },
+        unitSlots: {
+          for (final entry in draft.unitSlots.entries)
+            if (!blocked.contains(entry.key)) entry.key: entry.value,
+        },
+      ),
+    );
+    return blocked.length;
+  }
+
+  int takePrunedCount() {
+    final count = _prunedSinceNotice;
+    _prunedSinceNotice = 0;
+    return count;
   }
 
   bool hasActiveBooking(String motorId) =>
@@ -175,16 +222,25 @@ class BookingDraftViewModel extends Notifier<BookingDraft?> {
   }
 
   Future<void> reset() async {
+    await _writeChain;
+    if (!ref.mounted) return;
     await ref.read(bookingRepositoryProvider).deleteDraft();
     if (!ref.mounted) return;
     state = null;
     await _load();
   }
 
-  Future<void> _persist(BookingDraft draft) async {
+  Future<void> _persist(BookingDraft draft) {
     state = draft;
-    final result = await ref.read(bookingRepositoryProvider).updateDraft(draft);
-    if (!ref.mounted) return;
-    if (result is Ok<BookingDraft>) state = result.value;
+    if (_writeQueued) return _writeChain;
+    _writeQueued = true;
+    _writeChain = _writeChain.then((_) async {
+      _writeQueued = false;
+      if (!ref.mounted) return;
+      final latest = state;
+      if (latest == null) return;
+      await ref.read(bookingRepositoryProvider).updateDraft(latest);
+    });
+    return _writeChain;
   }
 }

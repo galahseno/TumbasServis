@@ -203,6 +203,7 @@ void main() {
     });
 
     Future<void> waitForLoad() async {
+      container.listen(detailServisViewModelProvider, (_, _) {});
       for (var i = 0; i < 100; i++) {
         if (container.read(bookingDraftProvider) != null &&
             !container.read(detailServisViewModelProvider).isLoading) {

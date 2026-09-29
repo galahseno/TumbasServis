@@ -29,6 +29,7 @@ void main() {
   });
 
   Future<void> waitForLoad() async {
+    container.listen(pilihMotorViewModelProvider, (_, _) {});
     for (var i = 0; i < 100; i++) {
       if (!container.read(pilihMotorViewModelProvider).isLoading) return;
       await Future<void>.delayed(const Duration(milliseconds: 5));

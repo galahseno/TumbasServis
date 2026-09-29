@@ -208,6 +208,7 @@ void main() {
     });
 
     Future<void> waitForLoad() async {
+      container.listen(ringkasanViewModelProvider, (_, _) {});
       // Read the notifier once to construct it, then trigger a reload — the
       // view model only self-loads via reload(), matching the page's own
       // "reload on entry" pattern (see ringkasan_page.dart).

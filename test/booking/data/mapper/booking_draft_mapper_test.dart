@@ -8,10 +8,7 @@ BookingDraft _draft() => BookingDraft(
   id: 'draft_1',
   selectedMotorIds: const ['motor_001', 'motor_002'],
   unitConfigs: const {
-    'motor_001': UnitConfig(
-      serviceIds: ['svc_berkala'],
-      partIds: ['part_oli'],
-    ),
+    'motor_001': UnitConfig(serviceIds: ['svc_berkala'], partIds: ['part_oli']),
     'motor_002': UnitConfig(
       serviceIds: ['svc_ganti_ban'],
       partIds: [],

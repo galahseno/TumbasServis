@@ -23,22 +23,19 @@ BookingDraft _sharedDraft(TimeSlot slot) => BookingDraft(
   expiresAt: DateTime(2026, 9, 29),
 );
 
-BookingDraft _splitDraft(Map<String, TimeSlot> slots,
-        {String? missingMotorId}) =>
-    BookingDraft(
-      id: 'draft_1',
-      selectedMotorIds: [
-        'motor_001',
-        'motor_002',
-        ?missingMotorId,
-      ],
-      unitConfigs: const {},
-      workshopId: 'ws_001',
-      scheduleMode: ScheduleMode.split,
-      unitSlots: slots,
-      createdAt: DateTime(2026, 9, 28),
-      expiresAt: DateTime(2026, 9, 29),
-    );
+BookingDraft _splitDraft(
+  Map<String, TimeSlot> slots, {
+  String? missingMotorId,
+}) => BookingDraft(
+  id: 'draft_1',
+  selectedMotorIds: ['motor_001', 'motor_002', ?missingMotorId],
+  unitConfigs: const {},
+  workshopId: 'ws_001',
+  scheduleMode: ScheduleMode.split,
+  unitSlots: slots,
+  createdAt: DateTime(2026, 9, 28),
+  expiresAt: DateTime(2026, 9, 29),
+);
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -65,15 +62,18 @@ void main() {
   group('validateDraft', () {
     test('null workshopId → bengkel error', () async {
       final error = await validator.validateDraft(
-        _sharedDraft(_slot(DateTime(2026, 9, 29), 9)).copyWith(workshopId: null),
+        _sharedDraft(
+          _slot(DateTime(2026, 9, 29), 9),
+        ).copyWith(workshopId: null),
       );
       expect(error?.toString(), contains('Draft belum memiliki bengkel.'));
     });
 
     test('shared mode without slot → jadwal error', () async {
       final error = await validator.validateDraft(
-        _sharedDraft(_slot(DateTime(2026, 9, 29), 9))
-            .copyWith(sharedSlot: null),
+        _sharedDraft(
+          _slot(DateTime(2026, 9, 29), 9),
+        ).copyWith(sharedSlot: null),
       );
       expect(error?.toString(), contains('Draft belum memiliki jadwal.'));
     });
@@ -94,8 +94,9 @@ void main() {
 
     test('split mode missing a unit slot → jadwal error', () async {
       final error = await validator.validateDraft(
-        _splitDraft({'motor_001': _slot(DateTime(2026, 9, 29), 9)},
-            missingMotorId: 'motor_002'),
+        _splitDraft({
+          'motor_001': _slot(DateTime(2026, 9, 29), 9),
+        }, missingMotorId: 'motor_002'),
       );
       expect(
         error?.toString(),

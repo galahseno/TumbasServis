@@ -30,7 +30,10 @@ BookingUnit _unit({String? complaintNote, String? mechanicId}) => BookingUnit(
       timestamp: DateTime(2026, 9, 29, 8),
       note: 'Dibuat.',
     ),
-    StatusEvent(status: UnitStatus.dikerjakan, timestamp: DateTime(2026, 9, 29, 10)),
+    StatusEvent(
+      status: UnitStatus.dikerjakan,
+      timestamp: DateTime(2026, 9, 29, 10),
+    ),
   ],
   mechanicId: mechanicId,
   subtotal: 85000,
@@ -97,9 +100,8 @@ void main() {
     final booking = _splitBooking();
     final json = booking.toBookingJson();
     final unitJson = (json['units'] as List).first as Map<String, dynamic>;
-    final history = (unitJson['status_history'] as List).cast<
-      Map<String, dynamic>
-    >();
+    final history = (unitJson['status_history'] as List)
+        .cast<Map<String, dynamic>>();
     expect(history.first.containsKey('note'), isTrue);
     expect(history.last.containsKey('note'), isFalse);
   });

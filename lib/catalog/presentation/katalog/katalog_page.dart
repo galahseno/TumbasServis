@@ -149,6 +149,7 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
     final scheme = Theme.of(context).colorScheme;
     final textTheme = Theme.of(context).textTheme;
     final isSelect = widget.mode == KatalogMode.select;
+    final keyboardOpen = MediaQuery.viewInsetsOf(context).bottom > 0;
 
     Widget body;
     if (state.hasError) {
@@ -161,8 +162,9 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
       final visibleParts = viewModel.visibleParts;
       body = Column(
         children: [
-          if (isSelect && state.unitNickname != null)
-            Padding(
+          Visibility(
+            visible: isSelect && state.unitNickname != null && !keyboardOpen,
+            child: Padding(
               padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
               child: Align(
                 alignment: Alignment.centerLeft,
@@ -174,10 +176,12 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
                 ),
               ),
             ),
+          ),
           const SizedBox(height: 8),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: _SearchField(
+              key: const ValueKey('katalog_search'),
               controller: _searchController,
               onChanged: viewModel.setSearchQuery,
               onClear: () => _clearSearch(viewModel),
@@ -188,14 +192,17 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
             selectedCategory: state.selectedCategory,
             onSelected: viewModel.setCategory,
           ),
-          if (isSelect) ...[
-            const SizedBox(height: 4),
-            _CompatToggleRow(
-              nickname: state.unitNickname ?? '',
-              value: state.compatOnlyEnabled,
-              onChanged: viewModel.setCompatOnly,
+          Visibility(
+            visible: isSelect && !keyboardOpen,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 4),
+              child: _CompatToggleRow(
+                nickname: state.unitNickname ?? '',
+                value: state.compatOnlyEnabled,
+                onChanged: viewModel.setCompatOnly,
+              ),
             ),
-          ],
+          ),
           const SizedBox(height: 8),
           Expanded(
             child: state.isLoading
@@ -257,6 +264,7 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
 
 class _SearchField extends StatelessWidget {
   const _SearchField({
+    super.key,
     required this.controller,
     required this.onChanged,
     required this.onClear,

@@ -3,4 +3,6 @@ import 'package:tumbas_servis/catalog/presentation/katalog/katalog_view_model.da
 import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
 
 final katalogViewModelProvider =
-    NotifierProvider<KatalogViewModel, KatalogState>(KatalogViewModel.new);
+    NotifierProvider.autoDispose<KatalogViewModel, KatalogState>(
+      KatalogViewModel.new,
+    );

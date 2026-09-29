@@ -215,4 +215,18 @@ void main() {
       expect(find.byIcon(Icons.do_not_disturb_on_rounded), findsNothing);
     },
   );
+
+  testWidgets('steps 2+ use a back arrow: no close X and no exit dialog', (
+    tester,
+  ) async {
+    final bookingRepository = FakeBookingRepository()
+      ..createDraftResult = Result.ok(
+        _draft(selectedMotorIds: const ['m_vario']),
+      );
+    await _pumpPage(tester, bookingRepository: bookingRepository);
+
+    expect(find.byIcon(Icons.arrow_back_rounded), findsOneWidget);
+    expect(find.byIcon(Icons.close_rounded), findsNothing);
+    expect(find.text('Keluar dari booking?'), findsNothing);
+  });
 }

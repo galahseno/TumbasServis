@@ -97,14 +97,23 @@ void main() {
         await initializeAndWait(initialPartIds: const {});
         final viewModel = container.read(katalogViewModelProvider.notifier);
 
-        expect(container.read(katalogViewModelProvider).compatOnlyEnabled, isTrue);
-        expect(viewModel.visibleParts.map((p) => p.id), isNot(contains('part_mpx2')));
+        expect(
+          container.read(katalogViewModelProvider).compatOnlyEnabled,
+          isTrue,
+        );
+        expect(
+          viewModel.visibleParts.map((p) => p.id),
+          isNot(contains('part_mpx2')),
+        );
 
         viewModel.setCompatOnly(false);
 
         expect(viewModel.visibleParts.map((p) => p.id), contains('part_mpx2'));
         expect(viewModel.isCompatible(_mpx2), isFalse);
-        expect(viewModel.incompatibleReason(_mpx2), 'Tidak cocok · untuk matic 125 cc');
+        expect(
+          viewModel.incompatibleReason(_mpx2),
+          'Tidak cocok · untuk matic 125 cc',
+        );
       },
     );
 
@@ -125,28 +134,23 @@ void main() {
       viewModel.toggleStaged('part_mpx1');
       viewModel.setCategory('Kampas rem');
 
-      expect(
-        container.read(katalogViewModelProvider).stagedPartIds,
-        {'part_mpx1'},
-      );
+      expect(container.read(katalogViewModelProvider).stagedPartIds, {
+        'part_mpx1',
+      });
     });
 
-    test(
-      'the staged set (what "Selesai" returns) reflects exactly the toggles '
-      'made, seeded from the initial partIds',
-      () async {
-        await initializeAndWait(initialPartIds: const {'part_mpx1'});
-        final viewModel = container.read(katalogViewModelProvider.notifier);
+    test('the staged set (what "Selesai" returns) reflects exactly the toggles '
+        'made, seeded from the initial partIds', () async {
+      await initializeAndWait(initialPartIds: const {'part_mpx1'});
+      final viewModel = container.read(katalogViewModelProvider.notifier);
 
-        viewModel.toggleStaged('part_kampas');
-        viewModel.toggleStaged('part_mpx1');
+      viewModel.toggleStaged('part_kampas');
+      viewModel.toggleStaged('part_mpx1');
 
-        expect(
-          container.read(katalogViewModelProvider).stagedPartIds,
-          {'part_kampas'},
-        );
-        expect(viewModel.isDirty, isTrue);
-      },
-    );
+      expect(container.read(katalogViewModelProvider).stagedPartIds, {
+        'part_kampas',
+      });
+      expect(viewModel.isDirty, isTrue);
+    });
   });
 }

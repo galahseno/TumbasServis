@@ -51,3 +51,13 @@ bool canContinueSchedule(BookingDraft draft) {
   }
   return draft.sharedSlot != null;
 }
+
+String slotHourLabel(TimeSlot slot) =>
+    '${slot.hour.toString().padLeft(2, '0')}.00';
+
+String shortSlotMessage(TimeSlot slot, int unitCount) =>
+    'Jam ${slotHourLabel(slot)} hanya muat ${slot.remaining} motor. '
+    'Pisah jadwal untuk booking $unitCount motor.';
+
+String siblingConflictMessage(TimeSlot slot, String nickname) =>
+    'Jam ${slotHourLabel(slot)} sudah dipakai $nickname. Pilih jam lain.';

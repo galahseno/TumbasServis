@@ -4,7 +4,6 @@ import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/presentation/booking_draft/booking_draft_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
-import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/complaint_section.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/copy_from_row.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/components/copy_note.dart';
@@ -16,6 +15,7 @@ import 'package:tumbas_servis/booking/presentation/detail_servis/components/vehi
 import 'package:tumbas_servis/booking/presentation/detail_servis/detail_servis_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/detail_servis/state/detail_servis_state.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
+import 'package:tumbas_servis/booking/presentation/utils/summary_navigation.dart';
 import 'package:tumbas_servis/booking/presentation/utils/unit_config_display.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/katalog_page.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
@@ -35,17 +35,11 @@ class DetailServisPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final draft = ref.watch(bookingDraftProvider);
+    final editingFromSummary = ref.watch(summaryEditReturnProvider);
     final draftNotifier = ref.read(bookingDraftProvider.notifier);
     final state = ref.watch(detailServisViewModelProvider);
     final viewModel = ref.read(detailServisViewModelProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
-
-    Future<void> handleExit() async {
-      final confirmed = await showExitBookingDialog(context);
-      if ((confirmed ?? false) && context.mounted) {
-        Navigator.of(context).pop();
-      }
-    }
 
     Widget body;
     if (draft == null || state.isLoading) {
@@ -79,25 +73,15 @@ class DetailServisPage extends ConsumerWidget {
           activeMotor: activeMotor,
           draftNotifier: draftNotifier,
           viewModel: viewModel,
+          editingFromSummary: editingFromSummary,
         );
       }
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        handleExit();
-      },
-      child: Scaffold(
-        backgroundColor: scheme.surface,
-        appBar: TsAppBar.close(
-          title: 'Detail servis',
-          onClose: handleExit,
-          semanticLabel: 'Tutup booking',
-        ),
-        body: SafeArea(top: false, child: body),
-      ),
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: TsAppBar.back(title: 'Detail servis'),
+      body: SafeArea(top: false, child: body),
     );
   }
 }
@@ -137,8 +121,10 @@ class _DetailServisBody extends StatelessWidget {
     required this.activeMotor,
     required this.draftNotifier,
     required this.viewModel,
+    required this.editingFromSummary,
   });
 
+  final bool editingFromSummary;
   final BookingDraft draft;
   final DetailServisState state;
   final String activeMotorId;
@@ -391,7 +377,9 @@ class _DetailServisBody extends StatelessWidget {
             totalLabel: CurrencyFormatter.format(breakdown.total),
             reasonLine: allComplete ? null : reasonLine,
             onContinue: allComplete
-                ? () => context.push(Routes.bookingWorkshop)
+                ? () => editingFromSummary
+                      ? returnToSummary(context)
+                      : context.push(Routes.bookingWorkshop)
                 : null,
           ),
         ),

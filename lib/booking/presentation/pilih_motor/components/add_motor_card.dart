@@ -32,9 +32,12 @@ class AddMotorCard extends StatelessWidget {
             children: [
               Icon(Icons.add_circle_outline_rounded, color: ext.textAccent),
               const SizedBox(width: 8),
-              Text(
-                '+ Tambah motor lain',
-                style: textTheme.labelLarge?.copyWith(color: ext.textAccent),
+              Flexible(
+                child: Text(
+                  '+ Tambah motor lain',
+                  textAlign: TextAlign.center,
+                  style: textTheme.labelLarge?.copyWith(color: ext.textAccent),
+                ),
               ),
             ],
           ),

@@ -15,9 +15,6 @@ void main() {
   });
 
   test('auditLabel double-digit values unchanged', () {
-    expect(
-      _slot(DateTime(2026, 10, 12), 14).auditLabel,
-      '2026-10-12 14:00',
-    );
+    expect(_slot(DateTime(2026, 10, 12), 14).auditLabel, '2026-10-12 14:00');
   });
 }

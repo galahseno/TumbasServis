@@ -4,14 +4,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/presentation/booking_draft/booking_draft_view_model.dart';
-import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
-import 'package:tumbas_servis/core/presentation/components/ts_icon_button.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 import 'package:tumbas_servis/workshop/presentation/components/chosen_tag.dart';
@@ -48,13 +46,6 @@ class _DetailBengkelPageState extends ConsumerState<DetailBengkelPage> {
           .read(detailBengkelViewModelProvider.notifier)
           .initialize(widget.workshopId);
     });
-  }
-
-  Future<void> _handleClose(BuildContext context) async {
-    final confirmed = await showExitBookingDialog(context);
-    if ((confirmed ?? false) && context.mounted) {
-      Navigator.of(context).pop();
-    }
   }
 
   Future<void> _handleCopyAddress(BuildContext context, String address) async {
@@ -166,29 +157,10 @@ class _DetailBengkelPageState extends ConsumerState<DetailBengkelPage> {
       );
     }
 
-    return PopScope(
-      canPop: !isInFlow,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop || !isInFlow) return;
-        _handleClose(context);
-      },
-      child: Scaffold(
-        backgroundColor: scheme.surface,
-        appBar: isInFlow
-            ? TsAppBar(
-                title: 'Detail bengkel',
-                showBack: true,
-                actions: [
-                  TsIconButton(
-                    icon: Icons.close_rounded,
-                    onPressed: () => _handleClose(context),
-                    semanticLabel: 'Tutup booking',
-                  ),
-                ],
-              )
-            : TsAppBar.back(title: 'Detail bengkel'),
-        body: SafeArea(top: false, child: body),
-      ),
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: TsAppBar.back(title: 'Detail bengkel'),
+      body: SafeArea(top: false, child: body),
     );
   }
 }

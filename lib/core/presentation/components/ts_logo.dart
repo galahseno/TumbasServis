@@ -40,20 +40,28 @@ class TsLogo extends StatelessWidget {
       children: [
         mark,
         const SizedBox(width: 8),
-        Text.rich(
-          TextSpan(
-            children: [
+        Flexible(
+          child: FittedBox(
+            fit: BoxFit.scaleDown,
+            alignment: Alignment.centerLeft,
+            child: Text.rich(
               TextSpan(
-                text: 'Tumbas',
-                style: textTheme.titleMedium?.copyWith(color: scheme.onSurface),
+                children: [
+                  TextSpan(
+                    text: 'Tumbas',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: scheme.onSurface,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'Servis',
+                    style: textTheme.titleMedium?.copyWith(
+                      color: extension.textAccent,
+                    ),
+                  ),
+                ],
               ),
-              TextSpan(
-                text: 'Servis',
-                style: textTheme.titleMedium?.copyWith(
-                  color: extension.textAccent,
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ],

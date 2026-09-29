@@ -16,13 +16,41 @@ import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/selection_footer.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
-class PilihMotorPage extends ConsumerWidget {
+class PilihMotorPage extends ConsumerStatefulWidget {
   const PilihMotorPage({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<PilihMotorPage> createState() => _PilihMotorPageState();
+}
+
+class _PilihMotorPageState extends ConsumerState<PilihMotorPage> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      if (!mounted) return;
+      await ref.read(bookingDraftProvider.notifier).refreshActiveBookings();
+      _noticePrunedMotors();
+    });
+  }
+
+  void _noticePrunedMotors() {
+    if (!mounted) return;
+    final pruned = ref.read(bookingDraftProvider.notifier).takePrunedCount();
+    if (pruned == 0) return;
+    TsSnackbar.info(
+      context,
+      '$pruned motor dilepas dari draft karena sedang dalam servis',
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    ref.listen(bookingDraftProvider, (_, _) => _noticePrunedMotors());
+
     final draft = ref.watch(bookingDraftProvider);
     final draftNotifier = ref.read(bookingDraftProvider.notifier);
     final state = ref.watch(pilihMotorViewModelProvider);
@@ -52,9 +80,7 @@ class PilihMotorPage extends ConsumerWidget {
       await viewModel.refresh();
       final refreshed = ref.read(pilihMotorViewModelProvider);
       if (refreshed.motors.length > countBefore && context.mounted) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(const SnackBar(content: Text('Motor ditambahkan')));
+        TsSnackbar.success(context, 'Motor ditambahkan');
       }
     }
 

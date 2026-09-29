@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
-import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/components/confirm_bar.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/components/payment_note.dart';
@@ -42,16 +41,13 @@ class _RingkasanPageState extends ConsumerState<RingkasanPage> {
   }
 
   Future<void> _navigateAndReload(String path) async {
+    final isEdit = path != Routes.bookingSummaryVoucher;
+    final editReturn = ref.read(summaryEditReturnProvider.notifier);
+    if (isEdit) editReturn.begin();
     await context.push(path);
+    if (isEdit) editReturn.end();
     if (!mounted) return;
     ref.read(ringkasanViewModelProvider.notifier).reload();
-  }
-
-  Future<void> _handleClose() async {
-    final confirmed = await showExitBookingDialog(context);
-    if ((confirmed ?? false) && mounted) {
-      Navigator.of(context).pop();
-    }
   }
 
   @override
@@ -59,6 +55,7 @@ class _RingkasanPageState extends ConsumerState<RingkasanPage> {
     ref.listen(ringkasanViewModelProvider, (previous, next) {
       final bookingId = next.confirmedBookingId;
       if (bookingId != null && previous?.confirmedBookingId != bookingId) {
+        ref.read(summaryEditReturnProvider.notifier).end();
         ref.read(bookingDraftProvider.notifier).reset();
         context.go(Routes.bookingSuccess(bookingId));
       }
@@ -94,21 +91,10 @@ class _RingkasanPageState extends ConsumerState<RingkasanPage> {
       );
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _handleClose();
-      },
-      child: Scaffold(
-        backgroundColor: scheme.surface,
-        appBar: TsAppBar.close(
-          title: 'Ringkasan',
-          onClose: _handleClose,
-          semanticLabel: 'Tutup booking',
-        ),
-        body: SafeArea(top: false, child: body),
-      ),
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: TsAppBar.back(title: 'Ringkasan'),
+      body: SafeArea(top: false, child: body),
     );
   }
 }

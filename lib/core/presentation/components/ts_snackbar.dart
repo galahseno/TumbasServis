@@ -69,13 +69,15 @@ abstract final class TsSnackbar {
       _TsSnackbarKind.error => Icons.error_rounded,
     };
 
+    messenger.hideCurrentSnackBar();
     messenger.showSnackBar(
       SnackBar(
         behavior: SnackBarBehavior.floating,
         backgroundColor: scheme.inverseSurface,
         elevation: 0,
+        persist: false,
         duration: hasAction || kind == _TsSnackbarKind.error
-            ? const Duration(hours: 1)
+            ? const Duration(seconds: 6)
             : const Duration(seconds: 4),
         margin: EdgeInsets.only(
           left: 16,

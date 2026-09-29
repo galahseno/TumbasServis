@@ -8,6 +8,7 @@ import 'package:tumbas_servis/booking/presentation/pilih_motor/pilih_motor_view_
 import 'package:tumbas_servis/booking/presentation/pilih_motor/state/pilih_motor_state.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/ringkasan_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/state/ringkasan_state.dart';
+import 'package:tumbas_servis/booking/presentation/ringkasan/summary_edit_return_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/tiket/state/tiket_state.dart';
 import 'package:tumbas_servis/booking/presentation/tiket/tiket_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/voucher/state/voucher_state.dart';
@@ -20,28 +21,36 @@ final bookingDraftProvider =
     );
 
 final pilihMotorViewModelProvider =
-    NotifierProvider<PilihMotorViewModel, PilihMotorState>(
+    NotifierProvider.autoDispose<PilihMotorViewModel, PilihMotorState>(
       PilihMotorViewModel.new,
     );
 
 final detailServisViewModelProvider =
-    NotifierProvider<DetailServisViewModel, DetailServisState>(
+    NotifierProvider.autoDispose<DetailServisViewModel, DetailServisState>(
       DetailServisViewModel.new,
     );
 
 final pilihJadwalViewModelProvider =
-    NotifierProvider<PilihJadwalViewModel, PilihJadwalState>(
+    NotifierProvider.autoDispose<PilihJadwalViewModel, PilihJadwalState>(
       PilihJadwalViewModel.new,
     );
 
 final ringkasanViewModelProvider =
-    NotifierProvider<RingkasanViewModel, RingkasanState>(
+    NotifierProvider.autoDispose<RingkasanViewModel, RingkasanState>(
       RingkasanViewModel.new,
     );
 
-final tiketViewModelProvider = NotifierProvider<TiketViewModel, TiketState>(
-  TiketViewModel.new,
-);
+final summaryEditReturnProvider =
+    NotifierProvider<SummaryEditReturnViewModel, bool>(
+      SummaryEditReturnViewModel.new,
+    );
+
+final tiketViewModelProvider =
+    NotifierProvider.autoDispose<TiketViewModel, TiketState>(
+      TiketViewModel.new,
+    );
 
 final voucherViewModelProvider =
-    NotifierProvider<VoucherViewModel, VoucherState>(VoucherViewModel.new);
+    NotifierProvider.autoDispose<VoucherViewModel, VoucherState>(
+      VoucherViewModel.new,
+    );

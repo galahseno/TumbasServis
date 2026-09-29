@@ -21,6 +21,8 @@ class VoucherViewModel extends Notifier<VoucherState> {
   bool get hasPendingChange => state.pendingVoucherId != state.appliedVoucherId;
 
   Future<void> _load() async {
+    await Future<void>.value();
+    if (!ref.mounted) return;
     final draft = ref.read(bookingDraftProvider);
     if (draft == null) {
       state = state.copyWith(isLoading: false, hasError: true);

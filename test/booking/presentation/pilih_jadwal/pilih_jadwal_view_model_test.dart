@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
+import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_view_model.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
@@ -98,6 +99,7 @@ void main() {
     });
 
     Future<void> waitForLoad() async {
+      container.listen(pilihJadwalViewModelProvider, (_, _) {});
       for (var i = 0; i < 100; i++) {
         if (!container.read(pilihJadwalViewModelProvider).isLoading &&
             container.read(bookingDraftProvider) != null) {
@@ -362,6 +364,121 @@ void main() {
           notifier.splitChipStateFor(slot10, 'm_beat', draft),
           SlotChipState.limited,
         );
+      });
+    });
+
+    group('slot tap outcomes & split assist', () {
+      final date = DateTime(2026, 9, 29);
+
+      setUp(() {
+        workshopRepository.availableSlotsByDate['2026-9-29'] = Result.ok(
+          _daySlots(date, [4, 4, 2, 1, 0, 3, 2, 4, 0]),
+        );
+      });
+
+      test(
+        'a short hour reports SlotTapShort and leaves the draft alone',
+        () async {
+          await waitForLoad();
+          final notifier = container.read(
+            pilihJadwalViewModelProvider.notifier,
+          );
+          await notifier.selectDate(date);
+          final slot10 = container
+              .read(pilihJadwalViewModelProvider)
+              .sharedSlots
+              .firstWhere((s) => s.hour == 10);
+
+          final outcome = await notifier.selectSharedSlot(slot10, 3);
+
+          expect(outcome, isA<SlotTapShort>());
+          expect((outcome as SlotTapShort).slot.remaining, 2);
+          expect(container.read(bookingDraftProvider)!.sharedSlot, isNull);
+        },
+      );
+
+      test('a valid hour reports SlotTapSelected', () async {
+        await waitForLoad();
+        final notifier = container.read(pilihJadwalViewModelProvider.notifier);
+        await notifier.selectDate(date);
+        final slot8 = container
+            .read(pilihJadwalViewModelProvider)
+            .sharedSlots
+            .firstWhere((s) => s.hour == 8);
+
+        expect(
+          await notifier.selectSharedSlot(slot8, 3),
+          isA<SlotTapSelected>(),
+        );
+      });
+
+      test('splitFromShortSlot switches to split, seats as many motors as '
+          'fit and opens the next unscheduled motor', () async {
+        await waitForLoad();
+        final notifier = container.read(pilihJadwalViewModelProvider.notifier);
+        await notifier.selectDate(date);
+        final slot10 = container
+            .read(pilihJadwalViewModelProvider)
+            .sharedSlots
+            .firstWhere((s) => s.hour == 10);
+
+        await notifier.splitFromShortSlot(slot10);
+
+        final draft = container.read(bookingDraftProvider)!;
+        final state = container.read(pilihJadwalViewModelProvider);
+        expect(draft.scheduleMode, ScheduleMode.split);
+        expect(draft.unitSlots.keys, ['m_vario', 'm_beat']);
+        expect(draft.unitSlots['m_vario']!.hour, 10);
+        expect(draft.unitSlots['m_beat']!.hour, 10);
+        expect(state.expandedMotorId, 'm_pcx');
+        expect(state.unitDates['m_pcx'], date);
+        expect(state.unitSlotsByMotor['m_pcx'], isNotEmpty);
+        expect(state.unitSlotsByMotor['m_vario'], isNotEmpty);
+      });
+
+      test('split mode: an hour whose last bay a sibling holds reports '
+          'SlotTapSiblingConflict naming that sibling', () async {
+        final slot9 = TimeSlot(date: date, hour: 11, capacity: 5, booked: 4);
+        bookingRepository.createDraftResult = Result.ok(
+          _draft(
+            scheduleMode: ScheduleMode.split,
+            unitSlots: {'m_vario': slot9},
+          ),
+        );
+        await waitForLoad();
+        final notifier = container.read(pilihJadwalViewModelProvider.notifier);
+        final draft = container.read(bookingDraftProvider)!;
+
+        final outcome = await notifier.selectUnitSlot('m_beat', slot9, draft);
+
+        expect(outcome, isA<SlotTapSiblingConflict>());
+        expect((outcome as SlotTapSiblingConflict).nickname, 'Vario 125');
+        expect(container.read(bookingDraftProvider)!.unitSlots.keys, [
+          'm_vario',
+        ]);
+      });
+
+      test('changing date shows loading immediately and a stale response is '
+          'ignored', () async {
+        final nextDate = DateTime(2026, 9, 30);
+        workshopRepository.availableSlotsByDate['2026-9-30'] = Result.ok(
+          _daySlots(nextDate, [4, 4, 4, 4, 4, 4, 4, 4, 4]),
+        );
+        await waitForLoad();
+        final notifier = container.read(pilihJadwalViewModelProvider.notifier);
+
+        final first = notifier.selectDate(date);
+        expect(
+          container.read(pilihJadwalViewModelProvider).sharedSlotsLoading,
+          isTrue,
+        );
+        final second = notifier.selectDate(nextDate);
+        await Future.wait([first, second]);
+
+        final state = container.read(pilihJadwalViewModelProvider);
+        expect(state.sharedDate, nextDate);
+        expect(state.sharedSlotsLoading, isFalse);
+        expect(state.sharedSlots.first.date, nextDate);
       });
     });
   });

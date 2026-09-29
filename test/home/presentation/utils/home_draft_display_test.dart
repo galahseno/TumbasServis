@@ -101,20 +101,16 @@ void main() {
         workshopId: 'ws_001',
         expiresAt: DateTime(2026, 9, 29),
       );
-      final display = draft.toHomeDraftDisplay(
-        [_motor('motor_a', 'Vario')],
-        DateTime(2026, 9, 28, 12),
-      );
+      final display = draft.toHomeDraftDisplay([
+        _motor('motor_a', 'Vario'),
+      ], DateTime(2026, 9, 28, 12));
       expect(display.summaryLine, 'Vario · Langkah 3 dari 4 · Jadwal');
       expect(display.expiringSoon, isFalse);
     });
 
     test('negative remaining hours clamp to 0 in label', () {
       final draft = _draft(expiresAt: DateTime(2026, 9, 28, 10));
-      final display = draft.toHomeDraftDisplay(
-        [],
-        DateTime(2026, 9, 28, 12),
-      );
+      final display = draft.toHomeDraftDisplay([], DateTime(2026, 9, 28, 12));
       expect(display.expiryLabel, 'Kedaluwarsa dalam 0 jam');
       expect(display.expiringSoon, isTrue);
     });

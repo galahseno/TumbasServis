@@ -14,14 +14,14 @@ final splashViewModelProvider =
     );
 
 final onboardingViewModelProvider =
-    NotifierProvider<OnboardingViewModel, OnboardingState>(
+    NotifierProvider.autoDispose<OnboardingViewModel, OnboardingState>(
       OnboardingViewModel.new,
     );
 
-final loginViewModelProvider = NotifierProvider<LoginViewModel, LoginState>(
-  LoginViewModel.new,
-);
+final loginViewModelProvider =
+    NotifierProvider.autoDispose<LoginViewModel, LoginState>(
+      LoginViewModel.new,
+    );
 
-final otpViewModelProvider = NotifierProvider<OtpViewModel, OtpState>(
-  OtpViewModel.new,
-);
+final otpViewModelProvider =
+    NotifierProvider.autoDispose<OtpViewModel, OtpState>(OtpViewModel.new);

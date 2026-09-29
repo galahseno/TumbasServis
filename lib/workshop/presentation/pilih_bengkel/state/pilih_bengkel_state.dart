@@ -4,7 +4,7 @@ import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
 
 part 'pilih_bengkel_state.freezed.dart';
 
-enum WorkshopSortMode { terdekat, ratingTertinggi }
+enum WorkshopFilter { bukaSekarang, terdekat, ratingTertinggi }
 
 @freezed
 abstract class PilihBengkelState with _$PilihBengkelState {
@@ -13,8 +13,7 @@ abstract class PilihBengkelState with _$PilihBengkelState {
     @Default(false) bool hasError,
     @Default(<Workshop>[]) List<Workshop> workshops,
     @Default(<ServiceType>[]) List<ServiceType> serviceTypes,
-    @Default(false) bool openNowOnly,
-    @Default(WorkshopSortMode.terdekat) WorkshopSortMode sortMode,
+    @Default(WorkshopFilter.terdekat) WorkshopFilter filter,
     @Default('') String searchQuery,
   }) = _PilihBengkelState;
 }

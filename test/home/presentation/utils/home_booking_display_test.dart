@@ -40,7 +40,9 @@ Booking _booking({required List<BookingUnit> units, TimeSlot? sharedSlot}) =>
       userId: 'user_001',
       workshopId: 'ws_001',
       units: units,
-      scheduleMode: sharedSlot != null ? ScheduleMode.shared : ScheduleMode.split,
+      scheduleMode: sharedSlot != null
+          ? ScheduleMode.shared
+          : ScheduleMode.split,
       sharedSlot: sharedSlot,
       unitSlots: sharedSlot != null
           ? null
@@ -173,10 +175,12 @@ void main() {
     });
 
     test('split mode → earliest unitSlots date wins', () {
-      final booking = _booking(units: [
-        _unit('-B', 'motor_b', UnitStatus.terjadwal),
-        _unit('-C', 'motor_c', UnitStatus.terjadwal),
-      ]);
+      final booking = _booking(
+        units: [
+          _unit('-B', 'motor_b', UnitStatus.terjadwal),
+          _unit('-C', 'motor_c', UnitStatus.terjadwal),
+        ],
+      );
       final display = booking.toActiveBookingDisplay({'ws_001': 'Bengkel A'});
       expect(display.scheduleLine, contains('09.00'));
     });

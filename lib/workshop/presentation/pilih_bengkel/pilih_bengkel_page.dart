@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
-import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/booking/presentation/utils/unit_config_display.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
@@ -38,13 +37,6 @@ class _PilihBengkelPageState extends ConsumerState<PilihBengkelPage> {
   void _clearSearch(PilihBengkelViewModel viewModel) {
     _searchController.clear();
     viewModel.setSearchQuery('');
-  }
-
-  Future<void> _handleClose(BuildContext context) async {
-    final confirmed = await showExitBookingDialog(context);
-    if ((confirmed ?? false) && context.mounted) {
-      Navigator.of(context).pop();
-    }
   }
 
   @override
@@ -89,10 +81,8 @@ class _PilihBengkelPageState extends ConsumerState<PilihBengkelPage> {
           ),
           const SizedBox(height: 12),
           FilterChipRow(
-            openNowOnly: state.openNowOnly,
-            sortMode: state.sortMode,
-            onOpenNowChanged: viewModel.setOpenNowOnly,
-            onSortModeChanged: viewModel.setSortMode,
+            selected: state.filter,
+            onSelected: viewModel.setFilter,
           ),
           const SizedBox(height: 8),
           if (!state.isLoading)
@@ -101,8 +91,7 @@ class _PilihBengkelPageState extends ConsumerState<PilihBengkelPage> {
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  '${visible.length} bengkel · urut '
-                  '${state.sortMode == WorkshopSortMode.terdekat ? 'terdekat' : 'rating tertinggi'}',
+                  '${visible.length} bengkel · ${_filterCaption(state.filter)}',
                   style: textTheme.labelMedium?.copyWith(color: ext.textMuted),
                 ),
               ),
@@ -112,19 +101,17 @@ class _PilihBengkelPageState extends ConsumerState<PilihBengkelPage> {
             child: state.isLoading
                 ? const _LoadingList()
                 : visible.isEmpty
-                ? SingleChildScrollView(
-                    child: EmptyState(
-                      title: 'Bengkel tidak ditemukan',
-                      body: state.searchQuery.trim().isNotEmpty
-                          ? 'Tidak ada hasil untuk "${state.searchQuery.trim()}". '
-                                'Coba kata kunci lain atau hapus filter.'
-                          : 'Coba kata kunci lain atau hapus filter.',
-                      ctaLabel: 'Hapus pencarian & filter',
-                      onCta: () {
-                        _clearSearch(viewModel);
-                        viewModel.setOpenNowOnly(false);
-                      },
-                    ),
+                ? EmptyState(
+                    title: 'Bengkel tidak ditemukan',
+                    body: state.searchQuery.trim().isNotEmpty
+                        ? 'Tidak ada hasil untuk "${state.searchQuery.trim()}". '
+                              'Coba kata kunci lain atau hapus filter.'
+                        : 'Coba kata kunci lain atau hapus filter.',
+                    ctaLabel: 'Hapus pencarian & filter',
+                    onCta: () {
+                      _clearSearch(viewModel);
+                      viewModel.setFilter(WorkshopFilter.terdekat);
+                    },
                   )
                 : _WorkshopList(
                     workshops: visible,
@@ -145,24 +132,19 @@ class _PilihBengkelPageState extends ConsumerState<PilihBengkelPage> {
       );
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _handleClose(context);
-      },
-      child: Scaffold(
-        backgroundColor: scheme.surface,
-        appBar: TsAppBar.close(
-          title: 'Pilih bengkel',
-          onClose: () => _handleClose(context),
-          semanticLabel: 'Tutup booking',
-        ),
-        body: SafeArea(top: false, child: body),
-      ),
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: TsAppBar.back(title: 'Pilih bengkel'),
+      body: SafeArea(top: false, child: body),
     );
   }
 }
+
+String _filterCaption(WorkshopFilter filter) => switch (filter) {
+  WorkshopFilter.bukaSekarang => 'buka sekarang',
+  WorkshopFilter.terdekat => 'urut terdekat',
+  WorkshopFilter.ratingTertinggi => 'urut rating tertinggi',
+};
 
 class _LoadingList extends StatelessWidget {
   const _LoadingList();

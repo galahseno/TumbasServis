@@ -5,11 +5,11 @@ import 'package:tumbas_servis/workshop/presentation/pilih_bengkel/pilih_bengkel_
 import 'package:tumbas_servis/workshop/presentation/pilih_bengkel/state/pilih_bengkel_state.dart';
 
 final pilihBengkelViewModelProvider =
-    NotifierProvider<PilihBengkelViewModel, PilihBengkelState>(
+    NotifierProvider.autoDispose<PilihBengkelViewModel, PilihBengkelState>(
       PilihBengkelViewModel.new,
     );
 
 final detailBengkelViewModelProvider =
-    NotifierProvider<DetailBengkelViewModel, DetailBengkelState>(
+    NotifierProvider.autoDispose<DetailBengkelViewModel, DetailBengkelState>(
       DetailBengkelViewModel.new,
     );

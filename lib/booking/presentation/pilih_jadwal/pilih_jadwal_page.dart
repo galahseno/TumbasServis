@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -5,7 +7,6 @@ import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/booking/data/util/time_slot_format.dart';
 import 'package:tumbas_servis/booking/presentation/components/booking_stepper.dart';
 import 'package:tumbas_servis/booking/presentation/components/capacity_banner.dart';
-import 'package:tumbas_servis/booking/presentation/components/exit_booking_dialog.dart';
 import 'package:tumbas_servis/booking/presentation/components/workshop_summary_row.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/components/date_strip_item.dart';
@@ -15,6 +16,7 @@ import 'package:tumbas_servis/booking/presentation/pilih_jadwal/components/unit_
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/pilih_jadwal_view_model.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/state/pilih_jadwal_state.dart';
 import 'package:tumbas_servis/booking/presentation/utils/schedule_display.dart';
+import 'package:tumbas_servis/booking/presentation/utils/summary_navigation.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/service/scheduling/slot_capacity_service.dart';
@@ -23,22 +25,17 @@ import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/selection_footer.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
+import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 import 'package:tumbas_servis/core/presentation/utils/date_formatter.dart';
 
 class PilihJadwalPage extends ConsumerWidget {
   const PilihJadwalPage({super.key});
 
-  Future<void> _handleClose(BuildContext context) async {
-    final confirmed = await showExitBookingDialog(context);
-    if ((confirmed ?? false) && context.mounted) {
-      Navigator.of(context).pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final draft = ref.watch(bookingDraftProvider);
+    final editingFromSummary = ref.watch(summaryEditReturnProvider);
     final state = ref.watch(pilihJadwalViewModelProvider);
     final viewModel = ref.read(pilihJadwalViewModelProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
@@ -87,27 +84,18 @@ class PilihJadwalPage extends ConsumerWidget {
             reasonLine: scheduleReasonLine(draft, state.motorsById),
             ctaLabel: 'Lanjut',
             canContinue: canContinueSchedule(draft),
-            onContinue: () => context.push(Routes.bookingSummary),
+            onContinue: () => editingFromSummary
+                ? returnToSummary(context)
+                : context.push(Routes.bookingSummary),
           ),
         ],
       );
     }
 
-    return PopScope(
-      canPop: false,
-      onPopInvokedWithResult: (didPop, _) {
-        if (didPop) return;
-        _handleClose(context);
-      },
-      child: Scaffold(
-        backgroundColor: scheme.surface,
-        appBar: TsAppBar.close(
-          title: 'Pilih jadwal',
-          onClose: () => _handleClose(context),
-          semanticLabel: 'Tutup booking',
-        ),
-        body: SafeArea(top: false, child: body),
-      ),
+    return Scaffold(
+      backgroundColor: scheme.surface,
+      appBar: TsAppBar.back(title: 'Pilih jadwal'),
+      body: SafeArea(top: false, child: body),
     );
   }
 }
@@ -134,17 +122,7 @@ class _LoadingBody extends StatelessWidget {
             children: [
               const SkeletonBlock(height: 72),
               const SizedBox(height: 12),
-              GridView.count(
-                shrinkWrap: true,
-                physics: const NeverScrollableScrollPhysics(),
-                crossAxisCount: 3,
-                mainAxisSpacing: 8,
-                crossAxisSpacing: 8,
-                childAspectRatio: 1.4,
-                children: [
-                  for (var i = 0; i < 9; i++) const SkeletonBlock(height: 54),
-                ],
-              ),
+              const _SlotSkeletonGrid(),
             ],
           ),
         ),
@@ -154,6 +132,57 @@ class _LoadingBody extends StatelessWidget {
         ),
       ],
     );
+  }
+}
+
+class _SlotSkeletonGrid extends StatelessWidget {
+  const _SlotSkeletonGrid();
+
+  @override
+  Widget build(BuildContext context) {
+    return Semantics(
+      label: 'Memuat jam tersedia',
+      child: ExcludeSemantics(
+        child: GridView.count(
+          shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          crossAxisCount: 3,
+          mainAxisSpacing: 8,
+          crossAxisSpacing: 8,
+          childAspectRatio: 1.4,
+          children: [
+            for (var i = 0; i < 9; i++) const SkeletonBlock(height: 54),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+void _showSlotOutcome(
+  BuildContext context,
+  SlotTapOutcome outcome,
+  PilihJadwalViewModel viewModel,
+) {
+  if (!context.mounted) return;
+  switch (outcome) {
+    case SlotTapShort(:final slot, :final unitCount):
+      TsSnackbar.info(
+        context,
+        shortSlotMessage(slot, unitCount),
+        actionLabel: 'Pisah jadwal',
+        onAction: () => viewModel.splitFromShortSlot(slot),
+        aboveNavBar: true,
+      );
+    case SlotTapSiblingConflict(:final slot, :final nickname):
+      TsSnackbar.info(
+        context,
+        siblingConflictMessage(slot, nickname),
+        aboveNavBar: true,
+      );
+    case SlotTapSelected():
+    case SlotTapBlocked():
+      break;
   }
 }
 
@@ -205,14 +234,23 @@ class _SlotGrid extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GridView.count(
+    // Fixed aspect ratio clips the chip's caption at larger text scales, so the
+    // row height follows the text scale instead (54dp floor, PRD 06 48dp min).
+    final extent = math.max(
+      54.0,
+      MediaQuery.textScalerOf(context).scale(40) + 18,
+    );
+    return GridView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      crossAxisCount: 3,
-      mainAxisSpacing: 8,
-      crossAxisSpacing: 8,
-      childAspectRatio: 1.4,
-      children: [for (final slot in slots) chipBuilder(slot)],
+      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+        crossAxisCount: 3,
+        mainAxisSpacing: 8,
+        crossAxisSpacing: 8,
+        mainAxisExtent: extent,
+      ),
+      itemCount: slots.length,
+      itemBuilder: (context, index) => chipBuilder(slots[index]),
     );
   }
 }
@@ -239,6 +277,33 @@ class _SharedBody extends StatelessWidget {
 
     final today = viewModel.today();
     final slots = state.sharedSlots;
+
+    if (state.sharedSlotsLoading) {
+      return Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _DateStrip(
+            today: today,
+            selectedDate: selectedDate,
+            onSelect: viewModel.selectDate,
+          ),
+          const SizedBox(height: 8),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: Text(
+              DateFormatter.format(selectedDate),
+              style: textTheme.titleSmall?.copyWith(color: ext.textBody),
+            ),
+          ),
+          const SizedBox(height: 8),
+          const Padding(
+            padding: EdgeInsets.fromLTRB(20, 8, 20, 0),
+            child: _SlotSkeletonGrid(),
+          ),
+        ],
+      );
+    }
+
     final pureFull = viewModel.isDayPureFull(slots);
 
     if (pureFull) {
@@ -329,7 +394,15 @@ class _SharedBody extends StatelessWidget {
                 chipState: chip,
                 remaining: slot.remaining,
                 selected: selected,
-                onTap: () => viewModel.selectSharedSlot(slot, unitCount),
+                onTap: () async {
+                  final outcome = await viewModel.selectSharedSlot(
+                    slot,
+                    unitCount,
+                  );
+                  if (context.mounted) {
+                    _showSlotOutcome(context, outcome, viewModel);
+                  }
+                },
               );
             },
           ),
@@ -417,21 +490,36 @@ class _UnitSection extends StatelessWidget {
             onSelect: (date) => viewModel.selectUnitDate(motorId, date),
           ),
           const SizedBox(height: 8),
-          _SlotGrid(
-            slots: slots,
-            chipBuilder: (slot) {
-              final chip = viewModel.splitChipStateFor(slot, motorId, draft);
-              final selected =
-                  unitSlot != null && unitSlot.slotKey == slot.slotKey;
-              return SlotChip(
-                hour: slot.hour,
-                chipState: chip,
-                remaining: slot.remaining,
-                selected: selected,
-                onTap: () => viewModel.selectUnitSlot(motorId, slot, draft),
-              );
-            },
-          ),
+          if (state.unitSlotsLoading.contains(motorId))
+            const _SlotSkeletonGrid()
+          else
+            _SlotGrid(
+              slots: slots,
+              chipBuilder: (slot) {
+                final chip = viewModel.splitChipStateFor(slot, motorId, draft);
+                final selected =
+                    unitSlot != null && unitSlot.slotKey == slot.slotKey;
+                Future<void> handleTap() async {
+                  final outcome = await viewModel.selectUnitSlot(
+                    motorId,
+                    slot,
+                    draft,
+                  );
+                  if (context.mounted) {
+                    _showSlotOutcome(context, outcome, viewModel);
+                  }
+                }
+
+                return SlotChip(
+                  hour: slot.hour,
+                  chipState: chip,
+                  remaining: slot.remaining,
+                  selected: selected,
+                  onTap: handleTap,
+                  onDisabledTap: handleTap,
+                );
+              },
+            ),
           for (final slot in slots)
             if (viewModel.siblingConflictLabel(slot, motorId, draft) != null)
               Padding(

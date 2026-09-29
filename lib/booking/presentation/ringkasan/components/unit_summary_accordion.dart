@@ -103,10 +103,15 @@ class UnitSummaryAccordion extends StatelessWidget {
                       borderRadius: BorderRadius.circular(8),
                       child: Padding(
                         padding: const EdgeInsets.only(right: 12, left: 4),
-                        child: Text(
-                          'Ubah ${motor.nickname}',
-                          style: textTheme.labelLarge?.copyWith(
-                            color: ext.textAccent,
+                        child: ConstrainedBox(
+                          constraints: const BoxConstraints(maxWidth: 120),
+                          child: Text(
+                            'Ubah ${motor.nickname}',
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: textTheme.labelLarge?.copyWith(
+                              color: ext.textAccent,
+                            ),
                           ),
                         ),
                       ),

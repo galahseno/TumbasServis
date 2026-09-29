@@ -137,11 +137,17 @@ class _NavBarTabState extends State<_NavBarTab> {
                 child: Icon(widget.item.icon, size: 24, color: labelColor),
               ),
               const SizedBox(height: 2),
-              Text(
-                widget.item.label,
-                style: Theme.of(
-                  context,
-                ).textTheme.labelMedium?.copyWith(color: labelColor),
+              Flexible(
+                child: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    widget.item.label,
+                    maxLines: 1,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.labelMedium?.copyWith(color: labelColor),
+                  ),
+                ),
               ),
             ],
           ),
