@@ -258,7 +258,9 @@ class _Dot extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : const Duration(milliseconds: 200),
       margin: const EdgeInsets.symmetric(horizontal: 3),
       width: active ? 16 : 6,
       height: 6,

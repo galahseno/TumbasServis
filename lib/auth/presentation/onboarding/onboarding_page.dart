@@ -42,6 +42,8 @@ class _OnboardingPageState extends ConsumerState<OnboardingPage> {
   void _next(OnboardingViewModel viewModel, bool isLastSlide) {
     if (isLastSlide) {
       viewModel.finish();
+    } else if (MediaQuery.disableAnimationsOf(context)) {
+      _controller.jumpToPage((_controller.page ?? 0).round() + 1);
     } else {
       _controller.nextPage(
         duration: const Duration(milliseconds: 250),

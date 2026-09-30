@@ -384,7 +384,9 @@ class PageIndicator extends StatelessWidget {
         children: List.generate(count, (index) {
           final active = index == currentIndex;
           return AnimatedContainer(
-            duration: const Duration(milliseconds: 150),
+            duration: MediaQuery.disableAnimationsOf(context)
+                ? Duration.zero
+                : const Duration(milliseconds: 150),
             margin: const EdgeInsets.only(right: 6),
             width: active ? 24 : 8,
             height: 8,

@@ -1,4 +1,4 @@
-package com.galahseno.tumbas_servis
+package com.galahseno.tumbasservis
 
 import io.flutter.embedding.android.FlutterActivity
 

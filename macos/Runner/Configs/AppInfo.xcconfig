@@ -8,7 +8,7 @@
 PRODUCT_NAME = Tumbas Service
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.galahseno.tumbasServis
+PRODUCT_BUNDLE_IDENTIFIER = com.galahseno.tumbasservis
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2026 com.galahseno. All rights reserved.
