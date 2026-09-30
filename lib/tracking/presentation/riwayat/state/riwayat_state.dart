@@ -44,6 +44,7 @@ abstract class RiwayatState with _$RiwayatState {
     @Default(RiwayatTab.berlangsung) RiwayatTab selectedTab,
     String? motorFilterId,
     String? motorFilterLabel,
+    String? selectedBookingId,
   }) = _RiwayatState;
 
   const RiwayatState._();
@@ -71,6 +72,16 @@ abstract class RiwayatState with _$RiwayatState {
           : b.moment.compareTo(a.moment),
     );
     return list;
+  }
+
+  String? get effectiveSelectedId {
+    final visible = visibleEntries;
+    if (visible.isEmpty) return null;
+    final picked = selectedBookingId;
+    if (picked != null && visible.any((e) => e.booking.id == picked)) {
+      return picked;
+    }
+    return visible.first.booking.id;
   }
 
   RiwayatTab get defaultTab {

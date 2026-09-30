@@ -12,11 +12,14 @@ class ReviewRecap extends StatelessWidget {
     required this.workshopName,
     required this.mechanics,
     super.key,
+    this.preview = false,
   });
 
   final Review review;
   final String workshopName;
   final List<MechanicRatingItem> mechanics;
+
+  final bool preview;
 
   @override
   Widget build(BuildContext context) {
@@ -24,6 +27,27 @@ class ReviewRecap extends StatelessWidget {
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
     final comment = review.workshopComment?.trim() ?? '';
+    if (preview && review.workshopRating == 0) {
+      return Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(24),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          children: [
+            Icon(Icons.rate_review_outlined, color: ext.textFaint, size: 32),
+            const SizedBox(height: 8),
+            Text(
+              'Ulasanmu akan tampil di sini',
+              textAlign: TextAlign.center,
+              style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
+            ),
+          ],
+        ),
+      );
+    }
     final rated = [
       for (final m in mechanics)
         if (review.mechanicRatings.containsKey(m.mechanicId)) m,
@@ -106,8 +130,10 @@ class ReviewRecap extends StatelessWidget {
           ],
           const SizedBox(height: 12),
           Text(
-            'Dikirim ${DateFormatter.format(review.createdAt)} · '
-            '${TimeFormatter.format(review.createdAt)}',
+            preview
+                ? 'Pratinjau ulasanmu'
+                : 'Dikirim ${DateFormatter.format(review.createdAt)} · '
+                      '${TimeFormatter.format(review.createdAt)}',
             style: textTheme.bodySmall?.copyWith(
               color: ext.textMuted,
               fontFeatures: const [FontFeature.tabularFigures()],

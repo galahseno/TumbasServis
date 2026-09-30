@@ -45,6 +45,7 @@ Future<BatalkanChoice?> showBatalkanDialog(
   final options = cancelScopeOptions(booking, canCancelWhole: canCancelWhole);
   return TsDialog.custom<BatalkanChoice>(
     context,
+    maxWidth: 400,
     builder: (_) => _BatalkanBody(options: options),
   );
 }

@@ -25,6 +25,7 @@ import 'package:tumbas_servis/workshop/data/di/workshop_data_module.dart';
 
 import '../../../support/fake_booking_repository.dart';
 import '../../../support/fake_catalog_repository.dart';
+import '../../../support/fake_clock.dart';
 import '../../../support/fake_garage_repository.dart';
 import '../../../support/fake_workshop_repository.dart';
 
@@ -296,5 +297,115 @@ void main() {
         expect(container.read(bookingDraftProvider)!.voucherId, 'v-diskon10');
       },
     );
+
+    group('voucher auto-revalidation', () {
+      test('eligible voucher stays applied with no notice', () async {
+        await waitForLoad();
+        final state = container.read(ringkasanViewModelProvider);
+
+        expect(state.voucher?.code, 'DISKON10');
+        expect(state.voucherNotice, isNull);
+        expect(container.read(bookingDraftProvider)!.voucherId, 'v-diskon10');
+      });
+
+      test('motor count below minUnits removes the voucher with a reason '
+          'and clears it from the draft', () async {
+        bookingRepository.createDraftResult = Result.ok(
+          _canonicalDraft(
+            voucherId: 'v-diskon10',
+          ).copyWith(selectedMotorIds: ['m_vario']),
+        );
+        await waitForLoad();
+        final state = container.read(ringkasanViewModelProvider);
+
+        expect(state.voucher, isNull);
+        expect(
+          state.voucherNotice,
+          'Voucher DISKON10 dilepas — Butuh min. 2 motor',
+        );
+        expect(container.read(bookingDraftProvider)!.voucherId, isNull);
+      });
+
+      test('subtotal below minSubtotal removes the voucher and states the '
+          'shortfall', () async {
+        catalogRepository.vouchersResult = Result.ok([
+          Voucher(
+            id: 'v-diskon10',
+            code: 'DISKON10',
+            label: 'Diskon 10%',
+            discountType: DiscountType.percent,
+            discountValue: 10,
+            minSubtotal: 500000,
+            validUntil: DateTime(2099),
+          ),
+        ]);
+        await waitForLoad();
+        final state = container.read(ringkasanViewModelProvider);
+
+        expect(state.voucher, isNull);
+        expect(
+          state.voucherNotice,
+          'Voucher DISKON10 dilepas — Min. belanja Rp500.000 — kurang Rp72.000',
+        );
+        expect(container.read(bookingDraftProvider)!.voucherId, isNull);
+      });
+
+      test('expired voucher is removed', () async {
+        final expired = ProviderContainer(
+          overrides: [
+            bookingRepositoryProvider.overrideWithValue(bookingRepository),
+            workshopRepositoryProvider.overrideWithValue(workshopRepository),
+            garageRepositoryProvider.overrideWithValue(garageRepository),
+            catalogRepositoryProvider.overrideWithValue(catalogRepository),
+            clockProvider.overrideWithValue(FakeClock(DateTime(2100))),
+          ],
+        );
+        addTearDown(expired.dispose);
+        expired.listen(ringkasanViewModelProvider, (_, _) {});
+        await expired.read(ringkasanViewModelProvider.notifier).reload();
+        final state = expired.read(ringkasanViewModelProvider);
+
+        expect(state.voucher, isNull);
+        expect(
+          state.voucherNotice,
+          'Voucher DISKON10 dilepas — Voucher sudah tidak berlaku',
+        );
+      });
+
+      test('clearVoucherNotice drops the notice once', () async {
+        bookingRepository.createDraftResult = Result.ok(
+          _canonicalDraft(
+            voucherId: 'v-diskon10',
+          ).copyWith(selectedMotorIds: ['m_vario']),
+        );
+        await waitForLoad();
+        final notifier = container.read(ringkasanViewModelProvider.notifier);
+
+        notifier.clearVoucherNotice();
+
+        expect(
+          container.read(ringkasanViewModelProvider).voucherNotice,
+          isNull,
+        );
+      });
+
+      test('a later reload with no voucher raises no new notice', () async {
+        bookingRepository.createDraftResult = Result.ok(
+          _canonicalDraft(
+            voucherId: 'v-diskon10',
+          ).copyWith(selectedMotorIds: ['m_vario']),
+        );
+        await waitForLoad();
+        final notifier = container.read(ringkasanViewModelProvider.notifier)
+          ..clearVoucherNotice();
+
+        await notifier.reload();
+
+        expect(
+          container.read(ringkasanViewModelProvider).voucherNotice,
+          isNull,
+        );
+      });
+    });
   });
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
 import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
@@ -23,7 +24,11 @@ class GarasiPage extends ConsumerWidget {
     final result = await context.push<GarageMotorResult>(Routes.garageAdd);
     if (!context.mounted) return;
     if (result == GarageMotorResult.created) {
-      TsSnackbar.success(context, 'Motor ditambahkan', aboveNavBar: true);
+      TsSnackbar.success(
+        context,
+        'Motor ditambahkan',
+        aboveNavBar: context.windowSizeClass.isCompact,
+      );
     }
   }
 
@@ -33,7 +38,11 @@ class GarasiPage extends ConsumerWidget {
     );
     if (!context.mounted) return;
     if (result == GarageMotorResult.deleted) {
-      TsSnackbar.success(context, 'Motor dihapus', aboveNavBar: true);
+      TsSnackbar.success(
+        context,
+        'Motor dihapus',
+        aboveNavBar: context.windowSizeClass.isCompact,
+      );
     }
   }
 
@@ -107,29 +116,31 @@ class _MotorGrid extends StatelessWidget {
       ? null
       : '${modelDisplayName(model)} · ${motorCategoryLabel(model.category)}';
 
-  int _columnsFor(double width) {
-    if (width >= 1024) return 3;
-    if (width >= 600) return 2;
-    return 1;
-  }
+  int _columnsFor(WindowSizeClass sizeClass) => switch (sizeClass) {
+    WindowSizeClass.compact => 1,
+    WindowSizeClass.medium => 2,
+    WindowSizeClass.expanded || WindowSizeClass.large => 3,
+  };
 
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
       builder: (context, constraints) {
-        final columns = _columnsFor(constraints.maxWidth);
+        final sizeClass = context.windowSizeClass;
+        final columns = _columnsFor(sizeClass);
         const spacing = 12.0;
+        final gutter = sizeClass.isCompact ? 20.0 : 24.0;
         final contentWidth = constraints.maxWidth > 1040
             ? 1040.0
             : constraints.maxWidth;
-        final innerWidth = contentWidth - 40;
+        final innerWidth = contentWidth - gutter * 2;
         final cardWidth = (innerWidth - (columns - 1) * spacing) / columns;
 
         return RefreshIndicator(
           onRefresh: onRefresh,
           child: SingleChildScrollView(
             physics: const AlwaysScrollableScrollPhysics(),
-            padding: const EdgeInsets.fromLTRB(20, 12, 20, 24),
+            padding: EdgeInsets.fromLTRB(gutter, 12, gutter, 24),
             child: Center(
               child: SizedBox(
                 width: innerWidth,

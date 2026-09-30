@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$HomeState {
 
- bool get isLoading; bool get hasError; String get userName; int get unreadCount; List<Motor> get motors; Map<String, UnitStatus> get motorInServiceStatus; List<HomeActiveBookingDisplay> get activeBookings; int get activeBookingsTotalCount; HomeDraftDisplay? get draft; List<Promo> get promos;
+ bool get isLoading; bool get hasError; bool get isFirstLoad; double get loadProgress; String get loadLabel; String get userName; int get unreadCount; List<Motor> get motors; Map<String, UnitStatus> get motorInServiceStatus; List<HomeActiveBookingDisplay> get activeBookings; int get activeBookingsTotalCount; HomeDraftDisplay? get draft; List<Promo> get promos;
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $HomeStateCopyWith<HomeState> get copyWith => _$HomeStateCopyWithImpl<HomeState>
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.unreadCount, unreadCount) || other.unreadCount == unreadCount)&&const DeepCollectionEquality().equals(other.motors, motors)&&const DeepCollectionEquality().equals(other.motorInServiceStatus, motorInServiceStatus)&&const DeepCollectionEquality().equals(other.activeBookings, activeBookings)&&(identical(other.activeBookingsTotalCount, activeBookingsTotalCount) || other.activeBookingsTotalCount == activeBookingsTotalCount)&&(identical(other.draft, draft) || other.draft == draft)&&const DeepCollectionEquality().equals(other.promos, promos));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is HomeState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.isFirstLoad, isFirstLoad) || other.isFirstLoad == isFirstLoad)&&(identical(other.loadProgress, loadProgress) || other.loadProgress == loadProgress)&&(identical(other.loadLabel, loadLabel) || other.loadLabel == loadLabel)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.unreadCount, unreadCount) || other.unreadCount == unreadCount)&&const DeepCollectionEquality().equals(other.motors, motors)&&const DeepCollectionEquality().equals(other.motorInServiceStatus, motorInServiceStatus)&&const DeepCollectionEquality().equals(other.activeBookings, activeBookings)&&(identical(other.activeBookingsTotalCount, activeBookingsTotalCount) || other.activeBookingsTotalCount == activeBookingsTotalCount)&&(identical(other.draft, draft) || other.draft == draft)&&const DeepCollectionEquality().equals(other.promos, promos));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,userName,unreadCount,const DeepCollectionEquality().hash(motors),const DeepCollectionEquality().hash(motorInServiceStatus),const DeepCollectionEquality().hash(activeBookings),activeBookingsTotalCount,draft,const DeepCollectionEquality().hash(promos));
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,isFirstLoad,loadProgress,loadLabel,userName,unreadCount,const DeepCollectionEquality().hash(motors),const DeepCollectionEquality().hash(motorInServiceStatus),const DeepCollectionEquality().hash(activeBookings),activeBookingsTotalCount,draft,const DeepCollectionEquality().hash(promos));
 
 @override
 String toString() {
-  return 'HomeState(isLoading: $isLoading, hasError: $hasError, userName: $userName, unreadCount: $unreadCount, motors: $motors, motorInServiceStatus: $motorInServiceStatus, activeBookings: $activeBookings, activeBookingsTotalCount: $activeBookingsTotalCount, draft: $draft, promos: $promos)';
+  return 'HomeState(isLoading: $isLoading, hasError: $hasError, isFirstLoad: $isFirstLoad, loadProgress: $loadProgress, loadLabel: $loadLabel, userName: $userName, unreadCount: $unreadCount, motors: $motors, motorInServiceStatus: $motorInServiceStatus, activeBookings: $activeBookings, activeBookingsTotalCount: $activeBookingsTotalCount, draft: $draft, promos: $promos)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $HomeStateCopyWith<$Res>  {
   factory $HomeStateCopyWith(HomeState value, $Res Function(HomeState) _then) = _$HomeStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool hasError, String userName, int unreadCount, List<Motor> motors, Map<String, UnitStatus> motorInServiceStatus, List<HomeActiveBookingDisplay> activeBookings, int activeBookingsTotalCount, HomeDraftDisplay? draft, List<Promo> promos
+ bool isLoading, bool hasError, bool isFirstLoad, double loadProgress, String loadLabel, String userName, int unreadCount, List<Motor> motors, Map<String, UnitStatus> motorInServiceStatus, List<HomeActiveBookingDisplay> activeBookings, int activeBookingsTotalCount, HomeDraftDisplay? draft, List<Promo> promos
 });
 
 
@@ -62,11 +62,14 @@ class _$HomeStateCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? userName = null,Object? unreadCount = null,Object? motors = null,Object? motorInServiceStatus = null,Object? activeBookings = null,Object? activeBookingsTotalCount = null,Object? draft = freezed,Object? promos = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? isFirstLoad = null,Object? loadProgress = null,Object? loadLabel = null,Object? userName = null,Object? unreadCount = null,Object? motors = null,Object? motorInServiceStatus = null,Object? activeBookings = null,Object? activeBookingsTotalCount = null,Object? draft = freezed,Object? promos = null,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
-as bool,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as bool,isFirstLoad: null == isFirstLoad ? _self.isFirstLoad : isFirstLoad // ignore: cast_nullable_to_non_nullable
+as bool,loadProgress: null == loadProgress ? _self.loadProgress : loadProgress // ignore: cast_nullable_to_non_nullable
+as double,loadLabel: null == loadLabel ? _self.loadLabel : loadLabel // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,unreadCount: null == unreadCount ? _self.unreadCount : unreadCount // ignore: cast_nullable_to_non_nullable
 as int,motors: null == motors ? _self.motors : motors // ignore: cast_nullable_to_non_nullable
 as List<Motor>,motorInServiceStatus: null == motorInServiceStatus ? _self.motorInServiceStatus : motorInServiceStatus // ignore: cast_nullable_to_non_nullable
@@ -159,10 +162,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool isFirstLoad,  double loadProgress,  String loadLabel,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _HomeState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
+return $default(_that.isLoading,_that.hasError,_that.isFirstLoad,_that.loadProgress,_that.loadLabel,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
   return orElse();
 
 }
@@ -180,10 +183,10 @@ return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  bool isFirstLoad,  double loadProgress,  String loadLabel,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)  $default,) {final _that = this;
 switch (_that) {
 case _HomeState():
-return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
+return $default(_that.isLoading,_that.hasError,_that.isFirstLoad,_that.loadProgress,_that.loadLabel,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -200,10 +203,10 @@ return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  bool isFirstLoad,  double loadProgress,  String loadLabel,  String userName,  int unreadCount,  List<Motor> motors,  Map<String, UnitStatus> motorInServiceStatus,  List<HomeActiveBookingDisplay> activeBookings,  int activeBookingsTotalCount,  HomeDraftDisplay? draft,  List<Promo> promos)?  $default,) {final _that = this;
 switch (_that) {
 case _HomeState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
+return $default(_that.isLoading,_that.hasError,_that.isFirstLoad,_that.loadProgress,_that.loadLabel,_that.userName,_that.unreadCount,_that.motors,_that.motorInServiceStatus,_that.activeBookings,_that.activeBookingsTotalCount,_that.draft,_that.promos);case _:
   return null;
 
 }
@@ -215,11 +218,14 @@ return $default(_that.isLoading,_that.hasError,_that.userName,_that.unreadCount,
 
 
 class _HomeState extends HomeState {
-  const _HomeState({this.isLoading = true, this.hasError = false, this.userName = '', this.unreadCount = 0, final  List<Motor> motors = const <Motor>[], final  Map<String, UnitStatus> motorInServiceStatus = const <String, UnitStatus>{}, final  List<HomeActiveBookingDisplay> activeBookings = const <HomeActiveBookingDisplay>[], this.activeBookingsTotalCount = 0, this.draft, final  List<Promo> promos = const <Promo>[]}): _motors = motors,_motorInServiceStatus = motorInServiceStatus,_activeBookings = activeBookings,_promos = promos,super._();
+  const _HomeState({this.isLoading = true, this.hasError = false, this.isFirstLoad = true, this.loadProgress = 0.0, this.loadLabel = 'Memuat beranda…', this.userName = '', this.unreadCount = 0, final  List<Motor> motors = const <Motor>[], final  Map<String, UnitStatus> motorInServiceStatus = const <String, UnitStatus>{}, final  List<HomeActiveBookingDisplay> activeBookings = const <HomeActiveBookingDisplay>[], this.activeBookingsTotalCount = 0, this.draft, final  List<Promo> promos = const <Promo>[]}): _motors = motors,_motorInServiceStatus = motorInServiceStatus,_activeBookings = activeBookings,_promos = promos,super._();
   
 
 @override@JsonKey() final  bool isLoading;
 @override@JsonKey() final  bool hasError;
+@override@JsonKey() final  bool isFirstLoad;
+@override@JsonKey() final  double loadProgress;
+@override@JsonKey() final  String loadLabel;
 @override@JsonKey() final  String userName;
 @override@JsonKey() final  int unreadCount;
  final  List<Motor> _motors;
@@ -263,16 +269,16 @@ _$HomeStateCopyWith<_HomeState> get copyWith => __$HomeStateCopyWithImpl<_HomeSt
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.unreadCount, unreadCount) || other.unreadCount == unreadCount)&&const DeepCollectionEquality().equals(other._motors, _motors)&&const DeepCollectionEquality().equals(other._motorInServiceStatus, _motorInServiceStatus)&&const DeepCollectionEquality().equals(other._activeBookings, _activeBookings)&&(identical(other.activeBookingsTotalCount, activeBookingsTotalCount) || other.activeBookingsTotalCount == activeBookingsTotalCount)&&(identical(other.draft, draft) || other.draft == draft)&&const DeepCollectionEquality().equals(other._promos, _promos));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _HomeState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.isFirstLoad, isFirstLoad) || other.isFirstLoad == isFirstLoad)&&(identical(other.loadProgress, loadProgress) || other.loadProgress == loadProgress)&&(identical(other.loadLabel, loadLabel) || other.loadLabel == loadLabel)&&(identical(other.userName, userName) || other.userName == userName)&&(identical(other.unreadCount, unreadCount) || other.unreadCount == unreadCount)&&const DeepCollectionEquality().equals(other._motors, _motors)&&const DeepCollectionEquality().equals(other._motorInServiceStatus, _motorInServiceStatus)&&const DeepCollectionEquality().equals(other._activeBookings, _activeBookings)&&(identical(other.activeBookingsTotalCount, activeBookingsTotalCount) || other.activeBookingsTotalCount == activeBookingsTotalCount)&&(identical(other.draft, draft) || other.draft == draft)&&const DeepCollectionEquality().equals(other._promos, _promos));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,userName,unreadCount,const DeepCollectionEquality().hash(_motors),const DeepCollectionEquality().hash(_motorInServiceStatus),const DeepCollectionEquality().hash(_activeBookings),activeBookingsTotalCount,draft,const DeepCollectionEquality().hash(_promos));
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,isFirstLoad,loadProgress,loadLabel,userName,unreadCount,const DeepCollectionEquality().hash(_motors),const DeepCollectionEquality().hash(_motorInServiceStatus),const DeepCollectionEquality().hash(_activeBookings),activeBookingsTotalCount,draft,const DeepCollectionEquality().hash(_promos));
 
 @override
 String toString() {
-  return 'HomeState(isLoading: $isLoading, hasError: $hasError, userName: $userName, unreadCount: $unreadCount, motors: $motors, motorInServiceStatus: $motorInServiceStatus, activeBookings: $activeBookings, activeBookingsTotalCount: $activeBookingsTotalCount, draft: $draft, promos: $promos)';
+  return 'HomeState(isLoading: $isLoading, hasError: $hasError, isFirstLoad: $isFirstLoad, loadProgress: $loadProgress, loadLabel: $loadLabel, userName: $userName, unreadCount: $unreadCount, motors: $motors, motorInServiceStatus: $motorInServiceStatus, activeBookings: $activeBookings, activeBookingsTotalCount: $activeBookingsTotalCount, draft: $draft, promos: $promos)';
 }
 
 
@@ -283,7 +289,7 @@ abstract mixin class _$HomeStateCopyWith<$Res> implements $HomeStateCopyWith<$Re
   factory _$HomeStateCopyWith(_HomeState value, $Res Function(_HomeState) _then) = __$HomeStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool hasError, String userName, int unreadCount, List<Motor> motors, Map<String, UnitStatus> motorInServiceStatus, List<HomeActiveBookingDisplay> activeBookings, int activeBookingsTotalCount, HomeDraftDisplay? draft, List<Promo> promos
+ bool isLoading, bool hasError, bool isFirstLoad, double loadProgress, String loadLabel, String userName, int unreadCount, List<Motor> motors, Map<String, UnitStatus> motorInServiceStatus, List<HomeActiveBookingDisplay> activeBookings, int activeBookingsTotalCount, HomeDraftDisplay? draft, List<Promo> promos
 });
 
 
@@ -300,11 +306,14 @@ class __$HomeStateCopyWithImpl<$Res>
 
 /// Create a copy of HomeState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? userName = null,Object? unreadCount = null,Object? motors = null,Object? motorInServiceStatus = null,Object? activeBookings = null,Object? activeBookingsTotalCount = null,Object? draft = freezed,Object? promos = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? isFirstLoad = null,Object? loadProgress = null,Object? loadLabel = null,Object? userName = null,Object? unreadCount = null,Object? motors = null,Object? motorInServiceStatus = null,Object? activeBookings = null,Object? activeBookingsTotalCount = null,Object? draft = freezed,Object? promos = null,}) {
   return _then(_HomeState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
-as bool,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
+as bool,isFirstLoad: null == isFirstLoad ? _self.isFirstLoad : isFirstLoad // ignore: cast_nullable_to_non_nullable
+as bool,loadProgress: null == loadProgress ? _self.loadProgress : loadProgress // ignore: cast_nullable_to_non_nullable
+as double,loadLabel: null == loadLabel ? _self.loadLabel : loadLabel // ignore: cast_nullable_to_non_nullable
+as String,userName: null == userName ? _self.userName : userName // ignore: cast_nullable_to_non_nullable
 as String,unreadCount: null == unreadCount ? _self.unreadCount : unreadCount // ignore: cast_nullable_to_non_nullable
 as int,motors: null == motors ? _self._motors : motors // ignore: cast_nullable_to_non_nullable
 as List<Motor>,motorInServiceStatus: null == motorInServiceStatus ? _self._motorInServiceStatus : motorInServiceStatus // ignore: cast_nullable_to_non_nullable

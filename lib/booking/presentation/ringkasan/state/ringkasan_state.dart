@@ -18,6 +18,7 @@ abstract class RingkasanState with _$RingkasanState {
     @Default(<String, Part>{}) Map<String, Part> partById,
     Voucher? voucher,
     String? removedVoucherId,
+    String? voucherNotice,
     @Default(false) bool slotInvalid,
     String? slotInvalidTitle,
     String? slotInvalidBody,

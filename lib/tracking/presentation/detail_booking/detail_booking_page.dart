@@ -12,6 +12,7 @@ import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 import 'package:tumbas_servis/core/presentation/utils/date_formatter.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/tracking/presentation/components/booking_status_badge.dart';
 import 'package:tumbas_servis/tracking/presentation/detail_booking/components/unit_status_row.dart';
 import 'package:tumbas_servis/tracking/presentation/detail_booking/state/detail_booking_state.dart';
@@ -20,7 +21,7 @@ import 'package:tumbas_servis/tracking/presentation/ubah_jadwal_batalkan/batalka
 import 'package:tumbas_servis/tracking/presentation/ubah_jadwal_batalkan/ubah_jadwal_sheet.dart';
 import 'package:tumbas_servis/tracking/presentation/utils/tracking_display.dart';
 
-class DetailBookingPage extends ConsumerWidget {
+class DetailBookingPage extends StatelessWidget {
   const DetailBookingPage({required this.bookingId, super.key});
 
   final String bookingId;
@@ -32,6 +33,36 @@ class DetailBookingPage extends ConsumerWidget {
       context.go(Routes.bookings);
     }
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      appBar: TsAppBar.back(
+        title: 'Detail booking',
+        onBack: () => _goBack(context),
+      ),
+      body: SafeArea(
+        top: false,
+        child: DetailBookingBody(bookingId: bookingId),
+      ),
+    );
+  }
+}
+
+class DetailBookingBody extends ConsumerWidget {
+  const DetailBookingBody({
+    required this.bookingId,
+    this.embedded = false,
+    this.onChanged,
+    super.key,
+  });
+
+  final String bookingId;
+
+  final bool embedded;
+
+  final VoidCallback? onChanged;
 
   Future<void> _reschedule(
     BuildContext context,
@@ -51,6 +82,7 @@ class DetailBookingPage extends ConsumerWidget {
     await ref
         .read(detailBookingViewModelProvider(bookingId).notifier)
         .refresh();
+    onChanged?.call();
     if (context.mounted) TsSnackbar.success(context, 'Jadwal diperbarui');
   }
 
@@ -70,6 +102,7 @@ class DetailBookingPage extends ConsumerWidget {
         .cancel(unitCode: choice.unitCode, reason: choice.reason);
     if (!context.mounted) return;
     if (ok) {
+      onChanged?.call();
       TsSnackbar.success(
         context,
         choice.unitCode == null
@@ -91,6 +124,7 @@ class DetailBookingPage extends ConsumerWidget {
     await ref
         .read(detailBookingViewModelProvider(bookingId).notifier)
         .refresh();
+    onChanged?.call();
   }
 
   @override
@@ -98,45 +132,45 @@ class DetailBookingPage extends ConsumerWidget {
     final provider = detailBookingViewModelProvider(bookingId);
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
-    final scheme = Theme.of(context).colorScheme;
     final booking = state.booking;
+    final wide =
+        !embedded &&
+        context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
 
-    return Scaffold(
-      backgroundColor: scheme.surface,
-      appBar: TsAppBar.back(
-        title: 'Detail booking',
-        onBack: () => _goBack(context),
-      ),
-      body: SafeArea(
-        top: false,
-        child: state.hasError
-            ? ErrorState(
-                message: 'Gagal memuat detail booking. Coba lagi.',
-                onRetry: viewModel.retry,
-                layout: ErrorStateLayout.fullPage,
-              )
-            : state.isLoading || booking == null
-            ? const _DetailSkeleton()
-            : RefreshIndicator(
-                onRefresh: viewModel.refresh,
-                child: SingleChildScrollView(
-                  physics: const AlwaysScrollableScrollPhysics(),
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 720),
-                      child: _DetailContent(
-                        state: state,
-                        booking: booking,
-                        onReschedule: () => _reschedule(context, ref, state),
-                        onCancel: () => _cancel(context, ref, state),
-                        onOpen: (location) =>
-                            _openAndRefresh(context, ref, location),
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+    if (state.hasError) {
+      return ErrorState(
+        message: 'Gagal memuat detail booking. Coba lagi.',
+        onRetry: viewModel.retry,
+        layout: ErrorStateLayout.fullPage,
+      );
+    }
+    if (state.isLoading || booking == null) return const _DetailSkeleton();
+
+    return RefreshIndicator(
+      onRefresh: viewModel.refresh,
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        padding: EdgeInsets.fromLTRB(
+          embedded ? 24 : 20,
+          16,
+          embedded ? 24 : 20,
+          32,
+        ),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(
+              maxWidth: embedded ? double.infinity : (wide ? 1064 : 720),
+            ),
+            child: _DetailContent(
+              state: state,
+              booking: booking,
+              wide: wide,
+              onReschedule: () => _reschedule(context, ref, state),
+              onCancel: () => _cancel(context, ref, state),
+              onOpen: (location) => _openAndRefresh(context, ref, location),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -149,8 +183,10 @@ class _DetailContent extends StatelessWidget {
     required this.onReschedule,
     required this.onCancel,
     required this.onOpen,
+    this.wide = false,
   });
 
+  final bool wide;
   final DetailBookingState state;
   final Booking booking;
   final VoidCallback onReschedule;
@@ -164,118 +200,142 @@ class _DetailContent extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
     final cancelled = booking.status == BookingStatus.dibatalkan;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        _HeaderCard(state: state, booking: booking),
-        if (!cancelled) ...[
-          const SizedBox(height: 16),
-          FleetProgress(
-            unitStatuses: [for (final u in booking.units) u.status],
-            label:
-                'Progres ${booking.units.length} motor: '
-                '${booking.status.label}',
-            legendLabels: [
-              for (final u in booking.units)
-                '${unitLetter(u.unitCode)} · ${u.status.timelineLabel}',
-            ],
-          ),
-        ],
+    final overview = <Widget>[
+      _HeaderCard(state: state, booking: booking),
+      if (!cancelled) ...[
         const SizedBox(height: 16),
-        Container(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
-          decoration: BoxDecoration(
-            color: scheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Status motor',
-                style: textTheme.titleMedium?.copyWith(color: scheme.onSurface),
-              ),
-              const SizedBox(height: 4),
-              for (var i = 0; i < booking.units.length; i++)
-                UnitStatusRow(
-                  unit: booking.units[i],
-                  meta:
-                      state.unitMeta[booking.units[i].unitCode] ??
-                      'Unit ${booking.units[i].unitCode}',
-                  showDivider: i < booking.units.length - 1,
-                  onTap: () => context.push(
-                    Routes.bookingUnitDetail(
-                      booking.id,
-                      booking.units[i].unitCode,
-                    ),
+        FleetProgress(
+          unitStatuses: [for (final u in booking.units) u.status],
+          label:
+              'Progres ${booking.units.length} motor: '
+              '${booking.status.label}',
+          legendLabels: [
+            for (final u in booking.units)
+              '${unitLetter(u.unitCode)} · ${u.status.timelineLabel}',
+          ],
+        ),
+      ],
+    ];
+    final details = <Widget>[
+      const SizedBox(height: 16),
+      Container(
+        padding: const EdgeInsets.fromLTRB(16, 16, 16, 4),
+        decoration: BoxDecoration(
+          color: scheme.surfaceContainer,
+          borderRadius: BorderRadius.circular(16),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Status motor',
+              style: textTheme.titleMedium?.copyWith(color: scheme.onSurface),
+            ),
+            const SizedBox(height: 4),
+            for (var i = 0; i < booking.units.length; i++)
+              UnitStatusRow(
+                unit: booking.units[i],
+                meta:
+                    state.unitMeta[booking.units[i].unitCode] ??
+                    'Unit ${booking.units[i].unitCode}',
+                showDivider: i < booking.units.length - 1,
+                onTap: () => context.push(
+                  Routes.bookingUnitDetail(
+                    booking.id,
+                    booking.units[i].unitCode,
                   ),
                 ),
-            ],
+              ),
+          ],
+        ),
+      ),
+      const SizedBox(height: 16),
+      if (state.showScheduleActions) ...[
+        _ActionButton(
+          label: 'Ubah jadwal',
+          icon: Icons.edit_calendar_rounded,
+          onPressed: state.canReschedule ? onReschedule : null,
+          reason: state.rescheduleDisabledReason,
+        ),
+        const SizedBox(height: 12),
+        _ActionButton(
+          label: 'Batalkan',
+          icon: Icons.event_busy_rounded,
+          type: TsButtonType.dangerOutline,
+          onPressed: state.canCancel ? onCancel : null,
+          reason: state.cancelDisabledReason,
+        ),
+      ],
+      if (booking.status == BookingStatus.selesai) ...[
+        _ActionButton(
+          label: 'Lihat invoice',
+          icon: Icons.receipt_long_rounded,
+          onPressed: () => onOpen(Routes.invoice(booking.id)),
+        ),
+        const SizedBox(height: 12),
+        if (state.hasReview)
+          _ActionButton(
+            label: 'Lihat ulasan',
+            icon: Icons.star_rounded,
+            onPressed: () => onOpen(Routes.review(booking.id)),
+          )
+        else
+          _ActionButton(
+            label: 'Beri ulasan',
+            icon: Icons.star_border_rounded,
+            onPressed: state.canReview
+                ? () => onOpen(Routes.review(booking.id))
+                : null,
+            reason: state.canReview ? null : DetailBookingState.unpaidReview,
+          ),
+      ],
+      if (cancelled && state.cancelledAt != null)
+        Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text(
+            'Dibatalkan ${DateFormatter.format(state.cancelledAt!).split(', ').last}',
+            style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
           ),
         ),
-        const SizedBox(height: 16),
-        if (state.showScheduleActions) ...[
-          _ActionButton(
-            label: 'Ubah jadwal',
-            icon: Icons.edit_calendar_rounded,
-            onPressed: state.canReschedule ? onReschedule : null,
-            reason: state.rescheduleDisabledReason,
+      if (booking.status == BookingStatus.selesai ||
+          booking.status == BookingStatus.dibatalkan) ...[
+        if (booking.status == BookingStatus.selesai) const SizedBox(height: 12),
+        TsButton(
+          label: 'Booking lagi',
+          type: cancelled ? TsButtonType.outline : TsButtonType.ghost,
+          leadingIcon: Icons.refresh_rounded,
+          onPressed: () => context.push(
+            Routes.bookingVehicles,
+            extra: [for (final u in booking.units) u.motorId],
           ),
-          const SizedBox(height: 12),
-          _ActionButton(
-            label: 'Batalkan',
-            icon: Icons.event_busy_rounded,
-            type: TsButtonType.dangerOutline,
-            onPressed: state.canCancel ? onCancel : null,
-            reason: state.cancelDisabledReason,
-          ),
-        ],
-        if (booking.status == BookingStatus.selesai) ...[
-          _ActionButton(
-            label: 'Lihat invoice',
-            icon: Icons.receipt_long_rounded,
-            onPressed: () => onOpen(Routes.invoice(booking.id)),
-          ),
-          const SizedBox(height: 12),
-          if (state.hasReview)
-            _ActionButton(
-              label: 'Lihat ulasan',
-              icon: Icons.star_rounded,
-              onPressed: () => onOpen(Routes.review(booking.id)),
-            )
-          else
-            _ActionButton(
-              label: 'Beri ulasan',
-              icon: Icons.star_border_rounded,
-              onPressed: state.canReview
-                  ? () => onOpen(Routes.review(booking.id))
-                  : null,
-              reason: state.canReview ? null : DetailBookingState.unpaidReview,
-            ),
-        ],
-        if (cancelled && state.cancelledAt != null)
-          Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Text(
-              'Dibatalkan ${DateFormatter.format(state.cancelledAt!).split(', ').last}',
-              style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
-            ),
-          ),
-        if (booking.status == BookingStatus.selesai ||
-            booking.status == BookingStatus.dibatalkan) ...[
-          if (booking.status == BookingStatus.selesai)
-            const SizedBox(height: 12),
-          TsButton(
-            label: 'Booking lagi',
-            type: cancelled ? TsButtonType.outline : TsButtonType.ghost,
-            leadingIcon: Icons.refresh_rounded,
-            onPressed: () => context.push(
-              Routes.bookingVehicles,
-              extra: [for (final u in booking.units) u.motorId],
-            ),
-          ),
-        ],
+        ),
       ],
+    ];
+
+    if (wide) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: overview,
+            ),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: details.skip(1).toList(),
+            ),
+          ),
+        ],
+      );
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [...overview, ...details],
     );
   }
 }

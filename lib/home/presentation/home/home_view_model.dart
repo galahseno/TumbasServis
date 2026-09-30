@@ -21,6 +21,8 @@ import 'package:tumbas_servis/home/presentation/utils/home_draft_display.dart';
 import 'package:tumbas_servis/notification/data/di/notification_data_module.dart';
 import 'package:tumbas_servis/workshop/data/di/workshop_data_module.dart';
 
+const _seedShare = 0.6;
+
 class HomeViewModel extends Notifier<HomeState> {
   StreamSubscription<int>? _unreadSubscription;
 
@@ -32,25 +34,83 @@ class HomeViewModel extends Notifier<HomeState> {
   }
 
   Future<void> refresh() async {
-    state = state.copyWith(isLoading: true, hasError: false);
+    state = state.copyWith(
+      isLoading: true,
+      hasError: false,
+      isFirstLoad: false,
+      loadProgress: 0,
+    );
     await _load();
   }
 
-  Future<void> _load() async {
-    await ref.read(demoContentSeederProvider).seedIfNeeded();
+  void _reportProgress(double fraction, String label) {
+    if (!ref.mounted) return;
+    state = state.copyWith(
+      loadProgress: fraction > state.loadProgress
+          ? fraction.clamp(0.0, 1.0)
+          : state.loadProgress,
+      loadLabel: label,
+    );
+  }
 
-    final userResult = await ref.read(sessionRepositoryProvider).currentUser();
-    final motorsResult = await ref.read(garageRepositoryProvider).getMotors();
-    final promosResult = await ref.read(catalogRepositoryProvider).getPromos();
-    final bookingsResult = await ref
-        .read(bookingRepositoryProvider)
-        .getBookings(status: BookingStatus.berlangsung);
-    final draftResult = await ref
-        .read(bookingRepositoryProvider)
-        .getCurrentDraft();
-    final workshopsResult = await ref
-        .read(workshopRepositoryProvider)
-        .getWorkshops();
+  Future<void> _load() async {
+    await Future<void>.value();
+    if (!ref.mounted) return;
+
+    var didSeed = false;
+    await ref
+        .read(demoContentSeederProvider)
+        .seedIfNeeded(
+          onProgress: (fraction, label) {
+            didSeed = true;
+            _reportProgress(fraction * _seedShare, label);
+          },
+        );
+    if (!ref.mounted) return;
+
+    final readsBase = didSeed ? _seedShare : 0.0;
+    final pending = <String>[
+      'Memuat akun…',
+      'Memuat garasi…',
+      'Memuat promo…',
+      'Memuat booking…',
+      'Memuat draft…',
+      'Memuat bengkel…',
+    ];
+    final total = pending.length;
+    var done = 0;
+    Future<T> track<T>(String label, Future<T> read) async {
+      final result = await read;
+      pending.remove(label);
+      done++;
+      _reportProgress(
+        readsBase + (1 - readsBase) * done / total,
+        pending.isEmpty ? 'Hampir selesai…' : pending.first,
+      );
+      return result;
+    }
+
+    _reportProgress(readsBase, pending.first);
+    final (
+      userResult,
+      motorsResult,
+      promosResult,
+      bookingsResult,
+      draftResult,
+      workshopsResult,
+    ) = await (
+      track(pending[0], ref.read(sessionRepositoryProvider).currentUser()),
+      track(pending[1], ref.read(garageRepositoryProvider).getMotors()),
+      track(pending[2], ref.read(catalogRepositoryProvider).getPromos()),
+      track(
+        pending[3],
+        ref
+            .read(bookingRepositoryProvider)
+            .getBookings(status: BookingStatus.berlangsung),
+      ),
+      track(pending[4], ref.read(bookingRepositoryProvider).getCurrentDraft()),
+      track(pending[5], ref.read(workshopRepositoryProvider).getWorkshops()),
+    ).wait;
 
     if (!ref.mounted) return;
 
@@ -60,7 +120,11 @@ class HomeViewModel extends Notifier<HomeState> {
         bookingsResult is Error<List<Booking>> ||
         draftResult is Error<BookingDraft?> ||
         workshopsResult is Error<List<Workshop>>) {
-      state = state.copyWith(isLoading: false, hasError: true);
+      state = state.copyWith(
+        isLoading: false,
+        hasError: true,
+        isFirstLoad: false,
+      );
       return;
     }
 
@@ -75,6 +139,8 @@ class HomeViewModel extends Notifier<HomeState> {
     state = state.copyWith(
       isLoading: false,
       hasError: false,
+      isFirstLoad: false,
+      loadProgress: 1,
       userName: user?.name ?? '',
       motors: motors,
       motorInServiceStatus: bookings.motorInServiceStatus,

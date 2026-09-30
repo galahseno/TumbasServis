@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
 import 'package:tumbas_servis/core/domain/model/booking/unit_status.dart';
@@ -59,6 +60,7 @@ class LacakUnitPage extends ConsumerWidget {
     final viewModel = ref.read(provider.notifier);
     final scheme = Theme.of(context).colorScheme;
     final unit = state.unit;
+    final wide = context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
 
     return Scaffold(
       backgroundColor: scheme.surface,
@@ -80,8 +82,9 @@ class LacakUnitPage extends ConsumerWidget {
                 padding: const EdgeInsets.fromLTRB(20, 16, 20, 32),
                 child: Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 640),
+                    constraints: BoxConstraints(maxWidth: wide ? 1064 : 640),
                     child: _LacakContent(
+                      wide: wide,
                       state: state,
                       now: ref.read(clockProvider).now(),
                       onAdvance: state.canAdvance
@@ -105,8 +108,10 @@ class _LacakContent extends StatelessWidget {
     required this.now,
     required this.onAdvance,
     required this.onReset,
+    this.wide = false,
   });
 
+  final bool wide;
   final LacakUnitState state;
   final DateTime now;
   final VoidCallback? onAdvance;
@@ -119,68 +124,101 @@ class _LacakContent extends StatelessWidget {
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
 
+    final header = Container(
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        color: scheme.surfaceContainer,
+        borderRadius: BorderRadius.circular(16),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  unit.motorSnapshot.nickname,
+                  style: textTheme.titleLarge?.copyWith(
+                    color: scheme.onSurface,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 8),
+              UnitStatusBadge(status: unit.status),
+            ],
+          ),
+          const SizedBox(height: 4),
+          Text(
+            '${unit.motorSnapshot.plateNumber} · Unit ${unit.unitCode}',
+            style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
+          ),
+          if (state.servicesSummary.isNotEmpty) ...[
+            const SizedBox(height: 12),
+            Text(
+              state.servicesSummary,
+              style: textTheme.bodyLarge?.copyWith(color: ext.textBody),
+            ),
+          ],
+        ],
+      ),
+    );
+    final timeline = StatusTimeline(unit: unit, now: now);
+    final trailing = <Widget>[
+      if (!state.isCancelled) ...[
+        MechanicCard(unitCode: unit.unitCode, mechanic: state.mechanic),
+      ],
+      if (state.showDemoShortcut) ...[
+        const SizedBox(height: 16),
+        DemoModeShortcut(onAdvance: onAdvance, onReset: onReset),
+      ],
+      if (state.isCancelled) ...[
+        const SizedBox(height: 16),
+        TsButton(
+          label: 'Booking lagi',
+          type: TsButtonType.outline,
+          onPressed: () =>
+              context.push(Routes.bookingVehicles, extra: [unit.motorId]),
+        ),
+      ],
+    ];
+
+    if (wide) {
+      return Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 6,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [header, const SizedBox(height: 24), timeline],
+            ),
+          ),
+          const SizedBox(width: 24),
+          Expanded(
+            flex: 5,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                _StatusCard(state: state),
+                if (trailing.isNotEmpty) const SizedBox(height: 16),
+                ...trailing,
+              ],
+            ),
+          ),
+        ],
+      );
+    }
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Container(
-          padding: const EdgeInsets.all(16),
-          decoration: BoxDecoration(
-            color: scheme.surfaceContainer,
-            borderRadius: BorderRadius.circular(16),
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  Expanded(
-                    child: Text(
-                      unit.motorSnapshot.nickname,
-                      style: textTheme.titleLarge?.copyWith(
-                        color: scheme.onSurface,
-                      ),
-                    ),
-                  ),
-                  const SizedBox(width: 8),
-                  UnitStatusBadge(status: unit.status),
-                ],
-              ),
-              const SizedBox(height: 4),
-              Text(
-                '${unit.motorSnapshot.plateNumber} · Unit ${unit.unitCode}',
-                style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
-              ),
-              if (state.servicesSummary.isNotEmpty) ...[
-                const SizedBox(height: 12),
-                Text(
-                  state.servicesSummary,
-                  style: textTheme.bodyLarge?.copyWith(color: ext.textBody),
-                ),
-              ],
-            ],
-          ),
-        ),
+        header,
         const SizedBox(height: 16),
         _StatusCard(state: state),
         const SizedBox(height: 16),
-        StatusTimeline(unit: unit, now: now),
-        if (!state.isCancelled) ...[
-          const SizedBox(height: 24),
-          MechanicCard(unitCode: unit.unitCode, mechanic: state.mechanic),
-        ],
-        if (state.showDemoShortcut) ...[
-          const SizedBox(height: 16),
-          DemoModeShortcut(onAdvance: onAdvance, onReset: onReset),
-        ],
-        if (state.isCancelled) ...[
-          const SizedBox(height: 16),
-          TsButton(
-            label: 'Booking lagi',
-            type: TsButtonType.outline,
-            onPressed: () =>
-                context.push(Routes.bookingVehicles, extra: [unit.motorId]),
-          ),
-        ],
+        timeline,
+        if (!state.isCancelled) const SizedBox(height: 24),
+        ...trailing,
       ],
     );
   }

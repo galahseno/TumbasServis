@@ -4,9 +4,11 @@ import 'package:tumbas_servis/core/presentation/components/unit_status_badge.dar
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 
 class OnboardingArt extends StatelessWidget {
-  const OnboardingArt({required this.slide, super.key});
+  const OnboardingArt({required this.slide, this.maxArtWidth, super.key});
 
   final int slide;
+
+  final double? maxArtWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,9 @@ class OnboardingArt extends StatelessWidget {
         builder: (context, constraints) => Center(
           child: FittedBox(
             child: SizedBox(
-              width: constraints.maxWidth,
+              width: maxArtWidth == null
+                  ? constraints.maxWidth
+                  : constraints.maxWidth.clamp(0, maxArtWidth!),
               child: switch (slide) {
                 1 => const _MotorCardsVignette(),
                 2 => const _TimelineVignette(),

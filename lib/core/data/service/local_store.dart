@@ -18,8 +18,8 @@ class LocalStore {
   final SharedPreferences _preferences;
   final StorageDirectoryResolver _resolveStorageDirectory;
 
-  bool _hiveInitialized = false;
   final Map<String, Box<String>> _openBoxes = {};
+  final Map<String, Future<Box<String>>> _openingBoxes = {};
 
   static const _sessionActiveKey = 'local_store.session_active';
   static const _themeModeKey = 'local_store.theme_mode';
@@ -57,16 +57,31 @@ class LocalStore {
   Future<void> setDemoModeEnabled(bool value) =>
       _preferences.setBool(_demoModeEnabledKey, value);
 
-  Future<Box<String>> _box(String boxName) async {
+  Future<void>? _hiveInit;
+
+  Future<Box<String>> _box(String boxName) {
     final existing = _openBoxes[boxName];
-    if (existing != null) return existing;
-    if (!_hiveInitialized) {
-      Hive.init(await _resolveStorageDirectory());
-      _hiveInitialized = true;
+    if (existing != null) return Future.value(existing);
+    return _openingBoxes[boxName] ??= _openBox(boxName);
+  }
+
+  Future<Box<String>> _openBox(String boxName) async {
+    try {
+      _hiveInit ??= _initHive();
+      await _hiveInit;
+      final box = await Hive.openBox<String>(boxName);
+      _openBoxes[boxName] = box;
+      return box;
+    } catch (_) {
+      _hiveInit = null;
+      rethrow;
+    } finally {
+      _openingBoxes.remove(boxName);
     }
-    final box = await Hive.openBox<String>(boxName);
-    _openBoxes[boxName] = box;
-    return box;
+  }
+
+  Future<void> _initHive() async {
+    Hive.init(await _resolveStorageDirectory());
   }
 
   Future<Map<String, dynamic>?> get(String boxName, String key) async {

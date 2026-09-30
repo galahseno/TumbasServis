@@ -5,6 +5,7 @@ import 'package:tumbas_servis/auth/data/di/auth_data_module.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
 import 'package:tumbas_servis/catalog/data/di/catalog_data_module.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
+import 'package:tumbas_servis/core/data/service/demo_content_seeder.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_draft.dart';
 import 'package:tumbas_servis/core/domain/model/booking/booking_status.dart';
@@ -29,6 +30,15 @@ import '../../../support/fake_notification_repository.dart';
 import '../../../support/fake_session_repository.dart';
 import '../../../support/fake_workshop_repository.dart';
 import '../../../support/noop_demo_content_seeder.dart';
+
+class _ProgressSeeder extends NoopDemoContentSeeder {
+  @override
+  Future<void> seedIfNeeded({SeedProgressCallback? onProgress}) async {
+    onProgress?.call(0, 'Menyiapkan data demo…');
+    onProgress?.call(0.5, 'Menyiapkan data demo…');
+    onProgress?.call(1, 'Menyiapkan data demo…');
+  }
+}
 
 Motor _motor(String id, String nickname) => Motor(
   id: id,
@@ -179,7 +189,7 @@ void main() {
     );
     bookingRepository.currentDraftResult = Result.ok(draft);
 
-    clock.setNow(DateTime(2026, 9, 29, 9)); // 3h left -> not yet warning
+    clock.setNow(DateTime(2026, 9, 29, 9));
     await waitForLoad();
     var display = container.read(homeViewModelProvider).draft;
     expect(display, isNotNull);
@@ -209,5 +219,102 @@ void main() {
 
     expect(bookingRepository.draftDeleted, isTrue);
     expect(container.read(homeViewModelProvider).draft, isNull);
+  });
+
+  group('first-load progress', () {
+    List<double> recordProgress() {
+      final seen = <double>[];
+      container.listen(homeViewModelProvider, (previous, next) {
+        if (seen.isEmpty || next.loadProgress != seen.last) {
+          seen.add(next.loadProgress);
+        }
+      }, fireImmediately: true);
+      return seen;
+    }
+
+    test(
+      'starts at 0 on first load, ends at 100% and clears isFirstLoad',
+      () async {
+        final seen = recordProgress();
+        final initial = container.read(homeViewModelProvider);
+        expect(initial.isFirstLoad, isTrue);
+        expect(initial.loadProgress, 0);
+
+        await waitForLoad();
+        final state = container.read(homeViewModelProvider);
+
+        expect(state.loadProgress, 1);
+        expect(state.isFirstLoad, isFalse);
+        expect(seen.first, 0);
+        expect(seen.last, 1);
+      },
+    );
+
+    test('progress never goes backwards while loading', () async {
+      final seen = recordProgress();
+      await waitForLoad();
+
+      for (var i = 1; i < seen.length; i++) {
+        expect(seen[i], greaterThanOrEqualTo(seen[i - 1]));
+      }
+      expect(seen.length, greaterThan(3));
+    });
+
+    test('a seeding run spends the first 60% on the demo data, then reads '
+        'fill the rest', () async {
+      container.dispose();
+      container = ProviderContainer(
+        overrides: [
+          sessionRepositoryProvider.overrideWithValue(sessionRepository),
+          garageRepositoryProvider.overrideWithValue(garageRepository),
+          catalogRepositoryProvider.overrideWithValue(catalogRepository),
+          bookingRepositoryProvider.overrideWithValue(bookingRepository),
+          notificationRepositoryProvider.overrideWithValue(
+            notificationRepository,
+          ),
+          workshopRepositoryProvider.overrideWithValue(workshopRepository),
+          clockProvider.overrideWithValue(clock),
+          demoContentSeederProvider.overrideWithValue(_ProgressSeeder()),
+        ],
+      );
+      addTearDown(container.dispose);
+      final seen = <double>[];
+      final labels = <String>{};
+      container.listen(homeViewModelProvider, (_, next) {
+        seen.add(next.loadProgress);
+        labels.add(next.loadLabel);
+      }, fireImmediately: true);
+
+      await waitForLoad();
+
+      expect(seen, contains(0.3));
+      expect(seen, contains(0.6));
+      expect(labels, contains('Menyiapkan data demo…'));
+      expect(labels, contains('Memuat garasi…'));
+      expect(seen.last, 1);
+    });
+
+    test('refresh is not a first load', () async {
+      await waitForLoad();
+
+      final refresh = container.read(homeViewModelProvider.notifier).refresh();
+      expect(container.read(homeViewModelProvider).isFirstLoad, isFalse);
+      expect(container.read(homeViewModelProvider).isLoading, isTrue);
+      await refresh;
+
+      expect(container.read(homeViewModelProvider).loadProgress, 1);
+    });
+
+    test(
+      'a failed read ends loading with the error and no first-load card',
+      () async {
+        garageRepository.motorsResult = Result.error(Exception('boom'));
+        await waitForLoad();
+        final state = container.read(homeViewModelProvider);
+
+        expect(state.hasError, isTrue);
+        expect(state.isFirstLoad, isFalse);
+      },
+    );
   });
 }

@@ -8,6 +8,8 @@ import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/repository/booking/booking_repository.dart';
 import 'package:tumbas_servis/core/domain/repository/tracking/tracking_repository.dart';
 
+typedef SeedProgressCallback = void Function(double fraction, String label);
+
 class DemoContentSeeder {
   const DemoContentSeeder({
     required BookingRepository bookingRepository,
@@ -24,7 +26,9 @@ class DemoContentSeeder {
   static const canonicalBookingCode = 'TS-260929-0417';
   static const draftMotorId = 'motor_004';
 
-  Future<void> seedIfNeeded() async {
+  static const _seedStepCount = 10;
+
+  Future<void> seedIfNeeded({SeedProgressCallback? onProgress}) async {
     final bookingsResult = await _bookingRepository.getBookings();
     if (bookingsResult is! Ok<List<Booking>>) return;
 
@@ -33,16 +37,24 @@ class DemoContentSeeder {
     );
     if (alreadySeeded) return;
 
+    var doneSteps = 0;
+    void step() {
+      doneSteps++;
+      onProgress?.call(doneSteps / _seedStepCount, 'Menyiapkan data demo…');
+    }
+
+    onProgress?.call(0, 'Menyiapkan data demo…');
     _demoModeController?.beginSeeding();
     try {
-      await _seedActiveBooking();
+      await _seedActiveBooking(step);
       await _seedDraft();
+      step();
     } finally {
       _demoModeController?.endSeeding();
     }
   }
 
-  Future<void> _seedActiveBooking() async {
+  Future<void> _seedActiveBooking(void Function() step) async {
     final confirmResult = await _bookingRepository.confirmBooking(
       BookingDraft(
         id: 'demo_seed_draft',
@@ -74,18 +86,25 @@ class DemoContentSeeder {
     );
     if (confirmResult is! Ok<Booking>) return;
     final booking = confirmResult.value;
+    step();
 
-    await _advance(booking.id, '-A', 3); // terjadwal -> dikerjakan
-    await _advance(booking.id, '-B', 3); // terjadwal -> dikerjakan
-    await _advance(booking.id, '-C', 2); // terjadwal -> diperiksa
+    await _advance(booking.id, '-A', 3, step); // terjadwal -> dikerjakan
+    await _advance(booking.id, '-B', 3, step); // terjadwal -> dikerjakan
+    await _advance(booking.id, '-C', 2, step); // terjadwal -> diperiksa
   }
 
-  Future<void> _advance(String bookingId, String unitCode, int steps) async {
+  Future<void> _advance(
+    String bookingId,
+    String unitCode,
+    int steps,
+    void Function() step,
+  ) async {
     for (var i = 0; i < steps; i++) {
       await _trackingRepository.advanceUnitStatus(
         bookingId: bookingId,
         unitCode: unitCode,
       );
+      step();
     }
   }
 

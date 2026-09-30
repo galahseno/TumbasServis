@@ -16,9 +16,10 @@ class _DismissIntent extends Intent {
 }
 
 class _TsDialogShell extends StatelessWidget {
-  const _TsDialogShell({required this.child});
+  const _TsDialogShell({required this.child, this.maxWidth = 560});
 
   final Widget child;
+  final double maxWidth;
 
   @override
   Widget build(BuildContext context) {
@@ -37,12 +38,12 @@ class _TsDialogShell extends StatelessWidget {
         },
         child: Dialog(
           insetPadding: EdgeInsets.symmetric(
-            horizontal: isPhone ? 24 : (width - 560) / 2,
+            horizontal: isPhone ? 24 : (width - maxWidth) / 2,
             vertical: 24,
           ),
           child: ConstrainedBox(
             constraints: BoxConstraints(
-              maxWidth: isPhone ? double.infinity : 560,
+              maxWidth: isPhone ? double.infinity : maxWidth,
             ),
             child: Padding(padding: const EdgeInsets.all(24), child: child),
           ),
@@ -93,9 +94,10 @@ abstract final class TsDialog {
   static Future<T?> custom<T>(
     BuildContext context, {
     required WidgetBuilder builder,
+    double maxWidth = 560,
   }) => showDialog<T>(
     context: context,
-    builder: (ctx) => _TsDialogShell(child: builder(ctx)),
+    builder: (ctx) => _TsDialogShell(maxWidth: maxWidth, child: builder(ctx)),
   );
 
   static Future<bool?> confirmDestructive(

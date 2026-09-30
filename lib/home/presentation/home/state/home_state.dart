@@ -26,6 +26,9 @@ abstract class HomeState with _$HomeState {
   const factory HomeState({
     @Default(true) bool isLoading,
     @Default(false) bool hasError,
+    @Default(true) bool isFirstLoad,
+    @Default(0.0) double loadProgress,
+    @Default('Memuat beranda…') String loadLabel,
     @Default('') String userName,
     @Default(0) int unreadCount,
     @Default(<Motor>[]) List<Motor> motors,

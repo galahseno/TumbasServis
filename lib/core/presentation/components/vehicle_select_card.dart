@@ -14,6 +14,7 @@ class VehicleSelectCard extends StatelessWidget {
     this.onTap,
     this.layout = VehicleSelectCardLayout.compact,
     this.caption,
+    this.width = 124,
   });
 
   final String nickname;
@@ -22,6 +23,8 @@ class VehicleSelectCard extends StatelessWidget {
   final VoidCallback? onTap;
   final VehicleSelectCardLayout layout;
   final String? caption;
+
+  final double width;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +43,7 @@ class VehicleSelectCard extends StatelessWidget {
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
         child: Container(
-          width: 124,
+          width: width,
           padding: const EdgeInsets.all(12),
           constraints: const BoxConstraints(minHeight: 48),
           decoration: BoxDecoration(

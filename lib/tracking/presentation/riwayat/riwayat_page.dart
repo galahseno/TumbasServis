@@ -7,9 +7,12 @@ import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
+import 'package:tumbas_servis/tracking/presentation/detail_booking/detail_booking_page.dart';
 import 'package:tumbas_servis/tracking/presentation/di/tracking_presentation_module.dart';
 import 'package:tumbas_servis/tracking/presentation/riwayat/components/booking_history_card.dart';
 import 'package:tumbas_servis/tracking/presentation/riwayat/components/history_tab_row.dart';
+import 'package:tumbas_servis/tracking/presentation/riwayat/riwayat_view_model.dart';
 import 'package:tumbas_servis/tracking/presentation/riwayat/state/riwayat_state.dart';
 
 class RiwayatPage extends ConsumerWidget {
@@ -32,6 +35,9 @@ class RiwayatPage extends ConsumerWidget {
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
     final scheme = Theme.of(context).colorScheme;
+    final isSplit =
+        motorFilterId == null &&
+        context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
 
     return Scaffold(
       backgroundColor: scheme.surface,
@@ -48,40 +54,125 @@ class RiwayatPage extends ConsumerWidget {
               )
             : state.isLoading
             ? const _RiwayatSkeleton()
-            : Column(
-                children: [
-                  HistoryTabRow(
-                    selected: state.selectedTab,
-                    countFor: state.countFor,
-                    onSelected: viewModel.selectTab,
+            : isSplit
+            ? _buildSplit(context, ref, state, viewModel)
+            : _buildList(context, ref, state, viewModel, splitSelect: false),
+      ),
+    );
+  }
+
+  Widget _buildList(
+    BuildContext context,
+    WidgetRef ref,
+    RiwayatState state,
+    RiwayatViewModel viewModel, {
+    required bool splitSelect,
+  }) {
+    return Column(
+      children: [
+        HistoryTabRow(
+          selected: state.selectedTab,
+          countFor: state.countFor,
+          onSelected: viewModel.selectTab,
+        ),
+        if (state.motorFilterId != null && state.motorFilterLabel != null)
+          _MotorFilterChip(
+            label: state.motorFilterLabel!,
+            onDismiss: viewModel.clearMotorFilter,
+          ),
+        Expanded(
+          child: RefreshIndicator(
+            onRefresh: viewModel.refresh,
+            child: _RiwayatList(
+              state: state,
+              selectedId: splitSelect ? state.effectiveSelectedId : null,
+              maxWidth: splitSelect ? double.infinity : 720,
+              onOpen: splitSelect
+                  ? viewModel.selectBooking
+                  : (id) => _openDetail(context, ref, id),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildSplit(
+    BuildContext context,
+    WidgetRef ref,
+    RiwayatState state,
+    RiwayatViewModel viewModel,
+  ) {
+    final ext = TsThemeExtension.of(context);
+    final textTheme = Theme.of(context).textTheme;
+    final selectedId = state.effectiveSelectedId;
+
+    return Row(
+      children: [
+        SizedBox(
+          width: 420,
+          child: _buildList(context, ref, state, viewModel, splitSelect: true),
+        ),
+        VerticalDivider(width: 1, color: ext.borderDefault),
+        Expanded(
+          child: selectedId == null
+              ? Center(
+                  child: Text(
+                    'Pilih booking untuk melihat detail',
+                    style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
                   ),
-                  if (state.motorFilterId != null &&
-                      state.motorFilterLabel != null)
-                    _MotorFilterChip(
-                      label: state.motorFilterLabel!,
-                      onDismiss: viewModel.clearMotorFilter,
-                    ),
-                  Expanded(
-                    child: RefreshIndicator(
-                      onRefresh: viewModel.refresh,
-                      child: _RiwayatList(
-                        state: state,
-                        onOpen: (id) => _openDetail(context, ref, id),
+                )
+              : Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(24, 12, 16, 0),
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              'Detail booking',
+                              style: textTheme.titleMedium?.copyWith(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () =>
+                                _openDetail(context, ref, selectedId),
+                            child: const Text('Buka detail'),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
-                ],
-              ),
-      ),
+                    Expanded(
+                      child: DetailBookingBody(
+                        key: ValueKey(selectedId),
+                        bookingId: selectedId,
+                        embedded: true,
+                        onChanged: viewModel.refresh,
+                      ),
+                    ),
+                  ],
+                ),
+        ),
+      ],
     );
   }
 }
 
 class _RiwayatList extends StatelessWidget {
-  const _RiwayatList({required this.state, required this.onOpen});
+  const _RiwayatList({
+    required this.state,
+    required this.onOpen,
+    required this.maxWidth,
+    this.selectedId,
+  });
 
   final RiwayatState state;
   final ValueChanged<String> onOpen;
+  final double maxWidth;
+  final String? selectedId;
 
   @override
   Widget build(BuildContext context) {
@@ -98,7 +189,6 @@ class _RiwayatList extends StatelessWidget {
                 icon: Icons.history_rounded,
                 title: _emptyTitle(tab),
                 body: _emptyBody(tab),
-                // No CTA on Dibatalkan: nothing to "do" there (design note).
                 ctaLabel: tab == RiwayatTab.dibatalkan
                     ? null
                     : 'Booking servis',
@@ -114,7 +204,7 @@ class _RiwayatList extends StatelessWidget {
 
     return Center(
       child: ConstrainedBox(
-        constraints: const BoxConstraints(maxWidth: 720),
+        constraints: BoxConstraints(maxWidth: maxWidth),
         child: ListView.separated(
           physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
@@ -122,6 +212,7 @@ class _RiwayatList extends StatelessWidget {
           separatorBuilder: (_, _) => const SizedBox(height: 12),
           itemBuilder: (context, index) => BookingHistoryCard(
             entry: entries[index],
+            selected: entries[index].booking.id == selectedId,
             onTap: () => onOpen(entries[index].booking.id),
           ),
         ),

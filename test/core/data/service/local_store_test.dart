@@ -67,4 +67,27 @@ void main() {
     await store.clear('garage');
     expect((await store.getAll('garage')), isEmpty);
   });
+
+  test('parallel first reads share one Hive init and one box open', () async {
+    var resolves = 0;
+    final parallelStore = LocalStore(
+      preferences: await SharedPreferences.getInstance(),
+      resolveStorageDirectory: () async {
+        resolves++;
+        return tempDir.path;
+      },
+    );
+
+    await Future.wait([
+      parallelStore.put('box_a', 'k', {'v': 1}),
+      parallelStore.get('box_a', 'k'),
+      parallelStore.getAll('box_a'),
+      parallelStore.put('box_b', 'k', {'v': 2}),
+      parallelStore.get('box_b', 'k'),
+    ]);
+
+    expect(resolves, 1);
+    expect(await parallelStore.get('box_a', 'k'), {'v': 1});
+    expect(await parallelStore.get('box_b', 'k'), {'v': 2});
+  });
 }

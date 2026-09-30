@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_icon_button.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 
 class SheetHeader extends StatelessWidget {
   const SheetHeader({
@@ -23,17 +24,20 @@ class SheetHeader extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        Center(
-          child: Container(
-            width: 32,
-            height: 4,
-            margin: const EdgeInsets.only(top: 12, bottom: 12),
-            decoration: BoxDecoration(
-              color: ext.borderStrong,
-              borderRadius: BorderRadius.circular(999),
+        if (context.windowSizeClass.isCompact)
+          Center(
+            child: Container(
+              width: 32,
+              height: 4,
+              margin: const EdgeInsets.only(top: 12, bottom: 12),
+              decoration: BoxDecoration(
+                color: ext.borderStrong,
+                borderRadius: BorderRadius.circular(999),
+              ),
             ),
-          ),
-        ),
+          )
+        else
+          const SizedBox(height: 16),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 20),
           child: Row(

@@ -7,6 +7,8 @@ import 'package:tumbas_servis/catalog/presentation/katalog/components/selected_p
 import 'package:tumbas_servis/catalog/presentation/katalog/katalog_view_model.dart';
 import 'package:tumbas_servis/catalog/presentation/katalog/state/katalog_state.dart';
 import 'package:tumbas_servis/core/domain/model/catalog/part.dart';
+import 'package:tumbas_servis/core/presentation/components/adaptive_sheet.dart';
+import 'package:tumbas_servis/core/presentation/components/max_width_box.dart';
 import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/part_option_tile.dart';
@@ -15,6 +17,7 @@ import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_dialog.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_switch.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/core/presentation/utils/currency_formatter.dart';
 
 class KatalogSelectArgs {
@@ -118,9 +121,8 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
               ),
           ];
 
-    await showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
+    await showAdaptiveSheet<void>(
+      context,
       builder: (_) => Consumer(
         builder: (context, ref, _) {
           final liveState = ref.watch(katalogViewModelProvider);
@@ -160,49 +162,93 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
       );
     } else {
       final visibleParts = viewModel.visibleParts;
+      final sizeClass = context.windowSizeClass;
+      final isWide = sizeClass.isAtLeast(WindowSizeClass.expanded);
+      final gutter = sizeClass.isCompact ? 20.0 : 24.0;
+      final unitLine = Text(
+        'Untuk: ${state.unitNickname} · ${state.unitPlateNumber}',
+        style: textTheme.titleMedium?.copyWith(color: scheme.onSurface),
+      );
+      final showUnit = isSelect && state.unitNickname != null && !keyboardOpen;
+      final searchField = _SearchField(
+        key: const ValueKey('katalog_search'),
+        controller: _searchController,
+        onChanged: viewModel.setSearchQuery,
+        onClear: () => _clearSearch(viewModel),
+      );
+      final compatToggle = _CompatToggleRow(
+        nickname: state.unitNickname ?? '',
+        value: state.compatOnlyEnabled,
+        onChanged: viewModel.setCompatOnly,
+        horizontalPadding: isWide ? 0 : 20,
+      );
       body = Column(
         children: [
-          Visibility(
-            visible: isSelect && state.unitNickname != null && !keyboardOpen,
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(20, 8, 20, 0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Untuk: ${state.unitNickname} · ${state.unitPlateNumber}',
-                  style: textTheme.titleMedium?.copyWith(
-                    color: scheme.onSurface,
+          if (isWide) ...[
+            const SizedBox(height: 8),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: gutter),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  if (showUnit) ...[
+                    Flexible(flex: 3, child: unitLine),
+                    const SizedBox(width: 24),
+                  ],
+                  Expanded(flex: 5, child: searchField),
+                ],
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: CategoryChipRow(
+                    selectedCategory: state.selectedCategory,
+                    onSelected: viewModel.setCategory,
+                    horizontalPadding: gutter,
                   ),
+                ),
+                if (isSelect && !keyboardOpen)
+                  Padding(
+                    padding: EdgeInsets.only(right: gutter),
+                    child: SizedBox(width: 340, child: compatToggle),
+                  ),
+              ],
+            ),
+          ] else ...[
+            Visibility(
+              visible: showUnit,
+              child: Padding(
+                padding: EdgeInsets.fromLTRB(gutter, 8, gutter, 0),
+                child: Align(alignment: Alignment.centerLeft, child: unitLine),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: gutter),
+              child: searchField,
+            ),
+            const SizedBox(height: 12),
+            CategoryChipRow(
+              selectedCategory: state.selectedCategory,
+              onSelected: viewModel.setCategory,
+              horizontalPadding: gutter,
+            ),
+            Visibility(
+              visible: isSelect && !keyboardOpen,
+              child: Padding(
+                padding: const EdgeInsets.only(top: 4),
+                child: _CompatToggleRow(
+                  nickname: state.unitNickname ?? '',
+                  value: state.compatOnlyEnabled,
+                  onChanged: viewModel.setCompatOnly,
+                  horizontalPadding: gutter,
                 ),
               ),
             ),
-          ),
-          const SizedBox(height: 8),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: _SearchField(
-              key: const ValueKey('katalog_search'),
-              controller: _searchController,
-              onChanged: viewModel.setSearchQuery,
-              onClear: () => _clearSearch(viewModel),
-            ),
-          ),
-          const SizedBox(height: 12),
-          CategoryChipRow(
-            selectedCategory: state.selectedCategory,
-            onSelected: viewModel.setCategory,
-          ),
-          Visibility(
-            visible: isSelect && !keyboardOpen,
-            child: Padding(
-              padding: const EdgeInsets.only(top: 4),
-              child: _CompatToggleRow(
-                nickname: state.unitNickname ?? '',
-                value: state.compatOnlyEnabled,
-                onChanged: viewModel.setCompatOnly,
-              ),
-            ),
-          ),
+          ],
           const SizedBox(height: 8),
           Expanded(
             child: state.isLoading
@@ -228,6 +274,7 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
                     reasonFor: viewModel.incompatibleReason,
                     onToggle: viewModel.toggleStaged,
                     onOpenDetail: _openDetail,
+                    gutter: gutter,
                   ),
           ),
           if (isSelect)
@@ -238,6 +285,14 @@ class _KatalogPageState extends ConsumerState<KatalogPage> {
               onSelesai: () => _handleSelesai(context, state),
             ),
         ],
+      );
+    }
+
+    final sizeClass = context.windowSizeClass;
+    if (!sizeClass.isCompact && !state.hasError) {
+      body = MaxWidthBox(
+        maxWidth: sizeClass.isAtLeast(WindowSizeClass.expanded) ? 1232 : 720,
+        child: body,
       );
     }
 
@@ -325,11 +380,13 @@ class _CompatToggleRow extends StatelessWidget {
     required this.nickname,
     required this.value,
     required this.onChanged,
+    this.horizontalPadding = 20,
   });
 
   final String nickname;
   final bool value;
   final ValueChanged<bool> onChanged;
+  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -337,7 +394,7 @@ class _CompatToggleRow extends StatelessWidget {
     final textTheme = Theme.of(context).textTheme;
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
       child: Row(
         children: [
           Expanded(
@@ -386,8 +443,10 @@ class _PartList extends StatelessWidget {
     required this.reasonFor,
     required this.onToggle,
     required this.onOpenDetail,
+    this.gutter = 20,
   });
 
+  final double gutter;
   final List<Part> parts;
   final bool isSelect;
   final Set<String> stagedPartIds;
@@ -407,7 +466,7 @@ class _PartList extends StatelessWidget {
             : 1;
         if (columns == 1) {
           return ListView.separated(
-            padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+            padding: EdgeInsets.fromLTRB(gutter, 0, gutter, 12),
             itemCount: parts.length,
             separatorBuilder: (_, _) => const SizedBox(height: 4),
             itemBuilder: (context, index) => _tile(parts[index]),
@@ -415,7 +474,7 @@ class _PartList extends StatelessWidget {
         }
         final rowCount = (parts.length / columns).ceil();
         return ListView.separated(
-          padding: const EdgeInsets.fromLTRB(20, 0, 20, 12),
+          padding: EdgeInsets.fromLTRB(gutter, 0, gutter, 12),
           itemCount: rowCount,
           separatorBuilder: (_, _) => const SizedBox(height: 4),
           itemBuilder: (context, row) => IntrinsicHeight(

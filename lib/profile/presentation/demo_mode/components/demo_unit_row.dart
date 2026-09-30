@@ -12,6 +12,8 @@ class DemoUnitRow extends StatelessWidget {
     required this.onAdvance,
     required this.onReset,
     super.key,
+    this.selected = false,
+    this.onSelect,
   });
 
   final BookingUnit unit;
@@ -19,6 +21,9 @@ class DemoUnitRow extends StatelessWidget {
   final bool enabled;
   final VoidCallback onAdvance;
   final VoidCallback onReset;
+
+  final bool selected;
+  final VoidCallback? onSelect;
 
   @override
   Widget build(BuildContext context) {
@@ -29,12 +34,15 @@ class DemoUnitRow extends StatelessWidget {
     final atEnd = unit.status.isTerminal;
     final canReset = unit.status != UnitStatus.terjadwal;
 
-    return Container(
+    final row = Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
         color: scheme.surfaceContainer,
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: ext.borderDefault),
+        border: Border.all(
+          color: selected ? ext.borderAccent : ext.borderDefault,
+          width: selected ? 2 : 1,
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,6 +60,11 @@ class DemoUnitRow extends StatelessWidget {
                 status: unit.status,
                 size: UnitStatusBadgeSize.compact,
               ),
+              if (selected)
+                Text(
+                  'Dipratinjau',
+                  style: textTheme.labelSmall?.copyWith(color: ext.textAccent),
+                ),
             ],
           ),
           const SizedBox(height: 8),
@@ -95,6 +108,13 @@ class DemoUnitRow extends StatelessWidget {
           ),
         ],
       ),
+    );
+
+    if (onSelect == null) return row;
+    return InkWell(
+      onTap: onSelect,
+      borderRadius: BorderRadius.circular(12),
+      child: row,
     );
   }
 }

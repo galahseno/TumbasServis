@@ -10,10 +10,13 @@ class BookingHistoryCard extends StatelessWidget {
     required this.entry,
     required this.onTap,
     super.key,
+    this.selected = false,
   });
 
   final HistoryEntry entry;
   final VoidCallback onTap;
+
+  final bool selected;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +30,7 @@ class BookingHistoryCard extends StatelessWidget {
 
     return Semantics(
       button: true,
+      selected: selected,
       label:
           '${booking.code}, ${booking.status.label}, ${entry.workshopName}, '
           '$dateLabel, $unitCount motor',
@@ -40,7 +44,10 @@ class BookingHistoryCard extends StatelessWidget {
           decoration: BoxDecoration(
             color: scheme.surfaceContainer,
             borderRadius: BorderRadius.circular(16),
-            border: Border.all(color: ext.borderDefault),
+            border: Border.all(
+              color: selected ? ext.borderAccent : ext.borderDefault,
+              width: selected ? 2 : 1,
+            ),
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

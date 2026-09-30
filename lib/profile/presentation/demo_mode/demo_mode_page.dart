@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
+import 'package:tumbas_servis/core/data/di/core_data_module.dart';
+import 'package:tumbas_servis/core/domain/model/booking/booking_unit.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
@@ -12,14 +14,23 @@ import 'package:tumbas_servis/core/presentation/components/ts_segmented_control.
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_switch.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/profile/presentation/demo_mode/components/demo_panel.dart';
+import 'package:tumbas_servis/profile/presentation/demo_mode/components/demo_preview_pane.dart';
 import 'package:tumbas_servis/profile/presentation/demo_mode/components/demo_unit_row.dart';
 import 'package:tumbas_servis/profile/presentation/demo_mode/components/error_sim_banner.dart';
 import 'package:tumbas_servis/profile/presentation/demo_mode/state/demo_mode_state.dart';
 import 'package:tumbas_servis/profile/presentation/di/profile_presentation_module.dart';
 
-class DemoModePage extends ConsumerWidget {
+class DemoModePage extends ConsumerStatefulWidget {
   const DemoModePage({super.key});
+
+  @override
+  ConsumerState<DemoModePage> createState() => _DemoModePageState();
+}
+
+class _DemoModePageState extends ConsumerState<DemoModePage> {
+  String? _previewUnitCode;
 
   Future<void> _run(
     BuildContext context,
@@ -30,7 +41,7 @@ class DemoModePage extends ConsumerWidget {
     if (!ok && context.mounted) TsSnackbar.error(context, failure);
   }
 
-  Future<void> _confirmReset(BuildContext context, WidgetRef ref) async {
+  Future<void> _confirmReset(BuildContext context) async {
     final confirmed = await TsDialog.confirmDestructive(
       context,
       title: 'Reset semua data?',
@@ -55,13 +66,192 @@ class DemoModePage extends ConsumerWidget {
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final state = ref.watch(demoModeViewModelProvider);
     final viewModel = ref.read(demoModeViewModelProvider.notifier);
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
     final textTheme = Theme.of(context).textTheme;
     final idle = !state.isBusy && !state.isResetting;
+    final isWide = context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
+
+    BookingUnit? previewUnit;
+    for (final unit in state.units) {
+      if (unit.unitCode == _previewUnitCode) previewUnit = unit;
+    }
+    previewUnit ??= state.units.isEmpty ? null : state.units.first;
+
+    final caption = Text(
+      'Kontrol status khusus demo — bukan bagian produk.',
+      style: textTheme.bodyMedium?.copyWith(color: ext.textMuted),
+    );
+    final speedPanel = DemoPanel(
+      title: 'Kecepatan',
+      child: TsSegmentedControl<TrackingSpeed>(
+        semanticLabel: 'Kecepatan status otomatis',
+        selected: state.speed,
+        onChanged: viewModel.setSpeed,
+        segments: const [
+          TsSegment(value: TrackingSpeed.mati, label: 'Mati'),
+          TsSegment(value: TrackingSpeed.detik15, label: '15 dtk'),
+          TsSegment(value: TrackingSpeed.detik5, label: '5 dtk'),
+        ],
+      ),
+    );
+    final statusPanel = DemoPanel(
+      title: state.hasActiveBooking
+          ? 'Status booking ${state.bookingCode}'
+          : 'Status booking',
+      child: _BookingControls(
+        state: state,
+        idle: idle,
+        selectedUnitCode: isWide ? previewUnit?.unitCode : null,
+        onSelect: isWide
+            ? (code) => setState(() => _previewUnitCode = code)
+            : null,
+        onAdvance: (code) => _run(
+          context,
+          () => viewModel.advanceUnit(code),
+          'Gagal memajukan status. Coba lagi.',
+        ),
+        onReset: (code) => _run(
+          context,
+          () => viewModel.resetUnit(code),
+          'Gagal mereset status. Coba lagi.',
+        ),
+        onAdvanceAll: () => _run(
+          context,
+          viewModel.advanceAll,
+          'Gagal memajukan status. Coba lagi.',
+        ),
+        onResetAll: () => _run(
+          context,
+          viewModel.resetAll,
+          'Gagal mereset status. Coba lagi.',
+        ),
+      ),
+    );
+    final errorPanel = DemoPanel(
+      title: 'Simulasi galat',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Row(
+            children: [
+              Expanded(
+                child: Text(
+                  'Simulasikan galat jaringan',
+                  style: textTheme.bodyLarge?.copyWith(color: scheme.onSurface),
+                ),
+              ),
+              TsSwitch(
+                value: state.errorArmed,
+                semanticLabel: 'Simulasikan galat jaringan',
+                onChanged: viewModel.setErrorArmed,
+              ),
+            ],
+          ),
+          if (state.errorArmed) ...[
+            const SizedBox(height: 8),
+            const ErrorSimBanner(),
+          ],
+        ],
+      ),
+    );
+    final dataPanel = DemoPanel(
+      title: 'Data demo',
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          Text(
+            'Kembalikan garasi, booking, draft, notifikasi, invoice, dan '
+            'ulasan ke data awal.',
+            style: textTheme.bodyMedium?.copyWith(color: ext.textBody),
+          ),
+          const SizedBox(height: 12),
+          TsButton(
+            label: 'Reset semua data',
+            type: TsButtonType.dangerOutline,
+            isLoading: state.isResetting,
+            loadingLabel: 'Mengembalikan data…',
+            onPressed: idle ? () => _confirmReset(context) : null,
+          ),
+        ],
+      ),
+    );
+
+    Widget content() {
+      if (!isWide) {
+        return ListView(
+          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+          children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 560),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    caption,
+                    const SizedBox(height: 16),
+                    speedPanel,
+                    const SizedBox(height: 16),
+                    statusPanel,
+                    const SizedBox(height: 16),
+                    errorPanel,
+                    const SizedBox(height: 16),
+                    dataPanel,
+                  ],
+                ),
+              ),
+            ),
+          ],
+        );
+      }
+
+      return SingleChildScrollView(
+        padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+        child: Center(
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1192),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 632,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      caption,
+                      const SizedBox(height: 16),
+                      speedPanel,
+                      const SizedBox(height: 16),
+                      statusPanel,
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 24),
+                Expanded(
+                  flex: 560,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.stretch,
+                    children: [
+                      DemoPreviewPane(
+                        unit: previewUnit,
+                        now: ref.read(clockProvider).now(),
+                      ),
+                      const SizedBox(height: 16),
+                      errorPanel,
+                      const SizedBox(height: 16),
+                      dataPanel,
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: scheme.surface,
@@ -80,139 +270,7 @@ class DemoModePage extends ConsumerWidget {
               )
             : state.isLoading
             ? const _DemoSkeleton()
-            : ListView(
-                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-                children: [
-                  Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 560),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.stretch,
-                        children: [
-                          Text(
-                            'Kontrol status khusus demo — bukan bagian '
-                            'produk.',
-                            style: textTheme.bodyMedium?.copyWith(
-                              color: ext.textMuted,
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          DemoPanel(
-                            title: 'Kecepatan',
-                            child: TsSegmentedControl<TrackingSpeed>(
-                              semanticLabel: 'Kecepatan status otomatis',
-                              selected: state.speed,
-                              onChanged: viewModel.setSpeed,
-                              segments: const [
-                                TsSegment(
-                                  value: TrackingSpeed.mati,
-                                  label: 'Mati',
-                                ),
-                                TsSegment(
-                                  value: TrackingSpeed.detik15,
-                                  label: '15 dtk',
-                                ),
-                                TsSegment(
-                                  value: TrackingSpeed.detik5,
-                                  label: '5 dtk',
-                                ),
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          DemoPanel(
-                            title: state.hasActiveBooking
-                                ? 'Status booking ${state.bookingCode}'
-                                : 'Status booking',
-                            child: _BookingControls(
-                              state: state,
-                              idle: idle,
-                              onAdvance: (code) => _run(
-                                context,
-                                () => viewModel.advanceUnit(code),
-                                'Gagal memajukan status. Coba lagi.',
-                              ),
-                              onReset: (code) => _run(
-                                context,
-                                () => viewModel.resetUnit(code),
-                                'Gagal mereset status. Coba lagi.',
-                              ),
-                              onAdvanceAll: () => _run(
-                                context,
-                                viewModel.advanceAll,
-                                'Gagal memajukan status. Coba lagi.',
-                              ),
-                              onResetAll: () => _run(
-                                context,
-                                viewModel.resetAll,
-                                'Gagal mereset status. Coba lagi.',
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          DemoPanel(
-                            title: 'Simulasi galat',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Row(
-                                  children: [
-                                    Expanded(
-                                      child: Text(
-                                        'Simulasikan galat jaringan',
-                                        style: textTheme.bodyLarge?.copyWith(
-                                          color: scheme.onSurface,
-                                        ),
-                                      ),
-                                    ),
-                                    TsSwitch(
-                                      value: state.errorArmed,
-                                      semanticLabel:
-                                          'Simulasikan galat jaringan',
-                                      onChanged: viewModel.setErrorArmed,
-                                    ),
-                                  ],
-                                ),
-                                if (state.errorArmed) ...[
-                                  const SizedBox(height: 8),
-                                  const ErrorSimBanner(),
-                                ],
-                              ],
-                            ),
-                          ),
-                          const SizedBox(height: 16),
-                          DemoPanel(
-                            title: 'Data demo',
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                Text(
-                                  'Kembalikan garasi, booking, draft, '
-                                  'notifikasi, invoice, dan ulasan ke data '
-                                  'awal.',
-                                  style: textTheme.bodyMedium?.copyWith(
-                                    color: ext.textBody,
-                                  ),
-                                ),
-                                const SizedBox(height: 12),
-                                TsButton(
-                                  label: 'Reset semua data',
-                                  type: TsButtonType.dangerOutline,
-                                  isLoading: state.isResetting,
-                                  loadingLabel: 'Mengembalikan data…',
-                                  onPressed: idle
-                                      ? () => _confirmReset(context, ref)
-                                      : null,
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+            : content(),
       ),
     );
   }
@@ -226,8 +284,12 @@ class _BookingControls extends StatelessWidget {
     required this.onReset,
     required this.onAdvanceAll,
     required this.onResetAll,
+    this.selectedUnitCode,
+    this.onSelect,
   });
 
+  final String? selectedUnitCode;
+  final ValueChanged<String>? onSelect;
   final DemoModeState state;
   final bool idle;
   final ValueChanged<String> onAdvance;
@@ -280,6 +342,8 @@ class _BookingControls extends StatelessWidget {
           DemoUnitRow(
             unit: unit,
             enabled: idle,
+            selected: unit.unitCode == selectedUnitCode,
+            onSelect: onSelect == null ? null : () => onSelect!(unit.unitCode),
             onAdvance: () => onAdvance(unit.unitCode),
             onReset: () => onReset(unit.unitCode),
           ),

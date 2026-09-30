@@ -86,32 +86,43 @@ class DraftResumeCard extends StatelessWidget {
                   color: expiryColor,
                 ),
                 const SizedBox(width: 4),
-                Text(
-                  display.expiryLabel,
-                  style: textTheme.bodySmall?.copyWith(color: expiryColor),
+                Expanded(
+                  child: Text(
+                    display.expiryLabel,
+                    style: textTheme.bodySmall?.copyWith(color: expiryColor),
+                  ),
                 ),
               ],
             ),
             const SizedBox(height: 12),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: [
-                TsButton(
-                  label: 'Hapus draft',
-                  onPressed: onDelete,
-                  type: TsButtonType.ghost,
-                  compact: true,
-                  fullWidth: false,
-                ),
-                const SizedBox(width: 8),
-                TsButton(
-                  label: 'Lanjutkan',
-                  onPressed: onResume,
-                  type: TsButtonType.secondary,
-                  compact: true,
-                  fullWidth: false,
-                ),
-              ],
+            Align(
+              alignment: Alignment.centerRight,
+              child: Wrap(
+                alignment: WrapAlignment.end,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: 8,
+                runSpacing: 4,
+                children: [
+                  IntrinsicWidth(
+                    child: TsButton(
+                      label: 'Hapus draft',
+                      onPressed: onDelete,
+                      type: TsButtonType.ghost,
+                      compact: true,
+                      fullWidth: false,
+                    ),
+                  ),
+                  IntrinsicWidth(
+                    child: TsButton(
+                      label: 'Lanjutkan',
+                      onPressed: onResume,
+                      type: TsButtonType.secondary,
+                      compact: true,
+                      fullWidth: false,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ],
         ),

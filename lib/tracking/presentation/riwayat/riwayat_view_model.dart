@@ -32,6 +32,10 @@ class RiwayatViewModel extends Notifier<RiwayatState> {
     state = state.copyWith(selectedTab: tab);
   }
 
+  void selectBooking(String bookingId) {
+    state = state.copyWith(selectedBookingId: bookingId);
+  }
+
   void clearMotorFilter() {
     state = state.copyWith(motorFilterId: null, motorFilterLabel: null);
     if (!_tabPicked) state = state.copyWith(selectedTab: state.defaultTab);

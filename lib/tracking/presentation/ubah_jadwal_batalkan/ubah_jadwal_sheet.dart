@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/components/date_strip_item.dart';
 import 'package:tumbas_servis/booking/presentation/pilih_jadwal/components/slot_chip.dart';
+import 'package:tumbas_servis/core/presentation/components/adaptive_sheet.dart';
 import 'package:tumbas_servis/core/presentation/components/sheet_header.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
@@ -15,11 +16,9 @@ Future<bool> showUbahJadwalSheet(
   BuildContext context, {
   required UbahJadwalArgs args,
 }) async {
-  final saved = await showModalBottomSheet<bool>(
-    context: context,
-    isScrollControlled: true,
+  final saved = await showAdaptiveSheet<bool>(
+    context,
     useSafeArea: true,
-    showDragHandle: false,
     backgroundColor: Theme.of(context).colorScheme.surface,
     constraints: const BoxConstraints(maxWidth: 560),
     shape: const RoundedRectangleBorder(

@@ -123,6 +123,31 @@ void main() {
     expect(seedingController.isSeeding, isFalse);
   });
 
+  test('reports monotonic progress ending at 100% while seeding', () async {
+    final fractions = <double>[];
+    await seeder.seedIfNeeded(
+      onProgress: (fraction, label) => fractions.add(fraction),
+    );
+
+    expect(fractions.first, 0);
+    expect(fractions.last, 1);
+    expect(fractions.length, greaterThan(5));
+    for (var i = 1; i < fractions.length; i++) {
+      expect(fractions[i], greaterThanOrEqualTo(fractions[i - 1]));
+    }
+  });
+
+  test('reports no progress when there is nothing to seed', () async {
+    await seeder.seedIfNeeded();
+    final fractions = <double>[];
+
+    await seeder.seedIfNeeded(
+      onProgress: (fraction, label) => fractions.add(fraction),
+    );
+
+    expect(fractions, isEmpty);
+  });
+
   test('is idempotent: a second call does not duplicate the booking', () async {
     await seeder.seedIfNeeded();
     await seeder.seedIfNeeded();

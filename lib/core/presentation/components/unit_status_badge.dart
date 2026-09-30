@@ -102,7 +102,14 @@ class UnitStatusBadge extends StatelessWidget {
         children: [
           Icon(visual.icon, size: compact ? 12 : 14, color: visual.text),
           const SizedBox(width: 4),
-          Text(visual.label, style: textStyle),
+          Flexible(
+            child: Text(
+              visual.label,
+              style: textStyle,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+            ),
+          ),
         ],
       ),
     );

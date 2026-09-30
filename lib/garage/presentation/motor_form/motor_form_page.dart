@@ -9,12 +9,14 @@ import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_text_field.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/core/presentation/utils/plate_formatter.dart';
 import 'package:tumbas_servis/garage/presentation/di/garage_presentation_module.dart';
 import 'package:tumbas_servis/app/navigation/garage_result.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/components/discard_changes_dialog.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/components/motor_model_picker.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/components/motor_photo_field.dart';
+import 'package:tumbas_servis/garage/presentation/motor_form/components/motor_preview_pane.dart';
 import 'package:tumbas_servis/garage/presentation/motor_form/state/motor_form_state.dart';
 import 'package:tumbas_servis/garage/presentation/utils/motor_display.dart';
 
@@ -170,6 +172,116 @@ class _MotorFormPageState extends ConsumerState<MotorFormPage> {
     final ext = TsThemeExtension.of(context);
     final enabled = !state.isSaving;
 
+    final isWide = context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
+    final formColumn = Column(
+      children: [
+        Expanded(
+          child: SingleChildScrollView(
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+            padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 560),
+                child: state.isLoading && state.models.isEmpty
+                    ? const _FormSkeleton()
+                    : Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          MotorPhotoField(
+                            photoPath: state.photoPath,
+                            enabled: enabled,
+                            onPick: viewModel.pickPhoto,
+                            onRemove: viewModel.removePhoto,
+                          ),
+                          const SizedBox(height: 24),
+                          TsTextField(
+                            label: 'Nama panggilan',
+                            placeholder: 'Contoh: Vario 125',
+                            helperText: 'Tampil di Garasi dan saat booking.',
+                            controller: _nicknameController,
+                            focusNode: _nicknameFocus,
+                            enabled: enabled,
+                            maxLength: Motor.nicknameMaxLength,
+                            errorText: state.nicknameError,
+                            onChanged: viewModel.updateNickname,
+                          ),
+                          const SizedBox(height: 16),
+                          TsTextField(
+                            label: 'Model motor',
+                            placeholder: 'Pilih model',
+                            controller: _modelController,
+                            focusNode: _modelFocus,
+                            enabled: enabled,
+                            readOnly: true,
+                            suffixIcon: Icons.keyboard_arrow_down_rounded,
+                            errorText: state.modelError,
+                            onTap: _openModelPicker,
+                          ),
+                          const SizedBox(height: 16),
+                          TsTextField(
+                            label: 'Plat nomor',
+                            placeholder: 'AB 1234 XY',
+                            helperText: 'Contoh: AB 1234 XY',
+                            controller: _plateController,
+                            focusNode: _plateFocus,
+                            enabled: enabled,
+                            errorText: state.plateError,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: const [PlateNumberFormatter()],
+                            onChanged: viewModel.updatePlate,
+                          ),
+                          const SizedBox(height: 16),
+                          TsTextField(
+                            label: 'Tahun (opsional)',
+                            placeholder: '2015',
+                            helperText: 'Tahun produksi, 1990–2026',
+                            controller: _yearController,
+                            focusNode: _yearFocus,
+                            enabled: enabled,
+                            errorText: state.yearError,
+                            keyboardType: TextInputType.number,
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(4),
+                            ],
+                            onChanged: viewModel.updateYear,
+                          ),
+                        ],
+                      ),
+              ),
+            ),
+          ),
+        ),
+        Container(
+          padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
+          decoration: BoxDecoration(
+            color: scheme.surface,
+            border: Border(top: BorderSide(color: ext.borderDefault)),
+          ),
+          child: Center(
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 560),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  if (state.saveError) ...[
+                    _SaveErrorBanner(onRetry: _submit),
+                    const SizedBox(height: 12),
+                  ],
+                  TsButton(
+                    label: state.isEditMode ? 'Simpan perubahan' : 'Simpan',
+                    isLoading: state.isSaving,
+                    onPressed: _submit,
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+
     return PopScope(
       canPop: !state.isDirty && !state.isSaving,
       onPopInvokedWithResult: (didPop, _) {
@@ -184,120 +296,41 @@ class _MotorFormPageState extends ConsumerState<MotorFormPage> {
         ),
         body: SafeArea(
           top: false,
-          child: Column(
-            children: [
-              Expanded(
-                child: SingleChildScrollView(
-                  keyboardDismissBehavior:
-                      ScrollViewKeyboardDismissBehavior.onDrag,
-                  padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
-                  child: Center(
-                    child: ConstrainedBox(
-                      constraints: const BoxConstraints(maxWidth: 560),
-                      child: state.isLoading && state.models.isEmpty
-                          ? const _FormSkeleton()
-                          : Column(
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              children: [
-                                MotorPhotoField(
-                                  photoPath: state.photoPath,
-                                  enabled: enabled,
-                                  onPick: viewModel.pickPhoto,
-                                  onRemove: viewModel.removePhoto,
-                                ),
-                                const SizedBox(height: 24),
-                                TsTextField(
-                                  label: 'Nama panggilan',
-                                  placeholder: 'Contoh: Vario 125',
-                                  helperText:
-                                      'Tampil di Garasi dan saat booking.',
-                                  controller: _nicknameController,
-                                  focusNode: _nicknameFocus,
-                                  enabled: enabled,
-                                  maxLength: Motor.nicknameMaxLength,
-                                  errorText: state.nicknameError,
-                                  onChanged: viewModel.updateNickname,
-                                ),
-                                const SizedBox(height: 16),
-                                TsTextField(
-                                  label: 'Model motor',
-                                  placeholder: 'Pilih model',
-                                  controller: _modelController,
-                                  focusNode: _modelFocus,
-                                  enabled: enabled,
-                                  readOnly: true,
-                                  suffixIcon: Icons.keyboard_arrow_down_rounded,
-                                  errorText: state.modelError,
-                                  onTap: _openModelPicker,
-                                ),
-                                const SizedBox(height: 16),
-                                TsTextField(
-                                  label: 'Plat nomor',
-                                  placeholder: 'AB 1234 XY',
-                                  helperText: 'Contoh: AB 1234 XY',
-                                  controller: _plateController,
-                                  focusNode: _plateFocus,
-                                  enabled: enabled,
-                                  errorText: state.plateError,
-                                  keyboardType: TextInputType.text,
-                                  inputFormatters: const [
-                                    PlateNumberFormatter(),
-                                  ],
-                                  onChanged: viewModel.updatePlate,
-                                ),
-                                const SizedBox(height: 16),
-                                TsTextField(
-                                  label: 'Tahun (opsional)',
-                                  placeholder: '2015',
-                                  helperText: 'Tahun produksi, 1990–2026',
-                                  controller: _yearController,
-                                  focusNode: _yearFocus,
-                                  enabled: enabled,
-                                  errorText: state.yearError,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                    LengthLimitingTextInputFormatter(4),
-                                  ],
-                                  onChanged: viewModel.updateYear,
-                                ),
-                              ],
-                            ),
-                    ),
-                  ),
-                ),
-              ),
-              Container(
-                padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
-                decoration: BoxDecoration(
-                  color: scheme.surface,
-                  border: Border(top: BorderSide(color: ext.borderDefault)),
-                ),
-                child: Center(
+          child: isWide
+              ? Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 560),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        if (state.saveError) ...[
-                          _SaveErrorBanner(onRetry: _submit),
-                          const SizedBox(height: 12),
+                    constraints: const BoxConstraints(
+                      maxWidth: 600 + 24 + 360 + 48,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 24),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Flexible(
+                            child: ConstrainedBox(
+                              constraints: const BoxConstraints(maxWidth: 600),
+                              child: formColumn,
+                            ),
+                          ),
+                          const SizedBox(width: 24),
+                          SizedBox(
+                            width: 360,
+                            child: Padding(
+                              padding: const EdgeInsets.only(top: 16),
+                              child: MotorPreviewPane(
+                                nickname: state.nickname,
+                                plateNumber: state.plateNumber,
+                                model: state.selectedModel,
+                              ),
+                            ),
+                          ),
                         ],
-                        TsButton(
-                          label: state.isEditMode
-                              ? 'Simpan perubahan'
-                              : 'Simpan',
-                          isLoading: state.isSaving,
-                          onPressed: _submit,
-                        ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              ),
-            ],
-          ),
+                )
+              : formColumn,
         ),
       ),
     );

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
+import 'package:tumbas_servis/core/data/service/demo_content_seeder.dart';
 import 'package:tumbas_servis/core/data/service/demo_mode_controller.dart';
 import 'package:tumbas_servis/core/data/service/demo_reset_service.dart';
 import 'package:tumbas_servis/core/data/service/tracking_simulator.dart';
@@ -39,7 +40,8 @@ class _RecordingSeeder extends NoopDemoContentSeeder {
   final List<String> log;
 
   @override
-  Future<void> seedIfNeeded() async => log.add('seed');
+  Future<void> seedIfNeeded({SeedProgressCallback? onProgress}) async =>
+      log.add('seed');
 }
 
 void main() {
@@ -177,7 +179,6 @@ void main() {
         expect(container.read(provider).errorArmed, isTrue);
         expect(controller.isErrorArmed, isTrue);
 
-        // Any repository write consumes it (invoice / review / booking / login).
         expect(controller.consumeArmedError(), isTrue);
 
         expect(container.read(provider).errorArmed, isFalse);

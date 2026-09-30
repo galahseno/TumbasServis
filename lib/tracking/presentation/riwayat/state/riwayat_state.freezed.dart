@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RiwayatState {
 
- bool get isLoading; bool get hasError; List<HistoryEntry> get allEntries; RiwayatTab get selectedTab; String? get motorFilterId; String? get motorFilterLabel;
+ bool get isLoading; bool get hasError; List<HistoryEntry> get allEntries; RiwayatTab get selectedTab; String? get motorFilterId; String? get motorFilterLabel; String? get selectedBookingId;
 /// Create a copy of RiwayatState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $RiwayatStateCopyWith<RiwayatState> get copyWith => _$RiwayatStateCopyWithImpl<R
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RiwayatState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other.allEntries, allEntries)&&(identical(other.selectedTab, selectedTab) || other.selectedTab == selectedTab)&&(identical(other.motorFilterId, motorFilterId) || other.motorFilterId == motorFilterId)&&(identical(other.motorFilterLabel, motorFilterLabel) || other.motorFilterLabel == motorFilterLabel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RiwayatState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other.allEntries, allEntries)&&(identical(other.selectedTab, selectedTab) || other.selectedTab == selectedTab)&&(identical(other.motorFilterId, motorFilterId) || other.motorFilterId == motorFilterId)&&(identical(other.motorFilterLabel, motorFilterLabel) || other.motorFilterLabel == motorFilterLabel)&&(identical(other.selectedBookingId, selectedBookingId) || other.selectedBookingId == selectedBookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(allEntries),selectedTab,motorFilterId,motorFilterLabel);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(allEntries),selectedTab,motorFilterId,motorFilterLabel,selectedBookingId);
 
 @override
 String toString() {
-  return 'RiwayatState(isLoading: $isLoading, hasError: $hasError, allEntries: $allEntries, selectedTab: $selectedTab, motorFilterId: $motorFilterId, motorFilterLabel: $motorFilterLabel)';
+  return 'RiwayatState(isLoading: $isLoading, hasError: $hasError, allEntries: $allEntries, selectedTab: $selectedTab, motorFilterId: $motorFilterId, motorFilterLabel: $motorFilterLabel, selectedBookingId: $selectedBookingId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $RiwayatStateCopyWith<$Res>  {
   factory $RiwayatStateCopyWith(RiwayatState value, $Res Function(RiwayatState) _then) = _$RiwayatStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool hasError, List<HistoryEntry> allEntries, RiwayatTab selectedTab, String? motorFilterId, String? motorFilterLabel
+ bool isLoading, bool hasError, List<HistoryEntry> allEntries, RiwayatTab selectedTab, String? motorFilterId, String? motorFilterLabel, String? selectedBookingId
 });
 
 
@@ -62,7 +62,7 @@ class _$RiwayatStateCopyWithImpl<$Res>
 
 /// Create a copy of RiwayatState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? allEntries = null,Object? selectedTab = null,Object? motorFilterId = freezed,Object? motorFilterLabel = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? allEntries = null,Object? selectedTab = null,Object? motorFilterId = freezed,Object? motorFilterLabel = freezed,Object? selectedBookingId = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
@@ -70,6 +70,7 @@ as bool,allEntries: null == allEntries ? _self.allEntries : allEntries // ignore
 as List<HistoryEntry>,selectedTab: null == selectedTab ? _self.selectedTab : selectedTab // ignore: cast_nullable_to_non_nullable
 as RiwayatTab,motorFilterId: freezed == motorFilterId ? _self.motorFilterId : motorFilterId // ignore: cast_nullable_to_non_nullable
 as String?,motorFilterLabel: freezed == motorFilterLabel ? _self.motorFilterLabel : motorFilterLabel // ignore: cast_nullable_to_non_nullable
+as String?,selectedBookingId: freezed == selectedBookingId ? _self.selectedBookingId : selectedBookingId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }
@@ -155,10 +156,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel,  String? selectedBookingId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RiwayatState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel);case _:
+return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel,_that.selectedBookingId);case _:
   return orElse();
 
 }
@@ -176,10 +177,10 @@ return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTa
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel,  String? selectedBookingId)  $default,) {final _that = this;
 switch (_that) {
 case _RiwayatState():
-return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel);case _:
+return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel,_that.selectedBookingId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -196,10 +197,10 @@ return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTa
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  List<HistoryEntry> allEntries,  RiwayatTab selectedTab,  String? motorFilterId,  String? motorFilterLabel,  String? selectedBookingId)?  $default,) {final _that = this;
 switch (_that) {
 case _RiwayatState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel);case _:
+return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTab,_that.motorFilterId,_that.motorFilterLabel,_that.selectedBookingId);case _:
   return null;
 
 }
@@ -211,7 +212,7 @@ return $default(_that.isLoading,_that.hasError,_that.allEntries,_that.selectedTa
 
 
 class _RiwayatState extends RiwayatState {
-  const _RiwayatState({this.isLoading = true, this.hasError = false, final  List<HistoryEntry> allEntries = const <HistoryEntry>[], this.selectedTab = RiwayatTab.berlangsung, this.motorFilterId, this.motorFilterLabel}): _allEntries = allEntries,super._();
+  const _RiwayatState({this.isLoading = true, this.hasError = false, final  List<HistoryEntry> allEntries = const <HistoryEntry>[], this.selectedTab = RiwayatTab.berlangsung, this.motorFilterId, this.motorFilterLabel, this.selectedBookingId}): _allEntries = allEntries,super._();
   
 
 @override@JsonKey() final  bool isLoading;
@@ -226,6 +227,7 @@ class _RiwayatState extends RiwayatState {
 @override@JsonKey() final  RiwayatTab selectedTab;
 @override final  String? motorFilterId;
 @override final  String? motorFilterLabel;
+@override final  String? selectedBookingId;
 
 /// Create a copy of RiwayatState
 /// with the given fields replaced by the non-null parameter values.
@@ -237,16 +239,16 @@ _$RiwayatStateCopyWith<_RiwayatState> get copyWith => __$RiwayatStateCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RiwayatState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other._allEntries, _allEntries)&&(identical(other.selectedTab, selectedTab) || other.selectedTab == selectedTab)&&(identical(other.motorFilterId, motorFilterId) || other.motorFilterId == motorFilterId)&&(identical(other.motorFilterLabel, motorFilterLabel) || other.motorFilterLabel == motorFilterLabel));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RiwayatState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&const DeepCollectionEquality().equals(other._allEntries, _allEntries)&&(identical(other.selectedTab, selectedTab) || other.selectedTab == selectedTab)&&(identical(other.motorFilterId, motorFilterId) || other.motorFilterId == motorFilterId)&&(identical(other.motorFilterLabel, motorFilterLabel) || other.motorFilterLabel == motorFilterLabel)&&(identical(other.selectedBookingId, selectedBookingId) || other.selectedBookingId == selectedBookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(_allEntries),selectedTab,motorFilterId,motorFilterLabel);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,const DeepCollectionEquality().hash(_allEntries),selectedTab,motorFilterId,motorFilterLabel,selectedBookingId);
 
 @override
 String toString() {
-  return 'RiwayatState(isLoading: $isLoading, hasError: $hasError, allEntries: $allEntries, selectedTab: $selectedTab, motorFilterId: $motorFilterId, motorFilterLabel: $motorFilterLabel)';
+  return 'RiwayatState(isLoading: $isLoading, hasError: $hasError, allEntries: $allEntries, selectedTab: $selectedTab, motorFilterId: $motorFilterId, motorFilterLabel: $motorFilterLabel, selectedBookingId: $selectedBookingId)';
 }
 
 
@@ -257,7 +259,7 @@ abstract mixin class _$RiwayatStateCopyWith<$Res> implements $RiwayatStateCopyWi
   factory _$RiwayatStateCopyWith(_RiwayatState value, $Res Function(_RiwayatState) _then) = __$RiwayatStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool hasError, List<HistoryEntry> allEntries, RiwayatTab selectedTab, String? motorFilterId, String? motorFilterLabel
+ bool isLoading, bool hasError, List<HistoryEntry> allEntries, RiwayatTab selectedTab, String? motorFilterId, String? motorFilterLabel, String? selectedBookingId
 });
 
 
@@ -274,7 +276,7 @@ class __$RiwayatStateCopyWithImpl<$Res>
 
 /// Create a copy of RiwayatState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? allEntries = null,Object? selectedTab = null,Object? motorFilterId = freezed,Object? motorFilterLabel = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? allEntries = null,Object? selectedTab = null,Object? motorFilterId = freezed,Object? motorFilterLabel = freezed,Object? selectedBookingId = freezed,}) {
   return _then(_RiwayatState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
@@ -282,6 +284,7 @@ as bool,allEntries: null == allEntries ? _self._allEntries : allEntries // ignor
 as List<HistoryEntry>,selectedTab: null == selectedTab ? _self.selectedTab : selectedTab // ignore: cast_nullable_to_non_nullable
 as RiwayatTab,motorFilterId: freezed == motorFilterId ? _self.motorFilterId : motorFilterId // ignore: cast_nullable_to_non_nullable
 as String?,motorFilterLabel: freezed == motorFilterLabel ? _self.motorFilterLabel : motorFilterLabel // ignore: cast_nullable_to_non_nullable
+as String?,selectedBookingId: freezed == selectedBookingId ? _self.selectedBookingId : selectedBookingId // ignore: cast_nullable_to_non_nullable
 as String?,
   ));
 }

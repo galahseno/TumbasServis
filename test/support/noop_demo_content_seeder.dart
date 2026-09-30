@@ -11,5 +11,5 @@ class NoopDemoContentSeeder extends DemoContentSeeder {
       );
 
   @override
-  Future<void> seedIfNeeded() async {}
+  Future<void> seedIfNeeded({SeedProgressCallback? onProgress}) async {}
 }

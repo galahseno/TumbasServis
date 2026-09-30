@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tumbas_servis/booking/data/di/booking_data_module.dart';
 import 'package:tumbas_servis/booking/presentation/di/booking_presentation_module.dart';
 import 'package:tumbas_servis/booking/presentation/ringkasan/state/ringkasan_state.dart';
+import 'package:tumbas_servis/booking/presentation/utils/ringkasan_display.dart';
 import 'package:tumbas_servis/booking/presentation/utils/schedule_display.dart';
 import 'package:tumbas_servis/catalog/data/di/catalog_data_module.dart';
 import 'package:tumbas_servis/core/data/di/core_data_module.dart';
@@ -14,7 +15,9 @@ import 'package:tumbas_servis/core/domain/model/garage/motor.dart';
 import 'package:tumbas_servis/core/domain/model/result.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/time_slot.dart';
 import 'package:tumbas_servis/core/domain/model/workshop/workshop.dart';
+import 'package:tumbas_servis/core/domain/service/pricing_duration/pricing_calculator.dart';
 import 'package:tumbas_servis/core/domain/service/scheduling/slot_capacity_service.dart';
+import 'package:tumbas_servis/core/domain/service/voucher/voucher_eligibility_service.dart';
 import 'package:tumbas_servis/core/presentation/utils/time_formatter.dart';
 import 'package:tumbas_servis/garage/data/di/garage_data_module.dart';
 import 'package:tumbas_servis/workshop/data/di/workshop_data_module.dart';
@@ -31,6 +34,8 @@ T? _find<T>(Iterable<T> items, bool Function(T) test) {
 
 class RingkasanViewModel extends Notifier<RingkasanState> {
   static const _capacityService = SlotCapacityService();
+  static const _eligibilityService = VoucherEligibilityService();
+  static const _pricingCalculator = PricingCalculator();
 
   List<Voucher> _vouchers = [];
 
@@ -98,28 +103,60 @@ class RingkasanViewModel extends Notifier<RingkasanState> {
     final vouchersResult = await catalogRepo.getVouchers();
     if (!ref.mounted) return;
     _vouchers = vouchersResult is Ok<List<Voucher>> ? vouchersResult.value : [];
-    final voucher = draft.voucherId == null
+    final appliedVoucher = draft.voucherId == null
         ? null
         : _find(_vouchers, (v) => v.id == draft.voucherId);
 
     final workshop = (workshopResult as Ok<Workshop>).value;
     final invalid = await _checkSlotInvalid(draft: draft, workshop: workshop);
 
+    final motorsById = {
+      for (final m in (motorsResult as Ok<List<Motor>>).value) m.id: m,
+    };
+    final serviceById = {
+      for (final s in (serviceTypesResult as Ok<List<ServiceType>>).value)
+        s.id: s,
+    };
+    final partById = {
+      for (final p in (partsResult as Ok<List<Part>>).value) p.id: p,
+    };
+
+    var voucher = appliedVoucher;
+    String? voucherNotice;
+    if (appliedVoucher != null) {
+      final units = buildUnitLines(
+        draft: draft,
+        motorsById: motorsById,
+        serviceById: serviceById,
+        partById: partById,
+      );
+      final eligibility = _eligibilityService.evaluate(
+        voucher: appliedVoucher,
+        unitCount: units.length,
+        subtotal: _pricingCalculator.fleetSubtotal(
+          units.map((u) => u.subtotal).toList(),
+        ),
+        now: ref.read(clockProvider).now(),
+      );
+      if (!eligibility.isEligible) {
+        voucher = null;
+        voucherNotice =
+            'Voucher ${appliedVoucher.code} dilepas — '
+            '${_eligibilityService.shortfallMessage(voucher: appliedVoucher, result: eligibility)}';
+        await ref.read(bookingDraftProvider.notifier).setVoucher(null);
+        if (!ref.mounted) return;
+      }
+    }
+
     state = state.copyWith(
       isLoading: false,
       hasError: false,
       workshop: workshop,
-      motorsById: {
-        for (final m in (motorsResult as Ok<List<Motor>>).value) m.id: m,
-      },
-      serviceById: {
-        for (final s in (serviceTypesResult as Ok<List<ServiceType>>).value)
-          s.id: s,
-      },
-      partById: {
-        for (final p in (partsResult as Ok<List<Part>>).value) p.id: p,
-      },
+      motorsById: motorsById,
+      serviceById: serviceById,
+      partById: partById,
       voucher: voucher,
+      voucherNotice: voucherNotice,
       removedVoucherId: null,
       slotInvalid: invalid != null,
       slotInvalidTitle: invalid?.$1,
@@ -156,6 +193,11 @@ class RingkasanViewModel extends Notifier<RingkasanState> {
       'Tersisa ${fresh.remaining} motor di ${slotRecapLabel(fresh)}. '
           'Pisah jadwal atau pilih jam lain.',
     );
+  }
+
+  void clearVoucherNotice() {
+    if (state.voucherNotice == null) return;
+    state = state.copyWith(voucherNotice: null);
   }
 
   void toggleAccordion(String motorId) {

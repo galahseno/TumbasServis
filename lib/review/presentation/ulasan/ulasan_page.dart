@@ -5,17 +5,20 @@ import 'package:tumbas_servis/app/navigation/routes.dart';
 import 'package:tumbas_servis/core/domain/model/review/review.dart';
 import 'package:tumbas_servis/core/presentation/components/empty_state.dart';
 import 'package:tumbas_servis/core/presentation/components/error_state.dart';
+import 'package:tumbas_servis/core/presentation/components/max_width_box.dart';
 import 'package:tumbas_servis/core/presentation/components/skeleton.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_snackbar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_text_field.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/review/presentation/di/review_presentation_module.dart';
 import 'package:tumbas_servis/review/presentation/ulasan/components/mechanic_rating_row.dart';
 import 'package:tumbas_servis/review/presentation/ulasan/components/rating_stars.dart';
 import 'package:tumbas_servis/review/presentation/ulasan/components/review_recap.dart';
 import 'package:tumbas_servis/review/presentation/ulasan/state/ulasan_state.dart';
+import 'package:tumbas_servis/review/presentation/ulasan/ulasan_view_model.dart';
 
 class UlasanPage extends ConsumerStatefulWidget {
   const UlasanPage({required this.bookingId, super.key});
@@ -43,6 +46,9 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
     }
   }
 
+  bool _isWide(BuildContext context) =>
+      context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
+
   Future<void> _submit() async {
     FocusScope.of(context).unfocus();
     final viewModel = ref.read(
@@ -50,11 +56,12 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
     );
     final ok = await viewModel.submit();
     if (!mounted) return;
+    final aboveBar = !_isWide(context);
     if (ok) {
       TsSnackbar.success(
         context,
         'Ulasan terkirim. Terima kasih!',
-        aboveNavBar: true,
+        aboveNavBar: aboveBar,
       );
     } else if (!ref
         .read(ulasanViewModelProvider(widget.bookingId))
@@ -62,7 +69,7 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
       TsSnackbar.error(
         context,
         'Gagal mengirim ulasan. Coba lagi.',
-        aboveNavBar: true,
+        aboveNavBar: aboveBar,
       );
     }
   }
@@ -96,6 +103,8 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
                 onCta: () =>
                     context.pushReplacement(Routes.invoice(widget.bookingId)),
               )
+            : _isWide(context) && !state.isSubmitted
+            ? _buildWide(state, viewModel)
             : Column(
                 children: [
                   Expanded(
@@ -112,13 +121,7 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
                                   workshopName: state.workshopName,
                                   mechanics: state.mechanics,
                                 )
-                              : _UlasanForm(
-                                  state: state,
-                                  controller: _commentController,
-                                  onWorkshopRating: viewModel.setWorkshopRating,
-                                  onMechanicRating: viewModel.setMechanicRating,
-                                  onComment: viewModel.setComment,
-                                ),
+                              : _form(state, viewModel),
                         ),
                       ),
                     ),
@@ -126,11 +129,72 @@ class _UlasanPageState extends ConsumerState<UlasanPage> {
                   _UlasanBar(
                     submitted: state.isSubmitted,
                     isSubmitting: state.isSubmitting,
+                    maxContentWidth: context.isTablet ? 560 : null,
                     onSubmit: _submit,
                     onBack: _goBack,
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  Widget _form(UlasanState state, UlasanViewModel viewModel) => _UlasanForm(
+    state: state,
+    controller: _commentController,
+    onWorkshopRating: viewModel.setWorkshopRating,
+    onMechanicRating: viewModel.setMechanicRating,
+    onComment: viewModel.setComment,
+  );
+
+  Widget _buildWide(UlasanState state, UlasanViewModel viewModel) {
+    final preview = Review(
+      bookingId: widget.bookingId,
+      workshopRating: state.workshopRating,
+      workshopComment: state.comment,
+      mechanicRatings: {
+        for (final entry in state.mechanicRatings.entries)
+          if (entry.value > 0) entry.key: entry.value,
+      },
+      createdAt: DateTime.now(),
+    );
+    return SingleChildScrollView(
+      keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 652 + 24 + 400),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    _form(state, viewModel),
+                    const SizedBox(height: 24),
+                    TsButton(
+                      label: 'Kirim ulasan',
+                      loadingLabel: 'Mengirim ulasan',
+                      isLoading: state.isSubmitting,
+                      onPressed: _submit,
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(width: 24),
+              SizedBox(
+                width: 400,
+                child: ReviewRecap(
+                  preview: true,
+                  review: preview,
+                  workshopName: state.workshopName,
+                  mechanics: state.mechanics,
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -266,8 +330,10 @@ class _UlasanBar extends StatelessWidget {
     required this.isSubmitting,
     required this.onSubmit,
     required this.onBack,
+    this.maxContentWidth,
   });
 
+  final double? maxContentWidth;
   final bool submitted;
   final bool isSubmitting;
   final VoidCallback onSubmit;
@@ -278,20 +344,24 @@ class _UlasanBar extends StatelessWidget {
     final scheme = Theme.of(context).colorScheme;
     final ext = TsThemeExtension.of(context);
 
+    final button = submitted
+        ? TsButton(label: 'Kembali ke detail booking', onPressed: onBack)
+        : TsButton(
+            label: 'Kirim ulasan',
+            loadingLabel: 'Mengirim ulasan',
+            isLoading: isSubmitting,
+            onPressed: onSubmit,
+          );
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 12, 20, 12),
       decoration: BoxDecoration(
         color: scheme.surface,
         border: Border(top: BorderSide(color: ext.borderDefault)),
       ),
-      child: submitted
-          ? TsButton(label: 'Kembali ke detail booking', onPressed: onBack)
-          : TsButton(
-              label: 'Kirim ulasan',
-              loadingLabel: 'Mengirim ulasan',
-              isLoading: isSubmitting,
-              onPressed: onSubmit,
-            ),
+      child: maxContentWidth == null
+          ? button
+          : MaxWidthBox(maxWidth: maxContentWidth!, child: button),
     );
   }
 }

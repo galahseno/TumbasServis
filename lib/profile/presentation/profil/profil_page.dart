@@ -2,14 +2,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tumbas_servis/app/navigation/routes.dart';
+import 'package:tumbas_servis/core/presentation/components/adaptive_sheet.dart';
 import 'package:tumbas_servis/core/presentation/components/sheet_header.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_app_bar.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_dialog.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_logo.dart';
 import 'package:tumbas_servis/core/presentation/di/core_presentation_module.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/profile/presentation/di/profile_presentation_module.dart';
 import 'package:tumbas_servis/profile/presentation/profil/components/settings_row.dart';
+import 'package:tumbas_servis/profile/presentation/profil/components/theme_preview.dart';
 import 'package:tumbas_servis/profile/presentation/profil/components/theme_setting.dart';
 import 'package:tumbas_servis/profile/presentation/profil/components/user_card.dart';
 import 'package:tumbas_servis/profile/presentation/profil/state/profil_state.dart';
@@ -53,80 +56,99 @@ class ProfilPage extends ConsumerWidget {
       ),
     );
 
+    final isWide = context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
+    final menu = Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        UserCard(
+          name: state.userName,
+          maskedPhone: state.maskedPhone,
+          initial: state.avatarInitial,
+        ),
+        const SizedBox(height: 16),
+        group([
+          ThemeSetting(mode: themeMode, onChanged: viewModel.setThemeMode),
+          SettingsRow(
+            icon: Icons.notifications_outlined,
+            title: 'Notifikasi',
+            subtitle: 'Status servis, promo, dan pengingat',
+            switchValue: state.notificationsEnabled,
+            onSwitchChanged: viewModel.setNotificationsEnabled,
+          ),
+        ]),
+        const SizedBox(height: 16),
+        group([
+          SettingsRow(
+            icon: Icons.bolt_rounded,
+            title: 'Mode Demo',
+            tag: 'Demo',
+            showChevron: true,
+            onTap: () => context.push(Routes.profileDemoMode),
+          ),
+          SettingsRow(
+            icon: Icons.info_outline_rounded,
+            title: 'Tentang aplikasi',
+            subtitle: 'Versi 1.0.0',
+            showChevron: true,
+            onTap: () => _showAbout(context),
+          ),
+        ]),
+        const SizedBox(height: 16),
+        group([
+          SettingsRow(
+            icon: Icons.logout_rounded,
+            title: 'Keluar',
+            onTap: state.isLoggingOut
+                ? null
+                : () => _confirmLogout(context, ref),
+          ),
+        ]),
+      ],
+    );
+
     return Scaffold(
       backgroundColor: scheme.surface,
       appBar: TsAppBar.large('Profil'),
       body: SafeArea(
         top: false,
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
-          children: [
-            Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 560),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    UserCard(
-                      name: state.userName,
-                      maskedPhone: state.maskedPhone,
-                      initial: state.avatarInitial,
+        child: isWide
+            ? SingleChildScrollView(
+                padding: const EdgeInsets.fromLTRB(24, 8, 24, 24),
+                child: Center(
+                  child: ConstrainedBox(
+                    constraints: const BoxConstraints(maxWidth: 992),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Expanded(flex: 480, child: menu),
+                        const SizedBox(width: 24),
+                        Expanded(
+                          flex: 488,
+                          child: ThemePreview(mode: themeMode),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 16),
-                    group([
-                      ThemeSetting(
-                        mode: themeMode,
-                        onChanged: viewModel.setThemeMode,
-                      ),
-                      SettingsRow(
-                        icon: Icons.notifications_outlined,
-                        title: 'Notifikasi',
-                        subtitle: 'Status servis, promo, dan pengingat',
-                        switchValue: state.notificationsEnabled,
-                        onSwitchChanged: viewModel.setNotificationsEnabled,
-                      ),
-                    ]),
-                    const SizedBox(height: 16),
-                    group([
-                      SettingsRow(
-                        icon: Icons.bolt_rounded,
-                        title: 'Mode Demo',
-                        tag: 'Demo',
-                        showChevron: true,
-                        onTap: () => context.push(Routes.profileDemoMode),
-                      ),
-                      SettingsRow(
-                        icon: Icons.info_outline_rounded,
-                        title: 'Tentang aplikasi',
-                        subtitle: 'Versi 1.0.0',
-                        showChevron: true,
-                        onTap: () => _showAbout(context),
-                      ),
-                    ]),
-                    const SizedBox(height: 16),
-                    group([
-                      SettingsRow(
-                        icon: Icons.logout_rounded,
-                        title: 'Keluar',
-                        onTap: state.isLoggingOut
-                            ? null
-                            : () => _confirmLogout(context, ref),
-                      ),
-                    ]),
-                  ],
+                  ),
                 ),
+              )
+            : ListView(
+                padding: const EdgeInsets.fromLTRB(16, 8, 16, 24),
+                children: [
+                  Center(
+                    child: ConstrainedBox(
+                      constraints: const BoxConstraints(maxWidth: 560),
+                      child: menu,
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
       ),
     );
   }
 
   static Future<void> _showAbout(BuildContext context) {
-    return showModalBottomSheet<void>(
-      context: context,
-      isScrollControlled: true,
+    return showAdaptiveSheet<void>(
+      context,
       builder: (context) => const _AboutSheet(),
     );
   }

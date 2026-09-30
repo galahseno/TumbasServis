@@ -28,6 +28,8 @@ class NavRail extends StatelessWidget {
 
     return NavigationRail(
       extended: extended,
+      minWidth: 80,
+      minExtendedWidth: 240,
       backgroundColor: scheme.surface,
       indicatorColor: scheme.primaryContainer,
       selectedIndex: currentIndex,
@@ -50,6 +52,7 @@ class NavRail extends StatelessWidget {
       destinations: [
         for (final item in _navRailItems)
           NavigationRailDestination(
+            padding: EdgeInsets.zero,
             icon: Icon(item.icon),
             label: Text(item.label),
           ),

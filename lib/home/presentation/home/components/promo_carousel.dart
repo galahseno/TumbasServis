@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:tumbas_servis/core/domain/model/catalog/promo.dart';
 import 'package:tumbas_servis/core/presentation/components/ts_button.dart';
 import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 
 class _PromoCopy {
   const _PromoCopy(this.body, this.ctaLabel, this.icon);
@@ -36,9 +38,16 @@ _PromoCopy _copyFor(Promo promo) =>
     const _PromoCopy('', 'Booking sekarang', Icons.local_offer_rounded);
 
 class PromoCarousel extends StatefulWidget {
-  const PromoCarousel({required this.promos, super.key, this.onTapPromo});
+  const PromoCarousel({
+    required this.promos,
+    super.key,
+    this.onTapPromo,
+    this.perView = 1,
+  });
 
   final List<Promo> promos;
+
+  final int perView;
   final void Function(Promo promo)? onTapPromo;
 
   @override
@@ -46,9 +55,16 @@ class PromoCarousel extends StatefulWidget {
 }
 
 class _PromoCarouselState extends State<PromoCarousel> {
-  final _controller = PageController(viewportFraction: 0.92);
+  late final PageController _controller = PageController(
+    viewportFraction: _viewportFraction,
+  );
   Timer? _timer;
   int _page = 0;
+
+  bool get _multiUp => widget.perView > 1;
+  double get _viewportFraction => _multiUp ? 1 / widget.perView : 0.92;
+
+  int get _pageCount => math.max(1, widget.promos.length - widget.perView + 1);
   bool _paused = false;
 
   @override
@@ -66,10 +82,10 @@ class _PromoCarouselState extends State<PromoCarousel> {
 
   void _scheduleNext() {
     _timer?.cancel();
-    if (_paused || widget.promos.length <= 1) return;
+    if (_paused || _pageCount <= 1) return;
     if (MediaQuery.maybeDisableAnimationsOf(context) ?? false) return;
     _timer = Timer(const Duration(seconds: 5), () {
-      final next = (_page + 1) % widget.promos.length;
+      final next = (_page + 1) % _pageCount;
       _controller.animateToPage(
         next,
         duration: const Duration(milliseconds: 300),
@@ -82,6 +98,12 @@ class _PromoCarouselState extends State<PromoCarousel> {
     if (_paused == paused) return;
     setState(() => _paused = paused);
     _scheduleNext();
+  }
+
+  double _slideHeight(BuildContext context) {
+    final factor = MediaQuery.textScalerOf(context).scale(1);
+    final narrow = context.windowSizeClass.isCompact || widget.perView > 1;
+    return (narrow ? 180 : 148) + (factor.clamp(1.0, 2.0) - 1) * 112;
   }
 
   @override
@@ -97,13 +119,14 @@ class _PromoCarouselState extends State<PromoCarousel> {
           onPointerDown: (_) => _setPaused(true),
           onPointerUp: (_) => _setPaused(false),
           child: Semantics(
-            label: 'Promo ${_page + 1} dari ${widget.promos.length}',
+            label: 'Promo ${_page + 1} dari $_pageCount',
             child: Column(
               children: [
                 SizedBox(
-                  height: 148,
+                  height: _slideHeight(context),
                   child: PageView.builder(
                     controller: _controller,
+                    padEnds: !_multiUp,
                     itemCount: widget.promos.length,
                     onPageChanged: (page) {
                       setState(() => _page = page);
@@ -125,7 +148,7 @@ class _PromoCarouselState extends State<PromoCarousel> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      for (var i = 0; i < widget.promos.length; i++)
+                      for (var i = 0; i < _pageCount; i++)
                         _Dot(active: i == _page),
                     ],
                   ),
@@ -156,6 +179,7 @@ class _PromoSlide extends StatelessWidget {
       onTap: onTap,
       borderRadius: BorderRadius.circular(20),
       child: Container(
+        clipBehavior: Clip.hardEdge,
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
           gradient: LinearGradient(
@@ -176,35 +200,46 @@ class _PromoSlide extends StatelessWidget {
                 color: scheme.primary.withValues(alpha: 0.16),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  promo.title,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.titleMedium?.copyWith(
-                    color: scheme.onSurface,
-                    fontWeight: FontWeight.w700,
-                  ),
-                ),
-                const SizedBox(height: 6),
-                Text(
-                  copy.body,
-                  maxLines: 2,
-                  overflow: TextOverflow.ellipsis,
-                  style: textTheme.bodySmall?.copyWith(color: ext.textBody),
-                ),
-                const SizedBox(height: 12),
-                TsButton(
-                  label: copy.ctaLabel,
-                  onPressed: onTap,
-                  type: TsButtonType.primary,
-                  compact: true,
-                  fullWidth: false,
-                ),
-              ],
+            LayoutBuilder(
+              builder: (context, constraints) => constraints.maxWidth < 120
+                  ? const SizedBox.shrink()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          promo.title,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.titleMedium?.copyWith(
+                            color: scheme.onSurface,
+                            fontWeight: FontWeight.w700,
+                          ),
+                        ),
+                        const SizedBox(height: 6),
+                        Text(
+                          copy.body,
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
+                          style: textTheme.bodySmall?.copyWith(
+                            color: ext.textBody,
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: IntrinsicWidth(
+                            child: TsButton(
+                              label: copy.ctaLabel,
+                              onPressed: onTap,
+                              type: TsButtonType.primary,
+                              compact: true,
+                              fullWidth: false,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
             ),
           ],
         ),

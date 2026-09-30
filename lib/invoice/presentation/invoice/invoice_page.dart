@@ -15,11 +15,14 @@ import 'package:tumbas_servis/core/presentation/theme/ts_theme_extension.dart';
 import 'package:tumbas_servis/core/presentation/utils/currency_formatter.dart';
 import 'package:tumbas_servis/core/presentation/utils/date_formatter.dart';
 import 'package:tumbas_servis/core/presentation/utils/time_formatter.dart';
+import 'package:tumbas_servis/core/presentation/utils/window_size_class.dart';
 import 'package:tumbas_servis/invoice/presentation/di/invoice_presentation_module.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/components/invoice_header_card.dart';
+import 'package:tumbas_servis/invoice/presentation/invoice/components/invoice_summary_card.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/components/invoice_totals.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/components/paid_banner.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/components/price_breakdown_invoice.dart';
+import 'package:tumbas_servis/invoice/presentation/invoice/invoice_view_model.dart';
 import 'package:tumbas_servis/invoice/presentation/invoice/state/invoice_state.dart';
 
 class InvoicePage extends ConsumerWidget {
@@ -56,6 +59,7 @@ class InvoicePage extends ConsumerWidget {
     final state = ref.watch(provider);
     final viewModel = ref.read(provider.notifier);
     final scheme = Theme.of(context).colorScheme;
+    final isWide = context.windowSizeClass.isAtLeast(WindowSizeClass.expanded);
 
     return Scaffold(
       backgroundColor: scheme.surface,
@@ -70,6 +74,8 @@ class InvoicePage extends ConsumerWidget {
               )
             : !state.isReady
             ? const _InvoiceSkeleton()
+            : isWide
+            ? _buildWide(context, ref, state, viewModel)
             : Column(
                 children: [
                   Expanded(
@@ -77,7 +83,9 @@ class InvoicePage extends ConsumerWidget {
                       padding: const EdgeInsets.fromLTRB(20, 16, 20, 24),
                       child: Center(
                         child: ConstrainedBox(
-                          constraints: const BoxConstraints(maxWidth: 720),
+                          constraints: BoxConstraints(
+                            maxWidth: context.isTablet ? 640 : 720,
+                          ),
                           child: _InvoiceContent(
                             state: state,
                             onRetryMark: viewModel.markPaid,
@@ -88,11 +96,66 @@ class InvoicePage extends ConsumerWidget {
                   ),
                   _InvoiceBar(
                     state: state,
+                    maxContentWidth: context.isTablet ? 640 : null,
                     onMarkPaid: () => _confirmMarkPaid(context, ref),
                     onReview: () => _openReview(context),
                   ),
                 ],
               ),
+      ),
+    );
+  }
+
+  Widget _buildWide(
+    BuildContext context,
+    WidgetRef ref,
+    InvoiceState state,
+    InvoiceViewModel viewModel,
+  ) {
+    final invoice = state.invoice!;
+    final paid = state.isPaid;
+    final ctaLabel = !paid
+        ? 'Tandai lunas'
+        : state.hasReview
+        ? 'Lihat ulasan'
+        : 'Beri ulasan';
+    return SingleChildScrollView(
+      padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
+      child: Center(
+        child: ConstrainedBox(
+          constraints: const BoxConstraints(maxWidth: 720 + 24 + 360),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: _InvoiceContent(
+                  state: state,
+                  onRetryMark: viewModel.markPaid,
+                  showTotals: false,
+                ),
+              ),
+              const SizedBox(width: 24),
+              SizedBox(
+                width: 360,
+                child: InvoiceSummaryCard(
+                  paid: paid,
+                  subtotal: invoice.subtotal,
+                  discount: invoice.discount,
+                  total: invoice.total,
+                  voucherCode: state.voucherCode,
+                  workshopName: state.workshopName,
+                  issuedLine:
+                      'Diterbitkan ${_InvoiceContent._stamp(invoice.issuedAt)}',
+                  ctaLabel: ctaLabel,
+                  isLoading: state.isMarking,
+                  onCta: paid
+                      ? () => _openReview(context)
+                      : () => _confirmMarkPaid(context, ref),
+                ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
@@ -103,8 +166,10 @@ class _InvoiceBar extends StatelessWidget {
     required this.state,
     required this.onMarkPaid,
     required this.onReview,
+    this.maxContentWidth,
   });
 
+  final double? maxContentWidth;
   final InvoiceState state;
   final VoidCallback onMarkPaid;
   final VoidCallback onReview;
@@ -126,14 +191,20 @@ class _InvoiceBar extends StatelessWidget {
       loadingLabel: 'Menandai lunas…',
       enabled: true,
       isLoading: state.isMarking,
+      maxContentWidth: maxContentWidth,
       onConfirm: paid ? onReview : onMarkPaid,
     );
   }
 }
 
 class _InvoiceContent extends StatelessWidget {
-  const _InvoiceContent({required this.state, required this.onRetryMark});
+  const _InvoiceContent({
+    required this.state,
+    required this.onRetryMark,
+    this.showTotals = true,
+  });
 
+  final bool showTotals;
   final InvoiceState state;
   final Future<bool> Function() onRetryMark;
 
@@ -177,33 +248,35 @@ class _InvoiceContent extends StatelessWidget {
             ),
             const SizedBox(height: 12),
           ],
-        const SizedBox(height: 4),
-        InvoiceTotals(
-          subtotal: invoice.subtotal,
-          discount: invoice.discount,
-          total: invoice.total,
-          paid: paid,
-          voucherCode: state.voucherCode,
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            ExcludeSemantics(
-              child: Icon(
-                Icons.payments_outlined,
-                size: 18,
-                color: ext.textMuted,
+        if (showTotals) ...[
+          const SizedBox(height: 4),
+          InvoiceTotals(
+            subtotal: invoice.subtotal,
+            discount: invoice.discount,
+            total: invoice.total,
+            paid: paid,
+            voucherCode: state.voucherCode,
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              ExcludeSemantics(
+                child: Icon(
+                  Icons.payments_outlined,
+                  size: 18,
+                  color: ext.textMuted,
+                ),
               ),
-            ),
-            const SizedBox(width: 8),
-            Expanded(
-              child: Text(
-                paid ? 'Dibayar di bengkel' : 'Bayar di bengkel',
-                style: textTheme.bodySmall?.copyWith(color: ext.textMuted),
+              const SizedBox(width: 8),
+              Expanded(
+                child: Text(
+                  paid ? 'Dibayar di bengkel' : 'Bayar di bengkel',
+                  style: textTheme.bodySmall?.copyWith(color: ext.textMuted),
+                ),
               ),
-            ),
-          ],
-        ),
+            ],
+          ),
+        ],
       ],
     );
   }

@@ -14,7 +14,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$RingkasanState {
 
- bool get isLoading; bool get hasError; Workshop? get workshop; Map<String, Motor> get motorsById; Map<String, ServiceType> get serviceById; Map<String, Part> get partById; Voucher? get voucher; String? get removedVoucherId; bool get slotInvalid; String? get slotInvalidTitle; String? get slotInvalidBody; Set<String> get expandedMotorIds; bool get confirming; String? get confirmError; String? get confirmedBookingId;
+ bool get isLoading; bool get hasError; Workshop? get workshop; Map<String, Motor> get motorsById; Map<String, ServiceType> get serviceById; Map<String, Part> get partById; Voucher? get voucher; String? get removedVoucherId; String? get voucherNotice; bool get slotInvalid; String? get slotInvalidTitle; String? get slotInvalidBody; Set<String> get expandedMotorIds; bool get confirming; String? get confirmError; String? get confirmedBookingId;
 /// Create a copy of RingkasanState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -25,16 +25,16 @@ $RingkasanStateCopyWith<RingkasanState> get copyWith => _$RingkasanStateCopyWith
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is RingkasanState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.workshop, workshop) || other.workshop == workshop)&&const DeepCollectionEquality().equals(other.motorsById, motorsById)&&const DeepCollectionEquality().equals(other.serviceById, serviceById)&&const DeepCollectionEquality().equals(other.partById, partById)&&(identical(other.voucher, voucher) || other.voucher == voucher)&&(identical(other.removedVoucherId, removedVoucherId) || other.removedVoucherId == removedVoucherId)&&(identical(other.slotInvalid, slotInvalid) || other.slotInvalid == slotInvalid)&&(identical(other.slotInvalidTitle, slotInvalidTitle) || other.slotInvalidTitle == slotInvalidTitle)&&(identical(other.slotInvalidBody, slotInvalidBody) || other.slotInvalidBody == slotInvalidBody)&&const DeepCollectionEquality().equals(other.expandedMotorIds, expandedMotorIds)&&(identical(other.confirming, confirming) || other.confirming == confirming)&&(identical(other.confirmError, confirmError) || other.confirmError == confirmError)&&(identical(other.confirmedBookingId, confirmedBookingId) || other.confirmedBookingId == confirmedBookingId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is RingkasanState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.workshop, workshop) || other.workshop == workshop)&&const DeepCollectionEquality().equals(other.motorsById, motorsById)&&const DeepCollectionEquality().equals(other.serviceById, serviceById)&&const DeepCollectionEquality().equals(other.partById, partById)&&(identical(other.voucher, voucher) || other.voucher == voucher)&&(identical(other.removedVoucherId, removedVoucherId) || other.removedVoucherId == removedVoucherId)&&(identical(other.voucherNotice, voucherNotice) || other.voucherNotice == voucherNotice)&&(identical(other.slotInvalid, slotInvalid) || other.slotInvalid == slotInvalid)&&(identical(other.slotInvalidTitle, slotInvalidTitle) || other.slotInvalidTitle == slotInvalidTitle)&&(identical(other.slotInvalidBody, slotInvalidBody) || other.slotInvalidBody == slotInvalidBody)&&const DeepCollectionEquality().equals(other.expandedMotorIds, expandedMotorIds)&&(identical(other.confirming, confirming) || other.confirming == confirming)&&(identical(other.confirmError, confirmError) || other.confirmError == confirmError)&&(identical(other.confirmedBookingId, confirmedBookingId) || other.confirmedBookingId == confirmedBookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,workshop,const DeepCollectionEquality().hash(motorsById),const DeepCollectionEquality().hash(serviceById),const DeepCollectionEquality().hash(partById),voucher,removedVoucherId,slotInvalid,slotInvalidTitle,slotInvalidBody,const DeepCollectionEquality().hash(expandedMotorIds),confirming,confirmError,confirmedBookingId);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,workshop,const DeepCollectionEquality().hash(motorsById),const DeepCollectionEquality().hash(serviceById),const DeepCollectionEquality().hash(partById),voucher,removedVoucherId,voucherNotice,slotInvalid,slotInvalidTitle,slotInvalidBody,const DeepCollectionEquality().hash(expandedMotorIds),confirming,confirmError,confirmedBookingId);
 
 @override
 String toString() {
-  return 'RingkasanState(isLoading: $isLoading, hasError: $hasError, workshop: $workshop, motorsById: $motorsById, serviceById: $serviceById, partById: $partById, voucher: $voucher, removedVoucherId: $removedVoucherId, slotInvalid: $slotInvalid, slotInvalidTitle: $slotInvalidTitle, slotInvalidBody: $slotInvalidBody, expandedMotorIds: $expandedMotorIds, confirming: $confirming, confirmError: $confirmError, confirmedBookingId: $confirmedBookingId)';
+  return 'RingkasanState(isLoading: $isLoading, hasError: $hasError, workshop: $workshop, motorsById: $motorsById, serviceById: $serviceById, partById: $partById, voucher: $voucher, removedVoucherId: $removedVoucherId, voucherNotice: $voucherNotice, slotInvalid: $slotInvalid, slotInvalidTitle: $slotInvalidTitle, slotInvalidBody: $slotInvalidBody, expandedMotorIds: $expandedMotorIds, confirming: $confirming, confirmError: $confirmError, confirmedBookingId: $confirmedBookingId)';
 }
 
 
@@ -45,7 +45,7 @@ abstract mixin class $RingkasanStateCopyWith<$Res>  {
   factory $RingkasanStateCopyWith(RingkasanState value, $Res Function(RingkasanState) _then) = _$RingkasanStateCopyWithImpl;
 @useResult
 $Res call({
- bool isLoading, bool hasError, Workshop? workshop, Map<String, Motor> motorsById, Map<String, ServiceType> serviceById, Map<String, Part> partById, Voucher? voucher, String? removedVoucherId, bool slotInvalid, String? slotInvalidTitle, String? slotInvalidBody, Set<String> expandedMotorIds, bool confirming, String? confirmError, String? confirmedBookingId
+ bool isLoading, bool hasError, Workshop? workshop, Map<String, Motor> motorsById, Map<String, ServiceType> serviceById, Map<String, Part> partById, Voucher? voucher, String? removedVoucherId, String? voucherNotice, bool slotInvalid, String? slotInvalidTitle, String? slotInvalidBody, Set<String> expandedMotorIds, bool confirming, String? confirmError, String? confirmedBookingId
 });
 
 
@@ -62,7 +62,7 @@ class _$RingkasanStateCopyWithImpl<$Res>
 
 /// Create a copy of RingkasanState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? workshop = freezed,Object? motorsById = null,Object? serviceById = null,Object? partById = null,Object? voucher = freezed,Object? removedVoucherId = freezed,Object? slotInvalid = null,Object? slotInvalidTitle = freezed,Object? slotInvalidBody = freezed,Object? expandedMotorIds = null,Object? confirming = null,Object? confirmError = freezed,Object? confirmedBookingId = freezed,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? isLoading = null,Object? hasError = null,Object? workshop = freezed,Object? motorsById = null,Object? serviceById = null,Object? partById = null,Object? voucher = freezed,Object? removedVoucherId = freezed,Object? voucherNotice = freezed,Object? slotInvalid = null,Object? slotInvalidTitle = freezed,Object? slotInvalidBody = freezed,Object? expandedMotorIds = null,Object? confirming = null,Object? confirmError = freezed,Object? confirmedBookingId = freezed,}) {
   return _then(_self.copyWith(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
@@ -72,6 +72,7 @@ as Map<String, Motor>,serviceById: null == serviceById ? _self.serviceById : ser
 as Map<String, ServiceType>,partById: null == partById ? _self.partById : partById // ignore: cast_nullable_to_non_nullable
 as Map<String, Part>,voucher: freezed == voucher ? _self.voucher : voucher // ignore: cast_nullable_to_non_nullable
 as Voucher?,removedVoucherId: freezed == removedVoucherId ? _self.removedVoucherId : removedVoucherId // ignore: cast_nullable_to_non_nullable
+as String?,voucherNotice: freezed == voucherNotice ? _self.voucherNotice : voucherNotice // ignore: cast_nullable_to_non_nullable
 as String?,slotInvalid: null == slotInvalid ? _self.slotInvalid : slotInvalid // ignore: cast_nullable_to_non_nullable
 as bool,slotInvalidTitle: freezed == slotInvalidTitle ? _self.slotInvalidTitle : slotInvalidTitle // ignore: cast_nullable_to_non_nullable
 as String?,slotInvalidBody: freezed == slotInvalidBody ? _self.slotInvalidBody : slotInvalidBody // ignore: cast_nullable_to_non_nullable
@@ -188,10 +189,10 @@ return $default(_that);case _:
 /// }
 /// ```
 
-@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)?  $default,{required TResult orElse(),}) {final _that = this;
+@optionalTypeArgs TResult maybeWhen<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  String? voucherNotice,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)?  $default,{required TResult orElse(),}) {final _that = this;
 switch (_that) {
 case _RingkasanState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
+return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.voucherNotice,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
   return orElse();
 
 }
@@ -209,10 +210,10 @@ return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)  $default,) {final _that = this;
+@optionalTypeArgs TResult when<TResult extends Object?>(TResult Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  String? voucherNotice,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)  $default,) {final _that = this;
 switch (_that) {
 case _RingkasanState():
-return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
+return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.voucherNotice,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
   throw StateError('Unexpected subclass');
 
 }
@@ -229,10 +230,10 @@ return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_
 /// }
 /// ```
 
-@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)?  $default,) {final _that = this;
+@optionalTypeArgs TResult? whenOrNull<TResult extends Object?>(TResult? Function( bool isLoading,  bool hasError,  Workshop? workshop,  Map<String, Motor> motorsById,  Map<String, ServiceType> serviceById,  Map<String, Part> partById,  Voucher? voucher,  String? removedVoucherId,  String? voucherNotice,  bool slotInvalid,  String? slotInvalidTitle,  String? slotInvalidBody,  Set<String> expandedMotorIds,  bool confirming,  String? confirmError,  String? confirmedBookingId)?  $default,) {final _that = this;
 switch (_that) {
 case _RingkasanState() when $default != null:
-return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
+return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_that.serviceById,_that.partById,_that.voucher,_that.removedVoucherId,_that.voucherNotice,_that.slotInvalid,_that.slotInvalidTitle,_that.slotInvalidBody,_that.expandedMotorIds,_that.confirming,_that.confirmError,_that.confirmedBookingId);case _:
   return null;
 
 }
@@ -244,7 +245,7 @@ return $default(_that.isLoading,_that.hasError,_that.workshop,_that.motorsById,_
 
 
 class _RingkasanState implements RingkasanState {
-  const _RingkasanState({this.isLoading = true, this.hasError = false, this.workshop, final  Map<String, Motor> motorsById = const <String, Motor>{}, final  Map<String, ServiceType> serviceById = const <String, ServiceType>{}, final  Map<String, Part> partById = const <String, Part>{}, this.voucher, this.removedVoucherId, this.slotInvalid = false, this.slotInvalidTitle, this.slotInvalidBody, final  Set<String> expandedMotorIds = const <String>{}, this.confirming = false, this.confirmError, this.confirmedBookingId}): _motorsById = motorsById,_serviceById = serviceById,_partById = partById,_expandedMotorIds = expandedMotorIds;
+  const _RingkasanState({this.isLoading = true, this.hasError = false, this.workshop, final  Map<String, Motor> motorsById = const <String, Motor>{}, final  Map<String, ServiceType> serviceById = const <String, ServiceType>{}, final  Map<String, Part> partById = const <String, Part>{}, this.voucher, this.removedVoucherId, this.voucherNotice, this.slotInvalid = false, this.slotInvalidTitle, this.slotInvalidBody, final  Set<String> expandedMotorIds = const <String>{}, this.confirming = false, this.confirmError, this.confirmedBookingId}): _motorsById = motorsById,_serviceById = serviceById,_partById = partById,_expandedMotorIds = expandedMotorIds;
   
 
 @override@JsonKey() final  bool isLoading;
@@ -273,6 +274,7 @@ class _RingkasanState implements RingkasanState {
 
 @override final  Voucher? voucher;
 @override final  String? removedVoucherId;
+@override final  String? voucherNotice;
 @override@JsonKey() final  bool slotInvalid;
 @override final  String? slotInvalidTitle;
 @override final  String? slotInvalidBody;
@@ -297,16 +299,16 @@ _$RingkasanStateCopyWith<_RingkasanState> get copyWith => __$RingkasanStateCopyW
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RingkasanState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.workshop, workshop) || other.workshop == workshop)&&const DeepCollectionEquality().equals(other._motorsById, _motorsById)&&const DeepCollectionEquality().equals(other._serviceById, _serviceById)&&const DeepCollectionEquality().equals(other._partById, _partById)&&(identical(other.voucher, voucher) || other.voucher == voucher)&&(identical(other.removedVoucherId, removedVoucherId) || other.removedVoucherId == removedVoucherId)&&(identical(other.slotInvalid, slotInvalid) || other.slotInvalid == slotInvalid)&&(identical(other.slotInvalidTitle, slotInvalidTitle) || other.slotInvalidTitle == slotInvalidTitle)&&(identical(other.slotInvalidBody, slotInvalidBody) || other.slotInvalidBody == slotInvalidBody)&&const DeepCollectionEquality().equals(other._expandedMotorIds, _expandedMotorIds)&&(identical(other.confirming, confirming) || other.confirming == confirming)&&(identical(other.confirmError, confirmError) || other.confirmError == confirmError)&&(identical(other.confirmedBookingId, confirmedBookingId) || other.confirmedBookingId == confirmedBookingId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _RingkasanState&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.hasError, hasError) || other.hasError == hasError)&&(identical(other.workshop, workshop) || other.workshop == workshop)&&const DeepCollectionEquality().equals(other._motorsById, _motorsById)&&const DeepCollectionEquality().equals(other._serviceById, _serviceById)&&const DeepCollectionEquality().equals(other._partById, _partById)&&(identical(other.voucher, voucher) || other.voucher == voucher)&&(identical(other.removedVoucherId, removedVoucherId) || other.removedVoucherId == removedVoucherId)&&(identical(other.voucherNotice, voucherNotice) || other.voucherNotice == voucherNotice)&&(identical(other.slotInvalid, slotInvalid) || other.slotInvalid == slotInvalid)&&(identical(other.slotInvalidTitle, slotInvalidTitle) || other.slotInvalidTitle == slotInvalidTitle)&&(identical(other.slotInvalidBody, slotInvalidBody) || other.slotInvalidBody == slotInvalidBody)&&const DeepCollectionEquality().equals(other._expandedMotorIds, _expandedMotorIds)&&(identical(other.confirming, confirming) || other.confirming == confirming)&&(identical(other.confirmError, confirmError) || other.confirmError == confirmError)&&(identical(other.confirmedBookingId, confirmedBookingId) || other.confirmedBookingId == confirmedBookingId));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,isLoading,hasError,workshop,const DeepCollectionEquality().hash(_motorsById),const DeepCollectionEquality().hash(_serviceById),const DeepCollectionEquality().hash(_partById),voucher,removedVoucherId,slotInvalid,slotInvalidTitle,slotInvalidBody,const DeepCollectionEquality().hash(_expandedMotorIds),confirming,confirmError,confirmedBookingId);
+int get hashCode => Object.hash(runtimeType,isLoading,hasError,workshop,const DeepCollectionEquality().hash(_motorsById),const DeepCollectionEquality().hash(_serviceById),const DeepCollectionEquality().hash(_partById),voucher,removedVoucherId,voucherNotice,slotInvalid,slotInvalidTitle,slotInvalidBody,const DeepCollectionEquality().hash(_expandedMotorIds),confirming,confirmError,confirmedBookingId);
 
 @override
 String toString() {
-  return 'RingkasanState(isLoading: $isLoading, hasError: $hasError, workshop: $workshop, motorsById: $motorsById, serviceById: $serviceById, partById: $partById, voucher: $voucher, removedVoucherId: $removedVoucherId, slotInvalid: $slotInvalid, slotInvalidTitle: $slotInvalidTitle, slotInvalidBody: $slotInvalidBody, expandedMotorIds: $expandedMotorIds, confirming: $confirming, confirmError: $confirmError, confirmedBookingId: $confirmedBookingId)';
+  return 'RingkasanState(isLoading: $isLoading, hasError: $hasError, workshop: $workshop, motorsById: $motorsById, serviceById: $serviceById, partById: $partById, voucher: $voucher, removedVoucherId: $removedVoucherId, voucherNotice: $voucherNotice, slotInvalid: $slotInvalid, slotInvalidTitle: $slotInvalidTitle, slotInvalidBody: $slotInvalidBody, expandedMotorIds: $expandedMotorIds, confirming: $confirming, confirmError: $confirmError, confirmedBookingId: $confirmedBookingId)';
 }
 
 
@@ -317,7 +319,7 @@ abstract mixin class _$RingkasanStateCopyWith<$Res> implements $RingkasanStateCo
   factory _$RingkasanStateCopyWith(_RingkasanState value, $Res Function(_RingkasanState) _then) = __$RingkasanStateCopyWithImpl;
 @override @useResult
 $Res call({
- bool isLoading, bool hasError, Workshop? workshop, Map<String, Motor> motorsById, Map<String, ServiceType> serviceById, Map<String, Part> partById, Voucher? voucher, String? removedVoucherId, bool slotInvalid, String? slotInvalidTitle, String? slotInvalidBody, Set<String> expandedMotorIds, bool confirming, String? confirmError, String? confirmedBookingId
+ bool isLoading, bool hasError, Workshop? workshop, Map<String, Motor> motorsById, Map<String, ServiceType> serviceById, Map<String, Part> partById, Voucher? voucher, String? removedVoucherId, String? voucherNotice, bool slotInvalid, String? slotInvalidTitle, String? slotInvalidBody, Set<String> expandedMotorIds, bool confirming, String? confirmError, String? confirmedBookingId
 });
 
 
@@ -334,7 +336,7 @@ class __$RingkasanStateCopyWithImpl<$Res>
 
 /// Create a copy of RingkasanState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? workshop = freezed,Object? motorsById = null,Object? serviceById = null,Object? partById = null,Object? voucher = freezed,Object? removedVoucherId = freezed,Object? slotInvalid = null,Object? slotInvalidTitle = freezed,Object? slotInvalidBody = freezed,Object? expandedMotorIds = null,Object? confirming = null,Object? confirmError = freezed,Object? confirmedBookingId = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? isLoading = null,Object? hasError = null,Object? workshop = freezed,Object? motorsById = null,Object? serviceById = null,Object? partById = null,Object? voucher = freezed,Object? removedVoucherId = freezed,Object? voucherNotice = freezed,Object? slotInvalid = null,Object? slotInvalidTitle = freezed,Object? slotInvalidBody = freezed,Object? expandedMotorIds = null,Object? confirming = null,Object? confirmError = freezed,Object? confirmedBookingId = freezed,}) {
   return _then(_RingkasanState(
 isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
 as bool,hasError: null == hasError ? _self.hasError : hasError // ignore: cast_nullable_to_non_nullable
@@ -344,6 +346,7 @@ as Map<String, Motor>,serviceById: null == serviceById ? _self._serviceById : se
 as Map<String, ServiceType>,partById: null == partById ? _self._partById : partById // ignore: cast_nullable_to_non_nullable
 as Map<String, Part>,voucher: freezed == voucher ? _self.voucher : voucher // ignore: cast_nullable_to_non_nullable
 as Voucher?,removedVoucherId: freezed == removedVoucherId ? _self.removedVoucherId : removedVoucherId // ignore: cast_nullable_to_non_nullable
+as String?,voucherNotice: freezed == voucherNotice ? _self.voucherNotice : voucherNotice // ignore: cast_nullable_to_non_nullable
 as String?,slotInvalid: null == slotInvalid ? _self.slotInvalid : slotInvalid // ignore: cast_nullable_to_non_nullable
 as bool,slotInvalidTitle: freezed == slotInvalidTitle ? _self.slotInvalidTitle : slotInvalidTitle // ignore: cast_nullable_to_non_nullable
 as String?,slotInvalidBody: freezed == slotInvalidBody ? _self.slotInvalidBody : slotInvalidBody // ignore: cast_nullable_to_non_nullable

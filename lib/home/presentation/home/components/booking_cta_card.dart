@@ -9,10 +9,13 @@ class BookingCtaCard extends StatelessWidget {
     required this.variant,
     required this.onPressed,
     super.key,
+    this.hugButton = false,
   });
 
   final BookingCtaCardVariant variant;
   final VoidCallback onPressed;
+
+  final bool hugButton;
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +77,27 @@ class BookingCtaCard extends StatelessWidget {
                   style: textTheme.bodyMedium?.copyWith(color: ext.textBody),
                 ),
                 const SizedBox(height: 16),
-                TsButton(
-                  label: 'Mulai booking',
-                  onPressed: onPressed,
-                  type: TsButtonType.primary,
-                  emphasized: true,
-                  fullWidth: !isHero,
-                ),
+                if (hugButton)
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: IntrinsicWidth(
+                      child: TsButton(
+                        label: 'Mulai booking',
+                        onPressed: onPressed,
+                        type: TsButtonType.primary,
+                        emphasized: true,
+                        fullWidth: false,
+                      ),
+                    ),
+                  )
+                else
+                  TsButton(
+                    label: 'Mulai booking',
+                    onPressed: onPressed,
+                    type: TsButtonType.primary,
+                    emphasized: true,
+                    fullWidth: !isHero,
+                  ),
               ],
             ),
           ),

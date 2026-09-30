@@ -64,6 +64,11 @@ class _RingkasanPageState extends ConsumerState<RingkasanPage> {
         ref.read(bookingDraftProvider.notifier).reset();
         context.go(Routes.bookingSuccess(bookingId));
       }
+      final notice = next.voucherNotice;
+      if (notice != null && notice != previous?.voucherNotice) {
+        TsSnackbar.info(context, notice);
+        ref.read(ringkasanViewModelProvider.notifier).clearVoucherNotice();
+      }
     });
 
     final draft = ref.watch(bookingDraftProvider);

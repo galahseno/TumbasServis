@@ -7,10 +7,12 @@ class CategoryChipRow extends StatelessWidget {
     required this.selectedCategory,
     required this.onSelected,
     super.key,
+    this.horizontalPadding = 20,
   });
 
   final String selectedCategory;
   final ValueChanged<String> onSelected;
+  final double horizontalPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +20,7 @@ class CategoryChipRow extends StatelessWidget {
       container: true,
       child: SingleChildScrollView(
         scrollDirection: Axis.horizontal,
-        padding: const EdgeInsets.symmetric(horizontal: 20),
+        padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
         child: Row(
           children: [
             for (final category in katalogCategories) ...[
