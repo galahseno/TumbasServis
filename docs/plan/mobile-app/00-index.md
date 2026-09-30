@@ -19,7 +19,7 @@ Locked in the planning interview (2026-09-27):
 | Topic | Decision |
 |---|---|
 | Layer order | **Domain → Data → Presentation** (the skill's dependency-safe touch order — entities/interfaces exist before anything implements or renders them), supersedes the literal "data, domain, presentation" phrasing of the original ask |
-| Project location | Flutter project at the **repo root** (next to `prd/`, `docs/`, `design/`); Dart package name **`tumbas_servis`** (`package:tumbas_servis/...`); Android `applicationId` stays `com.galahseno.tumbasservis` (PRD 07, independent of the Dart package name) |
+| Project location | Flutter project at the **repo root** (next to `prd/`, `docs/`, `design/`); Dart package name **`tumbas_servis`** (`package:tumbas_servis/...`); Android `applicationId` and macOS bundle id are `com.galahseno.tumbasservis` (PRD 07, independent of the Dart package name; aligned in step 28) |
 | Repository placement (hybrid) | Every repository **interface** lives in `core/domain/repository/` (all 10 are read cross-feature in practice). Every repository **implementation** lives in its **owning feature's** `data/repository/` — not centralized in `core/data/`. See the concrete map in *Conventions* below |
 | Shared infra | Mock JSON loader, simulated-latency helper, local storage wrapper, `DemoModeController`, `TrackingSimulator` (consumed by 2+ features: tracking + profile) live in `core/data/service/` |
 | Commits | The user commits (as in the design phase); Claude never commits. Each step's *Close* proposes a `"NNN - <Title>"` commit message, continuing the existing history from `010 -` |
@@ -27,6 +27,7 @@ Locked in the planning interview (2026-09-27):
 | State coverage | P0 screens implement every PRD 04 state in their phone step; P1 screens implement default + empty + one loading/error state in their phone step (mirrors the design plan's own P0/P1 split) |
 | Testing gates | Domain = pure unit tests, no mocks. Data = repository tests against fakes of the service layer (`Result` plumbing, latency, one-shot error injection). Presentation = widget tests for gating/validation-heavy screens + layout tests at the PRD 06 phone sizes (+ ×1.3 text scale); tablet sizes are tested in steps 26–27 |
 | Claude-session numbering | `docs/claude-session/apps/NN-mobile-stepMM-<slug>.md` where `NN = MM + 1` (this planning session occupies slot 01, so step 01's log is 02, step 02's is 03, … step 28's is 29) — mirrors the `docs/claude-session/design/` offset |
+| Release CI (step 28) | Tag `vX.Y.Z` → GitHub Actions builds a release-key-signed APK + an ad-hoc-signed macOS DMG and publishes a GitHub Release (checksums, generated notes). macOS is deliberately not notarized (no paid Apple account); 4 Android signing secrets only |
 | Doc layout | This index + one file per step (28 steps) |
 
 ## Conventions
@@ -188,7 +189,7 @@ All mock data, seed values, and screen copy **must match** [`docs/plan/design/00
 | 25 | [25-p1-hardening.md](25-p1-hardening.md) | Hardening | — | Full phone app + app name/icon/launch screen | ✅ | `26-mobile-step25-p1-hardening.md` |
 | 26 | [26-tablet-booking-flow.md](26-tablet-booking-flow.md) | Presentation, tablet | Bonus | S10, S11, S13–S18 tablet | ✅ | `27-mobile-step26-tablet-booking-flow.md` |
 | 27 | [27-tablet-remaining-screens.md](27-tablet-remaining-screens.md) | Presentation, tablet | Bonus | S01–S09, S12, S19–S26 tablet | ✅ | `28-mobile-step27-tablet-remaining-screens.md` |
-| 28 | [28-release-polish.md](28-release-polish.md) | Release | — | APK, README, submission checklist | ⬜ | `29-mobile-step28-release-polish.md` |
+| 28 | [28-release-polish.md](28-release-polish.md) | Release | — | Signing, tag-triggered release workflow (APK + macOS DMG), README, submission checklist | ✅ | `29-mobile-step28-release-polish.md` |
 | 29 | [29-util-extraction-home-booking.md](29-util-extraction-home-booking.md) | Refactor | — | Per-feature `mapper/`/`utils/` extraction (Home VM, Booking repo) | 🔵 | `14-mobile-step29-util-extraction.md` |
 
 *S03 is the P0 entry point per PRD 04; S01/S02/S04 are P1.
